@@ -1,0 +1,28 @@
+{
+	// Place your DNS 工作区 snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"headerFiles.h": {
+		"scope": "c",
+		"prefix": "header",
+		"body": [
+			"#include<stdio.h>",
+			"#include<stdlib.h>",
+			"#include<sys/tyes.h>",
+			"#include<sys/socket.h>",
+			"#include<netinet/in.h>",
+			"#include<netdb.h>",
+			"#include<errno.h>",
+			"#include<signal.h>",
+			"#include<unistd.h>",
+			"#include<string.h>",
+			"#include<arpa/inet.h>",
+			"#include<sys/wait.h>",
+		],
+		"description": "headerFiles.h"
+	}
+}
