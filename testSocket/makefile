@@ -1,15 +1,15 @@
-all:testHear testSend
+all:server client
 
 
-testHear:testHear.o
-	gcc testHear.o -o testHear
-testHear.o:testHear.c
-	gcc -c testHear.c
+server:server.o
+	gcc server.o -o server
+server.o:server.c
+	gcc -c server.c
 
-testSend:testSend.o
-	gcc testSend.o -o testSend
-testSend.o:testSend.c
-	gcc -c testSend.c
+client:client.o
+	gcc client.o -o client
+client.o:client.c
+	gcc -c client.c
 
 
 .PHONY:clean

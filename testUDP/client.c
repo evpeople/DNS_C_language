@@ -6,7 +6,7 @@
 
 #define SERVER_PORT 8888
 #define BUFF_LEN 512
-#define SERVER_IP "172.0.5.182"
+#define SERVER_IP "172.0.5.189" //实际上是一个没有影响的量？
 
 void udp_msg_sender(int fd, struct sockaddr *dst)
 {

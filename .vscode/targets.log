@@ -5,11 +5,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 
-# Make data base, printed on Wed Apr 14 01:09:19 2021
+# Make data base, printed on Wed Apr 14 01:21:29 2021
 
 # Variables
 
@@ -69,6 +66,9 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /home/wangzhe/DNS
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 # default
 .LOADED := 
 # environment
@@ -117,7 +117,6 @@ OLDPWD = /mnt/c/Program Files/Microsoft VS Code
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
- 
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -224,8 +223,7 @@ GNUmakefile:
 
 # strcache performance: lookups = 18 / hit rate = 16%
 # hash-table stats:
- 
 # Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
-# Finished Make data base on Wed Apr 14 01:09:19 2021
+# Finished Make data base on Wed Apr 14 01:21:29 2021
 
  

@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 
-#define SERVER_PORT 8910 //这个宏似乎在头文件中没有定义。
+#define SERVER_PORT 8888 //这个宏似乎在头文件中没有定义。
 int main()
 {
     int s;
@@ -19,7 +19,7 @@ int main()
     char buffer[256];
     struct sockaddr_in servAddr;
     struct sockaddr_in cintAddr;
-    int cIntAddrLen;
+    int cIntAddrLen = sizeof(cintAddr);
 
     memset(&servAddr, 0, sizeof(servAddr));
     servAddr.sin_family = AF_INET;
@@ -38,8 +38,13 @@ int main()
     }
     for (;;)
     {
+        memset(buffer, 0, 256);
         len = recvfrom(s, buffer, sizeof(buffer), 0, (struct sockaddr *)&cintAddr, &cIntAddrLen); //没有对报文做任何加工
-        printf("%s", buffer);
-        sendto(s, buffer, len, 0, (struct sockaddr *)&cintAddr, sizeof(cintAddr));
+        fflush(stdout);
+        printf("ddddx  %s", buffer);
+        fflush(stdout);
+        // memset(buffer, 0, 256);
+        sendto(s, buffer, len, 0, (struct sockaddr *)&cintAddr, cIntAddrLen);
     }
+    close(s);
 }

@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 
-#define SERVER_PORT 8910 //这个宏似乎在头文件中没有定义。
+#define SERVER_PORT 8888 //这个宏似乎在头文件中没有定义。
 int main(int argc, char *argv[])
 {
     int s;
@@ -34,21 +34,22 @@ int main(int argc, char *argv[])
 
     memset(&servAddr, 0, sizeof(servAddr));
     servAddr.sin_family = AF_INET;
-    servAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    servAddr.sin_port = htons(servPort);
-
-    if ((s = socket(PF_INET, SOCK_DGRAM, 0) == -1))
+    servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    servAddr.sin_port = htons(8888);
+    s = socket(PF_INET, SOCK_DGRAM, 0);
+    if ((s < 0))
     {
         perror("error:socket failed");
         exit(1);
     }
+    char buf[256] = "TEST UDP MSG!\n";
+    sendto(s, string, sizeof(string), 0, (struct sockaddr *)&servAddr, sizeof(servAddr));
+    memset(buf, 0, 256);
+    recvfrom(s, buf, 256, 0, NULL, NULL);
 
-    len = sendto(s, string, strlen(string), 0, (struct sockaddr *)&servAddr, sizeof(servAddr));
-
-    recvfrom(s, buffer, len, 0, NULL, NULL);
-
-    buffer[len] = '\0';
-    printf("echo string received");
+    buf[256] = '\0';
+    printf("echo string received\n");
+    printf("%s", buf);
     fputs(buffer, stdout);
 
     close(s);
