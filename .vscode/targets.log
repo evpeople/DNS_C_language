@@ -1,14 +1,15 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
- 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 
-# Make data base, printed on Wed Apr 14 00:12:44 2021
+# Make data base, printed on Wed Apr 14 01:09:19 2021
 
 # Variables
 
@@ -116,6 +117,7 @@ OLDPWD = /mnt/c/Program Files/Microsoft VS Code
 .VARIABLES := 
 # automatic
 *F = $(notdir $*)
+ 
 # makefile
 MAKEFLAGS = pqrR
 # environment
@@ -157,7 +159,6 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 # environment
 WSL_DISTRO_NAME = Ubuntu-20.04
 # variable set hash-table stats:
- 
 # Load=72/1024=7%, Rehash=0, Collisions=5/94=5%
 
 # Pattern-specific Variable Values
@@ -166,9 +167,9 @@ WSL_DISTRO_NAME = Ubuntu-20.04
 
 # Directories
 
-# . (device 2, inode 48413695994242816): 6 files, no impossibilities.
+# . (device 2, inode 48413695994242816): 7 files, no impossibilities.
 
-# 6 files, no impossibilities in 1 directories.
+# 7 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -218,12 +219,13 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 14 / storage = 124 B / avg = 8 B
-# current buf: size = 8162 B / used = 124 B / count = 14 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 15 / storage = 132 B / avg = 8 B
+# current buf: size = 8162 B / used = 132 B / count = 15 / avg = 8 B
 
-# strcache performance: lookups = 17 / hit rate = 17%
+# strcache performance: lookups = 18 / hit rate = 16%
 # hash-table stats:
-# Load=14/8192=0%, Rehash=0, Collisions=1/17=6%
-# Finished Make data base on Wed Apr 14 00:12:44 2021
+ 
+# Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
+# Finished Make data base on Wed Apr 14 01:09:19 2021
 
  

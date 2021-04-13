@@ -1,6 +1,5 @@
 make testHear --dry-run --keep-going --print-directory
 make: Entering directory '/home/wangzhe/DNS'
- 
 make: Leaving directory '/home/wangzhe/DNS'
  
 make: *** No rule to make target 'testHear'.

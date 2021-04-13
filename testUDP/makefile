@@ -1,0 +1,21 @@
+all:client server
+
+
+client:client.o
+	gcc client.o -o client
+client.o:client.c
+	gcc -c client.c
+
+server:server.o
+	gcc server.o -o server
+server.o:server.c
+	gcc -c server.c
+
+
+.PHONY:clean
+clean:
+	@echo "=======clean project========="
+	rm   *.o 
+	@echo "=======clean completed========="
+
+	

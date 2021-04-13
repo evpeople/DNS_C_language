@@ -39,6 +39,7 @@ int main()
     for (;;)
     {
         len = recvfrom(s, buffer, sizeof(buffer), 0, (struct sockaddr *)&cintAddr, &cIntAddrLen); //没有对报文做任何加工
+        printf("%s", buffer);
         sendto(s, buffer, len, 0, (struct sockaddr *)&cintAddr, sizeof(cintAddr));
     }
 }
