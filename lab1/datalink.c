@@ -59,7 +59,7 @@ int main(int argc, char **argv)
     struct FRAME f;
     int len = 0;
 
-    protocol_init(argc, argv);
+    protocol_init(argc, argv); //初始化物理层信道以及debug参数
     lprintf("Designed by Jiang Yanjun, build: " __DATE__ "  "__TIME__
             "\n");
 

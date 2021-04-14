@@ -1,0 +1,1 @@
+{"buildTargets":["all","clean","client","client.o","clinet","server","server.o"],"launchTargets":["/home/wangzhe/DNS/TCPtest>clinet()"],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

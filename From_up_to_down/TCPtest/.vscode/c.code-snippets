@@ -1,0 +1,21 @@
+{
+    "headerFiles.h": {
+		"scope": "c",
+		"prefix": "header",
+		"body": [
+			"#include<stdio.h>",
+			"#include<stdlib.h>",
+			"#include<sys/tyes.h>",
+			"#include<sys/socket.h>",
+			"#include<netinet/in.h>",
+			"#include<netdb.h>",
+			"#include<errno.h>",
+			"#include<signal.h>",
+			"#include<unistd.h>",
+			"#include<string.h>",
+			"#include<arpa/inet.h>",
+			"#include<sys/wait.h>",
+		],
+		"description": "headerFiles.h"
+	}
+}
