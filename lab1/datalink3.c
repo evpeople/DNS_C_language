@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+
 #include "protocol.h"
 #include "datalink.h"
 
@@ -60,6 +60,8 @@ static void send_nak_frame(void)
     s.ack = 1 - frame_expected;
 
     dbg_frame("Send NAK  %d\n", s.ack);
+
+    put_frame((unsigned char *)&s, 2);
 }
 int main(int argc, char **argv)
 {
@@ -76,7 +78,7 @@ int main(int argc, char **argv)
     for (;;)
     {
         event = wait_for_event(&arg);
-        bool right_frame = true;
+
         switch (event)
         {
         case NETWORK_LAYER_READY:
@@ -91,28 +93,20 @@ int main(int argc, char **argv)
 
         case FRAME_RECEIVED:
             len = recv_frame((unsigned char *)&f, sizeof f);
-
             if (len < 5 || crc32((unsigned char *)&f, len) != 0)
             {
                 dbg_event("**** Receiver Error, Bad CRC Checksum    kind is %d\n", f.kind);
                 //出了问题，我应该通知发送方让他重传。
-                right_frame = false;
-            }
-            if (right_frame == false)
-            {
-                //收到了错误的帧，我发送了NAK，
-                dbg_event("---- NAK  %d happen\n", arg);
+                frame_expected = 1 - frame_expected;
                 send_nak_frame();
-                right_frame = true;
+
                 break;
             }
-
             if (f.kind == FRAME_ACK)
                 dbg_frame("Recv ACK  %d\n", f.ack);
             if (f.kind == FRAME_NAK)
             {
                 dbg_frame("Recv NAK  %d\n", f.ack);
-                //不出现是因为没有接受过NAK
             }
 
             if (f.kind == FRAME_DATA)
@@ -122,9 +116,7 @@ int main(int argc, char **argv)
                 {
                     put_packet(f.data, len - 7);
                     frame_expected = 1 - frame_expected;
-                    send_ack_frame(); //不会被送到网络层，但是会导致最后一个收到的数据帧的确认备重复发过去
-                    //这里是接到了受损帧和重复帧都处理方式。
-                    //首先我从len<5 这里知道了有问题，但是不是在哪里处理的
+                    send_ack_frame();
                 }
                 else
                 {
@@ -134,17 +126,16 @@ int main(int argc, char **argv)
             }
             if (f.ack == frame_nr)
             {
-                //ack是我刚刚发过去的帧的确认，就是说我重传过去的帧备确认成功了。
-                stop_timer(frame_nr); //所以暂停这个计时器
+                stop_timer(frame_nr);
                 nbuffered--;
                 frame_nr = 1 - frame_nr;
             }
             break;
 
-        case DATA_TIMEOUT:
-            dbg_event("---- DATA %d timeout\n", arg);
-            send_data_frame();
-            break;
+            // case DATA_TIMEOUT:
+            //     dbg_event("---- DATA %d timeout\n", arg);
+            //     send_data_frame();
+            //     break;
         }
 
         if (nbuffered < 1 && phl_ready)
