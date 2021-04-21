@@ -100,7 +100,7 @@ int main(int argc, char **argv)
             }
             if (right_frame == false)
             {
-                //收到了错误的帧，我发送了NAK，
+                //收到了错误的帧，我发送了NAK，只添加NAK只能保证更快的回复，不用等待超时,不能显著提高结果
                 dbg_event("---- NAK  %d happen\n", arg);
                 send_nak_frame();
                 right_frame = true;
