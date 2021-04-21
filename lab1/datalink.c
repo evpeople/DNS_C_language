@@ -108,10 +108,10 @@ int main(int argc, char **argv)
             }
             break;
 
-        case DATA_TIMEOUT:
-            dbg_event("---- DATA %d timeout\n", arg);
-            send_data_frame();
-            break;
+            // case DATA_TIMEOUT:
+            //     dbg_event("---- DATA %d timeout\n", arg);
+            //     send_data_frame();
+            //     break;
         }
 
         if (nbuffered < 1 && phl_ready)

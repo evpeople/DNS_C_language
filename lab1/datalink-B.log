@@ -1,0 +1,144 @@
+000.000 =============================================================
+000.000                     Station B                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 2.0E-01
+000.000 Log file "./datalink-B.log", TCP port 59144, debug mask 0x07
+000.000 Station B is connecting station A (TCP port 59144) ... Failed!
+000.000 Station B is connecting station A (TCP port 59144) ... Failed!
+000.000 Station B is connecting station A (TCP port 59144) ... Done.
+000.399 New epoch: Wed Apr 21 20:53:14 2021
+000.399 =================================================================
+000.399 
+000.399 Designed by Jiang Yanjun, build: Apr 21 2021  20:53:08
+000.950 Recv DATA 0 1, ID 10000
+000.951 Send ACK2  0
+001.045 Send DATA 0 0, ID 20000
+001.765 Recv DATA 1 1, ID 10001
+001.765 Send ACK2  1
+002.579 Recv DATA 0 1, ID 10002
+002.579 Send ACK2  0
+003.391 Recv DATA 1 1, ID 10003
+003.391 .... 4 packets received, 3025 bps, 37.81%, Err 0 (0.0e+00)
+003.391 Send ACK2  1
+003.550 ---- DATA 0 timeout
+003.550 Send DATA 0 1, ID 20000
+004.088 Impose noise on received data, 1/10616=9.4E-05
+004.196 Recv DATA 0 1, ID 10004
+004.197 Send ACK2  0
+004.354 **** Receiver Error, Bad CRC Checksum
+004.990 Recv DATA 1 0, ID 10005
+004.991 Send ACK2  1
+004.992 Send DATA 1 1, ID 20001
+005.795 Recv DATA 0 0, ID 10006
+005.795 .... 7 packets received, 2804 bps, 35.05%, Err 1 (6.7e-05)
+005.795 Send ACK2  0
+006.591 Recv DATA 1 0, ID 10007
+006.591 Send ACK2  1
+007.391 Recv DATA 0 0, ID 10008
+007.391 Send ACK2  0
+007.486 ---- DATA 1 timeout
+007.486 Send DATA 1 0, ID 20001
+008.018 Impose noise on received data, 2/21232=9.4E-05
+008.190 Recv DATA 1 0, ID 10009
+008.190 .... 10 packets received, 2728 bps, 34.10%, Err 2 (9.4e-05)
+008.190 Send ACK2  1
+008.737 Recv ACK  1
+008.737 Send DATA 0 1, ID 20002
+009.533 Recv ACK  0
+009.533 Send DATA 1 1, ID 20003
+010.062 Impose noise on received data, 3/23456=1.3E-04
+010.326 **** Receiver Error, Bad CRC Checksum
+011.498 Recv DATA 0 1, ID 10010
+011.498 .... 11 packets received, 2083 bps, 26.04%, Err 3 (1.2e-04)
+011.498 Send ACK2  0
+011.498 Send DATA 0 0, ID 20004
+012.296 Recv DATA 1 1, ID 10011
+012.296 Send ACK2  1
+013.110 Recv DATA 0 1, ID 10012
+013.110 Send ACK2  0
+013.922 Recv DATA 1 1, ID 10013
+013.922 .... 14 packets received, 2166 bps, 27.07%, Err 3 (9.4e-05)
+013.922 Send ACK2  1
+013.999 ---- DATA 0 timeout
+013.999 Send DATA 0 1, ID 20004
+014.535 Impose noise on received data, 4/34072=1.2E-04
+014.722 Recv DATA 0 1, ID 10014
+014.722 Send ACK2  0
+014.800 **** Receiver Error, Bad CRC Checksum
+015.266 Impose noise on received data, 5/36184=1.4E-04
+015.530 **** Receiver Error, Bad CRC Checksum
+016.511 ---- DATA 0 timeout
+016.511 Send DATA 0 0, ID 20004
+017.306 Send DATA 1 0, ID 20005
+017.762 Recv ACK  0
+017.840 Impose noise on received data, 6/38464=1.6E-04
+018.012 Recv DATA 1 0, ID 10015
+018.013 .... 16 packets received, 1891 bps, 23.64%, Err 6 (1.6e-04)
+018.013 Send ACK2  1
+018.108 **** Receiver Error, Bad CRC Checksum
+018.814 Recv DATA 0 1, ID 10016
+018.814 Send ACK2  0
+018.814 Send DATA 0 0, ID 20006
+019.612 Recv DATA 1 1, ID 10017
+019.612 Send ACK2  1
+020.405 Recv DATA 0 1, ID 10018
+020.405 .... 19 packets received, 1973 bps, 24.66%, Err 6 (1.3e-04)
+020.405 Send ACK2  0
+021.201 Recv DATA 1 1, ID 10019
+021.201 Send ACK2  1
+021.312 ---- DATA 0 timeout
+021.312 Send DATA 0 1, ID 20006
+022.002 Recv DATA 0 1, ID 10020
+022.002 Send ACK2  0
+022.128 Recv ACK  0
+022.128 Send DATA 1 0, ID 20007
+022.674 Impose noise on received data, 7/51248=1.4E-04
+022.816 Recv DATA 1 0, ID 10021
+022.817 .... 22 packets received, 2036 bps, 25.45%, Err 7 (1.4e-04)
+022.817 Send ACK2  1
+022.943 **** Receiver Error, Bad CRC Checksum
+023.612 Recv DATA 0 1, ID 10022
+023.612 Send ACK2  0
+023.612 Send DATA 0 0, ID 20008
+024.158 Impose noise on received data, 8/55528=1.4E-04
+024.409 Recv DATA 1 1, ID 10023
+024.409 Send ACK2  1
+024.425 **** Receiver Error, Bad CRC Checksum
+025.217 Recv DATA 0 0, ID 10024
+025.217 .... 25 packets received, 2087 bps, 26.09%, Err 8 (1.4e-04)
+025.218 Send ACK2  0
+025.219 Send DATA 1 0, ID 20009
+026.019 Recv DATA 1 0, ID 10025
+026.019 Send ACK2  1
+026.831 Recv DATA 0 0, ID 10026
+026.831 Send ACK2  0
+027.125 Impose noise on received data, 9/62000=1.5E-04
+027.626 **** Receiver Error, Bad CRC Checksum
+027.719 ---- DATA 1 timeout
+027.719 Send DATA 1 0, ID 20009
+030.132 Recv DATA 1 0, ID 10027
+030.132 .... 28 packets received, 1947 bps, 24.34%, Err 9 (1.4e-04)
+030.132 Send ACK2  1
+030.226 ---- DATA 1 timeout
+030.226 Send DATA 1 1, ID 20009
+030.759 Impose noise on received data, 10/68256=1.5E-04
+030.929 Recv DATA 0 0, ID 10028
+030.930 Send ACK2  0
+031.023 **** Receiver Error, Bad CRC Checksum
+031.722 Recv DATA 1 1, ID 10029
+031.723 Send ACK2  1
+031.723 Send DATA 0 1, ID 20010
+032.290 Impose noise on received data, 11/72536=1.5E-04
+032.537 Recv DATA 0 1, ID 10030
+032.537 .... 31 packets received, 1993 bps, 24.91%, Err 11 (1.5e-04)
+032.537 Send ACK2  0
+032.554 **** Receiver Error, Bad CRC Checksum
+033.350 Recv DATA 1 0, ID 10031
+033.350 Send ACK2  1
+033.350 Send DATA 1 1, ID 20011
+034.148 Recv DATA 0 0, ID 10032
+034.148 Send ACK2  0
+034.163 Recv ACK  1
+034.163 Send DATA 0 0, ID 20012
+034.522 TCP disconnected.
