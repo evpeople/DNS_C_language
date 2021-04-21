@@ -110,9 +110,12 @@ int main(int argc, char **argv)
             if (f.kind == FRAME_ACK)
                 dbg_frame("Recv ACK  %d\n", f.ack);
             if (f.kind == FRAME_NAK)
-            {
+            { //此处收到
                 dbg_frame("Recv NAK  %d\n", f.ack);
-                //不出现是因为没有接受过NAK
+                //不出现是因为没有接受过NAK，当收到NAK之后，我应该直接重传消息，并且停止计时器，重传的帧等价于超时之后的那一帧，
+                //遇到的问题是，怎么停止计时器，NAK有可能被丢掉，所以普通的超时还要保存，经过分析之后，其实并没有影响
+                send_data_frame();
+                //直接重置计时器,在上一行已经重置了
             }
 
             if (f.kind == FRAME_DATA)
