@@ -15,7 +15,7 @@ struct FRAME
     unsigned int padding;
 };
 
-static unsigned char frame_nr = 0, buffer[PKT_LEN], nbuffered;
+static unsigned char frame_nr = 0, buffer[PKT_LEN], nbuffered; //全局变量，默认为0，frame_nr 在 0 1 之间改变，frame_nr 是上一个发送的帧，但是更大的窗口就不能这样操作了
 static unsigned char frame_expected = 0;
 static int phl_ready = 0;
 
@@ -76,13 +76,14 @@ int main(int argc, char **argv)
     for (;;)
     {
         //未实现ACK定时器，也就是说没有实现捎带确认
+        //需要自己实现把帧放到指定的窗口
         event = wait_for_event(&arg);
         bool right_frame = true;
         switch (event)
         {
         case NETWORK_LAYER_READY:
-            get_packet(buffer);
-            nbuffered++;
+            get_packet(buffer); //将待发送分组缓冲到buffer中
+            nbuffered++;        //缓冲的总数？
             send_data_frame();
             break;
 
@@ -138,9 +139,9 @@ int main(int argc, char **argv)
             }
             if (f.ack == frame_nr)
             {
-                //ack是我刚刚发过去的帧的确认，就是说我重传过去的帧备确认成功了。
+                //ack是我刚刚发过去的帧的确认，就是说我重传过去的帧备确认成功了。不一定是重传过去的，是所有的，
                 stop_timer(frame_nr); //所以暂停这个计时器
-                nbuffered--;
+                nbuffered--;          //缓冲总数减少一位
                 frame_nr = 1 - frame_nr;
             }
             break;
@@ -151,9 +152,9 @@ int main(int argc, char **argv)
             break;
         }
 
-        if (nbuffered < 1 && phl_ready)
+        if (nbuffered < 1 && phl_ready) //缓冲区是空的，允许从网络层拿到新的数据
             enable_network_layer();
         else
-            disable_network_layer();
+            disable_network_layer(); //没有收到ACK？
     }
 }
