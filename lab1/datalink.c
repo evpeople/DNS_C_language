@@ -75,6 +75,7 @@ int main(int argc, char **argv)
 
     for (;;)
     {
+        //未实现ACK定时器，也就是说没有实现捎带确认
         event = wait_for_event(&arg);
         bool right_frame = true;
         switch (event)
