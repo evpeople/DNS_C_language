@@ -5,7 +5,7 @@
 #include "datalink.h"
 
 #define DATA_TIMER 2000
-#define ACK_TIMER 1000
+#define ACK_TIMER 1500
 
 struct FRAME
 {
@@ -34,9 +34,9 @@ static void send_data_frame(void)
 
     s.kind = FRAME_DATA;
     s.seq = frame_nr;
+    s.ack = 1 - frame_expected;
     if (start_ack_time)
     {
-        s.ack = 1 - frame_expected;
         stop_ack_timer();
         start_ack_time = false;
     }
@@ -118,8 +118,7 @@ int main(int argc, char **argv)
             }
 
             if (f.kind == FRAME_ACK)
-                dbg_frame("Recv ACK  %d\n", f.ack);
-            dbg_frame("ACK计时器的状态  %d\n", start_ack_time);
+                dbg_frame("Recv ACK  %d\n  ACK计时器的状态  %d\n", f.ack, start_ack_time);
             if (f.kind == FRAME_NAK)
             { //此处收到
                 dbg_frame("Recv NAK  %d\n", f.ack);
@@ -139,6 +138,7 @@ int main(int argc, char **argv)
                     //将数据放到网络层
                     frame_expected = 1 - frame_expected;
                     start_ack_timer(ACK_TIMER);
+                    //我开启了ACK计时器，然后等待一个从网络层来的帧，来了之后把ACK信息放到这个帧里，同时停止ACK计时器，之后传到另一个站点，
                     start_ack_time = true;
                     // send_ack_frame(); //不会被送到网络层，但是会导致最后一个收到的数据帧的确认备重复发过去
                     //这里是接到了受损帧和重复帧都处理方式。
@@ -164,9 +164,11 @@ int main(int argc, char **argv)
             send_data_frame();
             break;
         case ACK_TIMEOUT:
+            dbg_frame("超时的时候，ACK计时器的状态  %d\n", start_ack_time);
             dbg_event("---- ACK %d timeout\n", arg);
             send_ack_frame();
             start_ack_time = false;
+            dbg_frame("超时之后，ACK计时器的状态  %d\n", start_ack_time);
             //ACK定时器超时了
         }
 
