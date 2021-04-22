@@ -84,7 +84,6 @@ int main(int argc, char **argv)
     bool right_frame = true;
     for (;;)
     {
-        //未实现ACK定时器，也就是说没有实现捎带确认
         //需要自己实现把帧放到指定的窗口
         event = wait_for_event(&arg);
         switch (event)
