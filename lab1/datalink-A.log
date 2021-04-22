@@ -2,175 +2,22 @@
 000.000                     Station A                               
 000.000 -------------------------------------------------------------
 000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
-000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 9.0E-01
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
 000.000 Log file "./datalink-A.log", TCP port 59144, debug mask 0x07
 000.000 Station A is waiting for station B on TCP port 59144 ... Done.
-000.922 New epoch: Thu Apr 22 11:34:10 2021
-000.922 =================================================================
-000.922 
-000.922 Designed by Jiang Yanjun, build: Apr 22 2021  11:33:55
-000.922 Send DATA 0 1, ID 10000
-001.581 Recv DATA 0 1, ID 20000
-003.093 超时的时候，ACK计时器的状态  1
-003.093 ---- ACK 128 timeout
-003.093 Send ACK  0
-003.094 超时之后，ACK计时器的状态  0
-003.267 Recv ACK  0
-003.267   ACK计时器的状态  0
-003.267 Send DATA 1 0, ID 10001
-003.893 Recv DATA 1 0, ID 20001
-003.893 .... 2 packets received, 1586 bps, 19.83%, Err 0 (0.0e+00)
-005.408 超时的时候，ACK计时器的状态  1
-005.408 ---- ACK 128 timeout
-005.408 Send ACK  1
-005.409 超时之后，ACK计时器的状态  0
-005.580 Recv ACK  1
-005.580   ACK计时器的状态  0
-005.580 Send DATA 0 1, ID 10002
-006.222 Recv DATA 0 1, ID 20002
-006.222 .... 3 packets received, 1251 bps, 15.64%, Err 0 (0.0e+00)
-007.736 超时的时候，ACK计时器的状态  1
-007.736 ---- ACK 128 timeout
-007.736 Send ACK  0
-007.737 超时之后，ACK计时器的状态  0
-007.910 Recv ACK  0
-007.910   ACK计时器的状态  0
-007.910 Send DATA 1 0, ID 10003
-008.530 Recv DATA 1 0, ID 20003
-008.530 .... 4 packets received, 1135 bps, 14.18%, Err 0 (0.0e+00)
-010.031 超时的时候，ACK计时器的状态  1
-010.031 ---- ACK 128 timeout
-010.031 Send ACK  1
-010.032 超时之后，ACK计时器的状态  0
-010.234 Recv ACK  1
-010.234   ACK计时器的状态  0
-010.234 Send DATA 0 1, ID 10004
-010.829 Recv DATA 0 1, ID 20004
-010.829 .... 5 packets received, 1076 bps, 13.45%, Err 0 (0.0e+00)
-012.339 超时的时候，ACK计时器的状态  1
-012.339 ---- ACK 128 timeout
-012.339 Send ACK  0
-012.340 超时之后，ACK计时器的状态  0
-012.543 Recv ACK  0
-012.543   ACK计时器的状态  0
-012.543 Send DATA 1 0, ID 10005
-013.137 Recv DATA 1 0, ID 20005
-013.138 .... 6 packets received, 1039 bps, 12.99%, Err 0 (0.0e+00)
-014.646 超时的时候，ACK计时器的状态  1
-014.646 ---- ACK 128 timeout
-014.646 Send ACK  1
-014.646 超时之后，ACK计时器的状态  0
-014.866 Recv ACK  1
-014.866   ACK计时器的状态  0
-014.866 Send DATA 0 1, ID 10006
-015.445 Recv DATA 0 1, ID 20006
-015.445 .... 7 packets received, 1014 bps, 12.68%, Err 0 (0.0e+00)
-016.956 超时的时候，ACK计时器的状态  1
-016.956 ---- ACK 128 timeout
-016.956 Send ACK  0
-016.957 超时之后，ACK计时器的状态  0
-017.191 Recv ACK  0
-017.192   ACK计时器的状态  0
-017.192 Send DATA 1 0, ID 10007
-017.755 Recv DATA 1 0, ID 20007
-017.755 .... 8 packets received, 996 bps, 12.45%, Err 0 (0.0e+00)
-019.269 超时的时候，ACK计时器的状态  1
-019.269 ---- ACK 128 timeout
-019.269 Send ACK  1
-019.270 超时之后，ACK计时器的状态  0
-019.503 Recv ACK  1
-019.503   ACK计时器的状态  0
-019.503 Send DATA 0 1, ID 10008
-020.079 Recv DATA 0 1, ID 20008
-020.079 .... 9 packets received, 982 bps, 12.28%, Err 0 (0.0e+00)
-021.587 超时的时候，ACK计时器的状态  1
-021.587 ---- ACK 128 timeout
-021.587 Send ACK  0
-021.587 超时之后，ACK计时器的状态  0
-021.804 Recv ACK  0
-021.804   ACK计时器的状态  0
-021.804 Send DATA 1 0, ID 10009
-022.381 Recv DATA 1 0, ID 20009
-022.381 .... 10 packets received, 972 bps, 12.15%, Err 0 (0.0e+00)
-023.891 超时的时候，ACK计时器的状态  1
-023.891 ---- ACK 128 timeout
-023.891 Send ACK  1
-023.892 超时之后，ACK计时器的状态  0
-024.110 Recv ACK  1
-024.111   ACK计时器的状态  0
-024.111 Send DATA 0 1, ID 10010
-024.676 Recv DATA 0 1, ID 20010
-024.676 .... 11 packets received, 964 bps, 12.05%, Err 0 (0.0e+00)
-026.183 超时的时候，ACK计时器的状态  1
-026.183 ---- ACK 128 timeout
-026.183 Send ACK  0
-026.184 超时之后，ACK计时器的状态  0
-026.434 Recv ACK  0
-026.434   ACK计时器的状态  0
-026.434 Send DATA 1 0, ID 10011
-027.002 Recv DATA 1 0, ID 20011
-027.002 .... 12 packets received, 957 bps, 11.96%, Err 0 (0.0e+00)
-028.514 超时的时候，ACK计时器的状态  1
-028.514 ---- ACK 128 timeout
-028.514 Send ACK  1
-028.515 超时之后，ACK计时器的状态  0
-028.762 Recv ACK  1
-028.762   ACK计时器的状态  0
-028.762 Send DATA 0 1, ID 10012
-029.310 Recv DATA 0 1, ID 20012
-029.310 .... 13 packets received, 951 bps, 11.89%, Err 0 (0.0e+00)
-030.816 超时的时候，ACK计时器的状态  1
-030.817 ---- ACK 128 timeout
-030.817 Send ACK  0
-030.817 超时之后，ACK计时器的状态  0
-031.068 Recv ACK  0
-031.068   ACK计时器的状态  0
-031.068 Send DATA 1 0, ID 10013
-031.605 Recv DATA 1 0, ID 20013
-031.605 .... 14 packets received, 946 bps, 11.83%, Err 0 (0.0e+00)
-033.111 超时的时候，ACK计时器的状态  1
-033.111 ---- ACK 128 timeout
-033.111 Send ACK  1
-033.113 超时之后，ACK计时器的状态  0
-033.382 Recv ACK  1
-033.382   ACK计时器的状态  0
-033.382 Send DATA 0 1, ID 10014
-033.926 Recv DATA 0 1, ID 20014
-033.926 .... 15 packets received, 942 bps, 11.77%, Err 0 (0.0e+00)
-035.440 超时的时候，ACK计时器的状态  1
-035.440 ---- ACK 128 timeout
-035.440 Send ACK  0
-035.440 超时之后，ACK计时器的状态  0
-035.688 Recv ACK  0
-035.688   ACK计时器的状态  0
-035.688 Send DATA 1 0, ID 10015
-036.236 Recv DATA 1 0, ID 20015
-036.236 .... 16 packets received, 938 bps, 11.73%, Err 0 (0.0e+00)
-037.746 超时的时候，ACK计时器的状态  1
-037.746 ---- ACK 128 timeout
-037.746 Send ACK  1
-037.747 超时之后，ACK计时器的状态  0
-037.996 Recv ACK  1
-037.996   ACK计时器的状态  0
-037.997 Send DATA 0 1, ID 10016
-038.548 Recv DATA 0 1, ID 20016
-038.548 .... 17 packets received, 935 bps, 11.69%, Err 0 (0.0e+00)
-040.058 超时的时候，ACK计时器的状态  1
-040.059 ---- ACK 128 timeout
-040.059 Send ACK  0
-040.059 超时之后，ACK计时器的状态  0
-040.307 Recv ACK  0
-040.307   ACK计时器的状态  0
-040.307 Send DATA 1 0, ID 10017
-040.857 Recv DATA 1 0, ID 20017
-040.857 .... 18 packets received, 932 bps, 11.65%, Err 0 (0.0e+00)
-042.366 超时的时候，ACK计时器的状态  1
-042.366 ---- ACK 128 timeout
-042.366 Send ACK  1
-042.367 超时之后，ACK计时器的状态  0
-042.616 Recv ACK  1
-042.616   ACK计时器的状态  0
-042.616 Send DATA 0 1, ID 10018
-043.162 Recv DATA 0 1, ID 20018
-043.162 .... 19 packets received, 930 bps, 11.62%, Err 0 (0.0e+00)
-043.909 TCP disconnected.
+000.292 New epoch: Thu Apr 22 21:31:26 2021
+000.292 =================================================================
+000.292 
+000.292 Designed by Jiang Yanjun, build: Apr 22 2021  21:30:34
+000.292 Send DATA 0 1, ID 10000
+001.127 Impose noise on received data, 1/656=1.5E-03
+001.575 **** Receiver Error, Bad CRC Checksum    kind is 1
+001.576 ---- NAK  32562 happen
+001.576 Send NAK  1
+002.822 ---- DATA 0 timeout
+002.822 Send DATA 0 1, ID 10000
+004.071 Recv DATA 0 1, ID 20000
+004.072 .... 1 packets received, 741 bps, 9.27%, Err 1 (2.4e-04)
+005.323 ---- DATA 0 timeout
+005.323 Send DATA 0 0, ID 10000
+005.859 TCP disconnected.

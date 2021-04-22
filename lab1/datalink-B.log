@@ -2,103 +2,22 @@
 000.000                     Station B                               
 000.000 -------------------------------------------------------------
 000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
-000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 9.0E-01
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
 000.000 Log file "./datalink-B.log", TCP port 59144, debug mask 0x07
+000.000 Station B is connecting station A (TCP port 59144) ... Failed!
+000.000 Station B is connecting station A (TCP port 59144) ... Failed!
 000.000 Station B is connecting station A (TCP port 59144) ... Done.
-000.922 New epoch: Thu Apr 22 11:34:10 2021
-000.922 =================================================================
-000.922 
-000.922 Designed by Jiang Yanjun, build: Apr 22 2021  11:33:55
-001.048 Send DATA 0 1, ID 20000
-001.476 Recv DATA 0 1, ID 10000
-002.987 超时的时候，ACK计时器的状态  1
-002.987 ---- ACK 128 timeout
-002.987 Send ACK  0
-002.988 超时之后，ACK计时器的状态  0
-003.363 Recv ACK  0
-003.363   ACK计时器的状态  0
-003.363 Send DATA 1 0, ID 20001
-003.805 Recv DATA 1 0, ID 10001
-003.805 .... 2 packets received, 1577 bps, 19.72%, Err 0 (0.0e+00)
-005.312 超时的时候，ACK计时器的状态  1
-005.313 ---- ACK 128 timeout
-005.313 Send ACK  1
-005.314 超时之后，ACK计时器的状态  0
-005.689 Recv ACK  1
-005.689   ACK计时器的状态  0
-005.689 Send DATA 0 1, ID 20002
-006.113 Recv DATA 0 1, ID 10002
-006.113 .... 3 packets received, 1253 bps, 15.66%, Err 0 (0.0e+00)
-007.625 超时的时候，ACK计时器的状态  1
-007.625 ---- ACK 128 timeout
-007.625 Send ACK  0
-007.626 超时之后，ACK计时器的状态  0
-008.016 Recv ACK  0
-008.016   ACK计时器的状态  0
-008.016 Send DATA 1 0, ID 20003
-008.439 Recv DATA 1 0, ID 10003
-008.439 .... 4 packets received, 1133 bps, 14.16%, Err 0 (0.0e+00)
-009.954 超时的时候，ACK计时器的状态  1
-009.954 ---- ACK 128 timeout
-009.954 Send ACK  1
-009.955 超时之后，ACK计时器的状态  0
-010.297 Recv ACK  1
-010.297   ACK计时器的状态  0
-010.297 Send DATA 0 1, ID 20004
-010.751 Recv DATA 0 1, ID 10004
-010.752 .... 5 packets received, 1073 bps, 13.41%, Err 0 (0.0e+00)
-012.262 超时的时候，ACK计时器的状态  1
-012.262 ---- ACK 128 timeout
-012.262 Send ACK  0
-012.263 超时之后，ACK计时器的状态  0
-012.621 Recv ACK  0
-012.621   ACK计时器的状态  0
-012.621 Send DATA 1 0, ID 20005
-013.073 Recv DATA 1 0, ID 10005
-013.073 .... 6 packets received, 1036 bps, 12.95%, Err 0 (0.0e+00)
-014.584 超时的时候，ACK计时器的状态  1
-014.584 ---- ACK 128 timeout
-014.585 Send ACK  1
-014.585 超时之后，ACK计时器的状态  0
-014.913 Recv ACK  1
-014.913   ACK计时器的状态  0
-014.913 Send DATA 0 1, ID 20006
-015.403 Recv DATA 0 1, ID 10006
-015.403 .... 7 packets received, 1010 bps, 12.62%, Err 0 (0.0e+00)
-016.914 超时的时候，ACK计时器的状态  1
-016.914 ---- ACK 128 timeout
-016.914 Send ACK  0
-016.915 超时之后，ACK计时器的状态  0
-017.226 Recv ACK  0
-017.226   ACK计时器的状态  0
-017.226 Send DATA 1 0, ID 20007
-017.711 Recv DATA 1 0, ID 10007
-017.711 .... 8 packets received, 993 bps, 12.41%, Err 0 (0.0e+00)
-019.222 超时的时候，ACK计时器的状态  1
-019.222 ---- ACK 128 timeout
-019.222 Send ACK  1
-019.223 超时之后，ACK计时器的状态  0
-019.548 Recv ACK  1
-019.548   ACK计时器的状态  0
-019.548 Send DATA 0 1, ID 20008
-020.018 Recv DATA 0 1, ID 10008
-020.018 .... 9 packets received, 980 bps, 12.25%, Err 0 (0.0e+00)
-021.525 超时的时候，ACK计时器的状态  1
-021.525 ---- ACK 128 timeout
-021.525 Send ACK  0
-021.526 超时之后，ACK计时器的状态  0
-021.852 Recv ACK  0
-021.852   ACK计时器的状态  0
-021.852 Send DATA 1 0, ID 20009
-022.321 Recv DATA 1 0, ID 10009
-022.321 .... 10 packets received, 970 bps, 12.13%, Err 0 (0.0e+00)
-023.834 超时的时候，ACK计时器的状态  1
-023.834 ---- ACK 128 timeout
-023.834 Send ACK  1
-023.834 超时之后，ACK计时器的状态  0
-024.158 Recv ACK  1
-024.158   ACK计时器的状态  0
-024.158 Send DATA 0 1, ID 20010
-024.645 Recv DATA 0 1, ID 10010
-024.645 .... 11 packets received, 961 bps, 12.02%, Err 0 (0.0e+00)
-026.152 超时的�
+000.292 New epoch: Thu Apr 22 21:31:26 2021
+000.292 =================================================================
+000.292 
+000.292 Designed by Jiang Yanjun, build: Apr 22 2021  21:30:34
+000.832 Recv DATA 0 1, ID 10000
+001.049 Send DATA 0 0, ID 20000
+003.342 Recv DATA 0 1, ID 10000
+003.342 Send NAK  1
+003.545 ---- DATA 0 timeout
+003.545 Send DATA 0 1, ID 20000
+005.857 Recv DATA 0 0, ID 10000
+005.857 
+005.857 FATAL: Network Layer received a bad packet from data link layer
+005.857 Abort.
