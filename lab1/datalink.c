@@ -145,7 +145,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    frame_expected = 1 - frame_expected;
+                    // frame_expected = 1 - frame_expected;
                     send_nak_frame();
                 }
             }
