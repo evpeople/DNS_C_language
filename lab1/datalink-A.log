@@ -1,0 +1,40 @@
+000.000 =============================================================
+000.000                     Station A                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 9.0E-09
+000.000 Log file "./datalink-A.log", TCP port 59144, debug mask 0x07
+000.000 Station A is waiting for station B on TCP port 59144 ... Done.
+000.284 New epoch: Thu Apr 22 11:15:29 2021
+000.284 =================================================================
+000.284 
+000.284 Designed by Jiang Yanjun, build: Apr 22 2021  11:15:23
+000.284 Send DATA 0 0, ID 10000
+002.122 Recv ACK  0
+002.122 ACK计时器的状态  0
+002.122 Send DATA 1 0, ID 10001
+003.949 Recv ACK  1
+003.949 ACK计时器的状态  0
+003.949 Send DATA 0 0, ID 10002
+005.755 Recv ACK  0
+005.756 ACK计时器的状态  0
+005.756 Send DATA 1 0, ID 10003
+007.579 Recv ACK  1
+007.579 ACK计时器的状态  0
+007.579 Send DATA 0 0, ID 10004
+009.404 Recv ACK  0
+009.404 ACK计时器的状态  0
+009.404 Send DATA 1 0, ID 10005
+011.210 Recv ACK  1
+011.210 ACK计时器的状态  0
+011.210 Send DATA 0 0, ID 10006
+013.015 Recv ACK  0
+013.015 ACK计时器的状态  0
+013.015 Send DATA 1 0, ID 10007
+014.833 Recv ACK  1
+014.833 ACK计时器的状态  0
+014.833 Send DATA 0 0, ID 10008
+016.654 Recv ACK  0
+016.654 ACK计时器的状态  0
+016.654 Send DATA 1 0, ID 10009
+018.029 TCP disconnected.

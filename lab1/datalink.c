@@ -5,6 +5,7 @@
 #include "datalink.h"
 
 #define DATA_TIMER 2000
+#define ACK_TIMER 1000
 
 struct FRAME
 {
@@ -19,6 +20,7 @@ static unsigned char frame_nr = 0, buffer[PKT_LEN], nbuffered; //全局变量，
 static unsigned char frame_expected = 0;
 static int phl_ready = 0;
 
+static bool start_ack_time = false;
 static void put_frame(unsigned char *frame, int len)
 {
     *(unsigned int *)(frame + len) = crc32(frame, len);
@@ -32,7 +34,13 @@ static void send_data_frame(void)
 
     s.kind = FRAME_DATA;
     s.seq = frame_nr;
-    s.ack = 1 - frame_expected;
+    if (start_ack_time)
+    {
+        s.ack = 1 - frame_expected;
+        stop_ack_timer();
+        start_ack_time = false;
+    }
+
     memcpy(s.data, buffer, PKT_LEN);
 
     dbg_frame("Send DATA %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
@@ -73,12 +81,12 @@ int main(int argc, char **argv)
 
     disable_network_layer();
 
+    bool right_frame = true;
     for (;;)
     {
         //未实现ACK定时器，也就是说没有实现捎带确认
         //需要自己实现把帧放到指定的窗口
         event = wait_for_event(&arg);
-        bool right_frame = true;
         switch (event)
         {
         case NETWORK_LAYER_READY:
@@ -111,9 +119,11 @@ int main(int argc, char **argv)
 
             if (f.kind == FRAME_ACK)
                 dbg_frame("Recv ACK  %d\n", f.ack);
+            dbg_frame("ACK计时器的状态  %d\n", start_ack_time);
             if (f.kind == FRAME_NAK)
             { //此处收到
                 dbg_frame("Recv NAK  %d\n", f.ack);
+
                 //不出现是因为没有接受过NAK，当收到NAK之后，我应该直接重传消息，并且停止计时器，重传的帧等价于超时之后的那一帧，
                 //遇到的问题是，怎么停止计时器，NAK有可能被丢掉，所以普通的超时还要保存，经过分析之后，其实并没有影响
                 send_data_frame();
@@ -126,8 +136,11 @@ int main(int argc, char **argv)
                 if (f.seq == frame_expected)
                 {
                     put_packet(f.data, len - 7);
+                    //将数据放到网络层
                     frame_expected = 1 - frame_expected;
-                    send_ack_frame(); //不会被送到网络层，但是会导致最后一个收到的数据帧的确认备重复发过去
+                    start_ack_timer(ACK_TIMER);
+                    start_ack_time = true;
+                    // send_ack_frame(); //不会被送到网络层，但是会导致最后一个收到的数据帧的确认备重复发过去
                     //这里是接到了受损帧和重复帧都处理方式。
                     //首先我从len<5 这里知道了有问题，但是不是在哪里处理的
                 }
@@ -150,6 +163,11 @@ int main(int argc, char **argv)
             dbg_event("---- DATA %d timeout\n", arg);
             send_data_frame();
             break;
+        case ACK_TIMEOUT:
+            dbg_event("---- ACK %d timeout\n", arg);
+            send_ack_frame();
+            start_ack_time = false;
+            //ACK定时器超时了
         }
 
         if (nbuffered < 1 && phl_ready) //缓冲区是空的，允许从网络层拿到新的数据
