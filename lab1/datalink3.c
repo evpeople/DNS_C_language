@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "protocol.h"
 #include "datalink.h"
 
 #define DATA_TIMER 2000
+#define BUFFERS_NUM 10
+static unsigned char send_buffers[BUFFERS_NUM][PKT_LEN];
+static unsigned char frame_expected = 0;
+static unsigned char number_of_send = 0;
+static unsigned char frame_expected = 0;
+static unsigned char get_buffer[PKT_LEN];
+static unsigned char have_ack[BUFFERS_NUM + 1];
+
+static bool phl_ready = false;
 
 struct FRAME
 {
@@ -14,133 +24,102 @@ struct FRAME
     unsigned char data[PKT_LEN];
     unsigned int padding;
 };
-
-static unsigned char frame_nr = 0, buffer[PKT_LEN], nbuffered;
-static unsigned char frame_expected = 0;
-static int phl_ready = 0;
-
-static void put_frame(unsigned char *frame, int len)
-{
-    *(unsigned int *)(frame + len) = crc32(frame, len);
-    send_frame(frame, len + 4);
-    phl_ready = 0;
-}
-
-static void send_data_frame(void)
-{
-    struct FRAME s;
-
-    s.kind = FRAME_DATA;
-    s.seq = frame_nr;
-    s.ack = 1 - frame_expected;
-    memcpy(s.data, buffer, PKT_LEN);
-
-    dbg_frame("Send DATA %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
-
-    put_frame((unsigned char *)&s, 3 + PKT_LEN);
-    start_timer(frame_nr, DATA_TIMER);
-}
-
-static void send_ack_frame(void)
-{
-    struct FRAME s;
-
-    s.kind = FRAME_ACK;
-    s.ack = 1 - frame_expected;
-
-    dbg_frame("Send ACK  %d\n", s.ack);
-
-    put_frame((unsigned char *)&s, 2);
-}
-static void send_nak_frame(void)
-{
-    struct FRAME s;
-
-    s.kind = FRAME_NAK;
-    s.ack = 1 - frame_expected;
-
-    dbg_frame("Send NAK  %d\n", s.ack);
-
-    put_frame((unsigned char *)&s, 2);
-}
+static void send_data_frame();
+static void send_ack_frame();
 int main(int argc, char **argv)
 {
     int event, arg;
-    struct FRAME f;
-    int len = 0;
+    int len; //帧的长度？
+    int not_recvive = 0;
+    struct FRAME to_network;
+    struct FRAME to_phl;
 
     protocol_init(argc, argv); //初始化物理层信道以及debug参数
     lprintf("Designed by Jiang Yanjun, build: " __DATE__ "  "__TIME__
             "\n");
 
     disable_network_layer();
-
+    bool frame_ok = true;
     for (;;)
     {
-        event = wait_for_event(&arg);
-
+        event = wait_for_event(&arg); //arg 是超时的计时器的编号
         switch (event)
         {
-        case NETWORK_LAYER_READY:
-            get_packet(buffer);
-            nbuffered++;
+        case NETWORK_LAYER_READY: //可以发送新的数据了（可以从网络层拿包了
+            get_packet(send_buffers[number_of_send]);
+            have_ack[number_of_send] = 0;
+            number_of_send++;
             send_data_frame();
             break;
-
         case PHYSICAL_LAYER_READY:
             phl_ready = 1;
             break;
-
-        case FRAME_RECEIVED:
-            len = recv_frame((unsigned char *)&f, sizeof f);
-            if (len < 5 || crc32((unsigned char *)&f, len) != 0)
+        case FRAME_RECEIVED: //收到了帧，需要发送到网络层
+            len = recv_frame((unsigned char *)&to_network, sizeof(to_network));
+            if (len < 5 || crc32((unsigned char *)&to_network, len) != 0)
             {
-                dbg_event("**** Receiver Error, Bad CRC Checksum    kind is %d\n", f.kind);
-                //出了问题，我应该通知发送方让他重传。
-                frame_expected = 1 - frame_expected;
-                send_nak_frame();
-
-                break;
+                dbg_event("CRC校验出错！");
+                frame_ok = false;
             }
-            if (f.kind == FRAME_ACK)
-                dbg_frame("Recv ACK  %d\n", f.ack);
-            if (f.kind == FRAME_NAK)
+            if (to_network.kind == FRAME_DATA)
             {
-                dbg_frame("Recv NAK  %d\n", f.ack);
-            }
-
-            if (f.kind == FRAME_DATA)
-            {
-                dbg_frame("Recv DATA %d %d, ID %d\n", f.seq, f.ack, *(short *)f.data);
-                if (f.seq == frame_expected)
+                if (to_network.seq != frame_expected)
                 {
-                    put_packet(f.data, len - 7);
-                    frame_expected = 1 - frame_expected;
+                    frame_ok = false;
+                }
+
+                if (frame_ok)
+                {
+                    put_packet(to_network.data, len - 7);
+                    //此处先不考虑捎带确认。
+                    if (frame_expected > BUFFERS_NUM)
+                    {
+                        frame_expected = 0;
+                    }
+                    else
+                    {
+                        frame_expected++;
+                    }
                     send_ack_frame();
                 }
-                else
+            }
+            if (to_network.kind == FRAME_ACK)
+            {
+                if (to_network.ack == not_recvive)
                 {
-                    frame_expected = 1 - frame_expected;
-                    send_nak_frame();
+                    have_ack[not_recvive] = 1;
+                    //  have_ack[1 + BUFFERS_NUM]++;
+                    stop_timer(not_recvive);
+                    not_recvive++;
+                    if (not_recvive > BUFFERS_NUM)
+                    {
+                        not_recvive = 0;
+                    }
                 }
             }
-            if (f.ack == frame_nr)
+            break;
+        case DATA_TIMEOUT:
+            for (size_t i = arg; i < BUFFERS_NUM; i++)
             {
-                stop_timer(frame_nr);
-                nbuffered--;
-                frame_nr = 1 - frame_nr;
+                send_data_frame();
             }
             break;
-
-        case DATA_TIMEOUT:
-            dbg_event("---- DATA %d timeout\n", arg);
-            send_data_frame();
+        case ACK_TIMEOUT:
             break;
         }
+        if (number_of_send > BUFFERS_NUM)
+        {
+            number_of_send = 0;
+        }
 
-        if (nbuffered < 1 && phl_ready)
+        //物理层准备好，缓冲没有满，待发送的位置的ack已经到了
+        if (phl_ready && number_of_send <= BUFFERS_NUM && have_ack[number_of_send])
+        {
             enable_network_layer();
+        }
         else
+        {
             disable_network_layer();
+        }
     }
 }

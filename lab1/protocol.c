@@ -895,7 +895,7 @@ int wait_for_event(int *arg)
         }
 
         /* check all timers */
-        if ((event = scan_timer(arg)) != 0)
+        if ((event = scan_timer(arg)) != 0) //event返回的是哪个超时了，arg是超时的编号，也是wait—_for_event的arg
             return event;
 
         /* physical layer event */
