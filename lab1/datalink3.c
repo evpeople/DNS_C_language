@@ -93,6 +93,7 @@ int main(int argc, char **argv)
             }
             break;
         case DATA_TIMEOUT:
+            dbg_event("---- DATA %d timeout\n", arg);
             for (size_t i = arg; i < BUFFERS_NUM; i++)
             {
                 send_data_frame(i);
@@ -130,6 +131,7 @@ static void send_data_frame(unsigned char to_send)
 
     memcpy(temp.data, send_buffers[to_send], PKT_LEN);
 
+    dbg_frame("Send DATA %d %d, ID %d\n", temp.seq, temp.ack, *(short *)temp.data);
     put_frame((unsigned char *)&temp, 3 + PKT_LEN);
 
     start_timer(to_send, DATA_TIMER);
@@ -140,7 +142,7 @@ static void send_ack_frame(unsigned char to_send_ack)
     struct FRAME temp;
     temp.kind = FRAME_ACK;
     temp.ack = to_send_ack;
-
+    dbg_frame("Send ACK  %d\n", s.ack);
     put_frame((unsigned char *)&temp, 2);
 }
 static void chang_number(unsigned char *t)
