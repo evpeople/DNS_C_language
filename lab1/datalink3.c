@@ -27,6 +27,7 @@ struct FRAME
 static void put_frame(unsigned char *frame, int len);
 static void send_data_frame(unsigned char);
 static void send_ack_frame(unsigned char);
+static void chang_number(unsigned char *);
 int main(int argc, char **argv)
 {
     int event, arg;
@@ -73,14 +74,9 @@ int main(int argc, char **argv)
                 {
                     put_packet(to_network.data, len - 7);
                     //此处先不考虑捎带确认。
-                    if (frame_expected > BUFFERS_NUM)
-                    {
-                        frame_expected = 0;
-                    }
-                    else
-                    {
-                        frame_expected++;
-                    }
+
+                    frame_expected++;
+                    chang_number(&frame_expected);
                     send_ack_frame(to_network.seq);
                 }
             }
@@ -92,10 +88,7 @@ int main(int argc, char **argv)
                     have_ack[1 + BUFFERS_NUM]++;
                     stop_timer(not_recvive);
                     not_recvive++;
-                    if (not_recvive > BUFFERS_NUM)
-                    {
-                        not_recvive = 0;
-                    }
+                    chang_number(&not_recvive);
                 }
             }
             break;
@@ -108,10 +101,7 @@ int main(int argc, char **argv)
         case ACK_TIMEOUT:
             break;
         }
-        if (number_of_send > BUFFERS_NUM)
-        {
-            number_of_send = 0;
-        }
+        chang_number(&number_of_send);
 
         //物理层准备好，缓冲没有满，待发送的位置的ack已经到了
         if (phl_ready && number_of_send <= BUFFERS_NUM && (have_ack[number_of_send] == 1 || have_ack[1 + BUFFERS_NUM] > BUFFERS_NUM))
@@ -152,4 +142,11 @@ static void send_ack_frame(unsigned char to_send_ack)
     temp.ack = to_send_ack;
 
     put_frame((unsigned char *)&temp, 2);
+}
+static void chang_number(unsigned char *t)
+{
+    if (*t > BUFFERS_NUM)
+    {
+        *t = 0;
+    }
 }
