@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
+//遇见的问题，fileB4是所有的问题，大概就是丢了ACK之后，会导致原本的发送方一直发送实际上已经到达的消息，导致死锁，
 #include "protocol.h"
 #include "datalink.h"
 
@@ -13,6 +13,7 @@ static unsigned int number_of_send = 0;
 static unsigned char get_buffer[PKT_LEN];
 static unsigned char have_ack[BUFFERS_NUM + 1];
 static unsigned char have_send[BUFFERS_NUM + 1];
+static unsigned char have_arrived[BUFFERS_NUM + 1];
 
 static bool phl_ready = false;
 
@@ -101,11 +102,13 @@ int main(int argc, char **argv)
                     frame_expected = to_network.seq + 1;
                     chang_number(&frame_expected);
                     send_ack_frame(to_network.seq);
+                    have_arrived[to_network.seq] = 1;
                 }
-                // else
-                // {
-                //     send_nak_frame(to_network.seq);
-                // }
+                else if (have_arrived[to_network.seq])
+                {
+                    /* code */
+                    send_ack_frame(to_network.seq);
+                }
             }
             if (to_network.kind == FRAME_ACK)
             {
