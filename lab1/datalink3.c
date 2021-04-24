@@ -24,8 +24,9 @@ struct FRAME
     unsigned char data[PKT_LEN];
     unsigned int padding;
 };
-static void send_data_frame();
-static void send_ack_frame();
+static void put_frame(unsigned char *frame, int len);
+static void send_data_frame(unsigned char);
+static void send_ack_frame(unsigned char);
 int main(int argc, char **argv)
 {
     int event, arg;
@@ -48,8 +49,8 @@ int main(int argc, char **argv)
         case NETWORK_LAYER_READY: //可以发送新的数据了（可以从网络层拿包了
             get_packet(send_buffers[number_of_send]);
             have_ack[number_of_send] = 0;
+            send_data_frame(number_of_send);
             number_of_send++;
-            send_data_frame();
             break;
         case PHYSICAL_LAYER_READY:
             phl_ready = 1;
@@ -80,7 +81,7 @@ int main(int argc, char **argv)
                     {
                         frame_expected++;
                     }
-                    send_ack_frame();
+                    send_ack_frame(to_network.seq);
                 }
             }
             if (to_network.kind == FRAME_ACK)
@@ -88,7 +89,7 @@ int main(int argc, char **argv)
                 if (to_network.ack == not_recvive)
                 {
                     have_ack[not_recvive] = 1;
-                    //  have_ack[1 + BUFFERS_NUM]++;
+                    have_ack[1 + BUFFERS_NUM]++;
                     stop_timer(not_recvive);
                     not_recvive++;
                     if (not_recvive > BUFFERS_NUM)
@@ -101,7 +102,7 @@ int main(int argc, char **argv)
         case DATA_TIMEOUT:
             for (size_t i = arg; i < BUFFERS_NUM; i++)
             {
-                send_data_frame();
+                send_data_frame(i);
             }
             break;
         case ACK_TIMEOUT:
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
         }
 
         //物理层准备好，缓冲没有满，待发送的位置的ack已经到了
-        if (phl_ready && number_of_send <= BUFFERS_NUM && have_ack[number_of_send])
+        if (phl_ready && number_of_send <= BUFFERS_NUM && (have_ack[number_of_send] == 1 || have_ack[1 + BUFFERS_NUM] > BUFFERS_NUM))
         {
             enable_network_layer();
         }
@@ -122,4 +123,33 @@ int main(int argc, char **argv)
             disable_network_layer();
         }
     }
+}
+static void put_frame(unsigned char *frame, int len)
+{
+    *(unsigned int *)(frame + len) = crc32(frame, len);
+    send_frame(frame, len + 4);
+    phl_ready = 0;
+}
+
+static void send_data_frame(unsigned char to_send)
+{
+    struct FRAME temp;
+
+    temp.seq = to_send;
+    temp.kind = FRAME_DATA;
+
+    memcpy(temp.data, send_buffers[to_send], PKT_LEN);
+
+    put_frame((unsigned char *)&temp, 3 + PKT_LEN);
+
+    start_timer(to_send, DATA_TIMER);
+}
+
+static void send_ack_frame(unsigned char to_send_ack)
+{
+    struct FRAME temp;
+    temp.kind = FRAME_ACK;
+    temp.ack = to_send_ack;
+
+    put_frame((unsigned char *)&temp, 2);
 }
