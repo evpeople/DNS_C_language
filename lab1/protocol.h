@@ -57,6 +57,7 @@ extern char *station_name(void);
 extern void dbg_event(char *fmt, ...);
 extern void dbg_frame(char *fmt, ...);
 extern void dbg_warning(char *fmt, ...);
+extern void dbg_error(char *fmt, ...);
 
 #define MARK lprintf("File \"%s\" (%d)\n", __FILE__, __LINE__)
 
