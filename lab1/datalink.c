@@ -6,7 +6,7 @@
 #include "datalink.h"
 
 #define DATA_TIMER 2000
-#define BUFFERS_NUM 10
+#define BUFFERS_NUM 11
 static unsigned char send_buffers[BUFFERS_NUM + 1][PKT_LEN];
 static unsigned char frame_expected = 0;
 static unsigned int number_of_send = 0;
@@ -35,7 +35,7 @@ static void send_ack_frame(unsigned char);
 static void chang_number(unsigned char *);
 static bool in_middle(unsigned char, unsigned char, unsigned char);
 static void send_nak_frame(unsigned char to_send_nak);
-
+static int minus(int);
 int main(int argc, char **argv)
 {
     int event, arg;
@@ -58,13 +58,14 @@ int main(int argc, char **argv)
         dbg_warning("event before is %d\n", event);
         event = wait_for_event(&arg); //arg 是超时的计时器的编号
         dbg_warning("event is %d\n", event);
+        int xx = 0;
         switch (event)
         {
         case NETWORK_LAYER_READY: //可以发送新的数据了（可以从网络层拿包了
             dbg_warning("进入了网络层准备好、\n");
             get_packet(send_buffers[number_of_send]);
             have_send[number_of_send] = 1;
-            have_ack[number_of_send] = 0;
+            have_ack[number_of_send] = 1;
             send_data_frame(number_of_send);
             // number_of_send++;
             inc(number_of_send);
@@ -106,13 +107,15 @@ int main(int argc, char **argv)
                     frame_expected = to_network.seq + 1;
                     chang_number(&frame_expected);
                     send_ack_frame(to_network.seq);
+                    have_arrived[minus(to_network.seq)] = 0;
                     have_arrived[to_network.seq] = 1;
+                    have_send[to_network.seq] = 0;
                 }
-                // else if (have_arrived[to_network.seq])
-                // {
-                //     /* code */
-                //     send_ack_frame(to_network.seq);
-                // }
+                else if (have_arrived[to_network.seq])
+                {
+                    /* code */
+                    send_ack_frame(to_network.seq);
+                }
             }
             if (to_network.kind == FRAME_ACK)
             {
@@ -122,7 +125,7 @@ int main(int argc, char **argv)
                 {
                     dbg_frame("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功\n");
                     dbg_error("#######################到have_ack[not_recvive] = 1;后的 numOFSEND*************%d\n", number_of_send);
-                    have_ack[not_recvive] = 1;
+                    have_ack[not_recvive] = 0;
                     // for (size_t i = (not_recvive + 1) % BUFFERS_NUM; i <= to_network.ack; i++)
                     // {
                     //     have_ack[i] = 1;
@@ -132,7 +135,7 @@ int main(int argc, char **argv)
                     have_ack[1 + BUFFERS_NUM]++;
                     dbg_error("#######################到后stop_timer(not_recvive);的 numOFSEND*************%d\n", number_of_send);
                     stop_timer(not_recvive);
-                    // number_of_send--;
+                    number_of_send = minus(number_of_send);
                     dbg_error("#######################到后的not_recvive++; numOFSEND*************%d\n", number_of_send);
                     not_recvive++;
                     dbg_error("#######################到后chang_number(&not_recvive);的 numOFSEND*************%d\n", number_of_send);
@@ -150,21 +153,14 @@ int main(int argc, char **argv)
             break;
         case DATA_TIMEOUT:
             dbg_event("---- DATA %d timeout\n", arg);
-            for (size_t i = 0; i < BUFFERS_NUM; i++)
+            for (size_t i = 0; i <= BUFFERS_NUM; i++)
             {
-                if (number_of_send + 1 >= BUFFERS_NUM)
+
+                dbg_frame("被重发的都有%d 判断一下是否有过ACK%d 是否发送过   %d\n", i, have_ack[i], have_send[i]);
+                if (have_ack[i])
                 {
-                    dbg_frame("被重发的都有%d 判断一下是否有过ACK%d \n", i, have_ack[i]);
-                    if (!have_ack[i])
-                    {
-                        // dbg_frame("have_ack = %d\n", have_ack[i]);
-                        send_data_frame(i);
-                    }
-                }
-                else
-                {
-                    send_data_frame(arg);
-                    break;
+                    // dbg_frame("have_ack = %d\n", have_ack[i]);
+                    send_data_frame(i);
                 }
             }
             break;
@@ -175,7 +171,7 @@ int main(int argc, char **argv)
         dbg_error("完成swich后的 numOFSEND %d\n", number_of_send);
         dbg_warning("完成了switch\n");
         //物理层准备好，缓冲没有满，待发送的位置的ack已经到了
-        if (phl_ready && (number_of_send < BUFFERS_NUM || have_ack[(number_of_send - 1) % BUFFERS_NUM] == 1))
+        if (phl_ready && (have_ack[minus(number_of_send)] == 0))
         {
             dbg_warning("启动了网络层\n");
             dbg_frame("启动了网络层，phlready 是 %d  numberOFSend 是 %d have_ack[number_of_send] = %d\n", phl_ready, number_of_send, have_ack[number_of_send % BUFFERS_NUM]);
@@ -242,4 +238,15 @@ static bool in_middle(unsigned char a, unsigned char b, unsigned char c)
         return true;
     }
     return false;
+}
+static int minus(int a)
+{
+    if (a == 0)
+    {
+        return BUFFERS_NUM;
+    }
+    else
+    {
+        return (a - 1);
+    }
 }
