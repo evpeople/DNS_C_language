@@ -7,6 +7,7 @@
 #define DATA_TIMER 2000
 #define ACK_TIMER 1500
 
+#define NR_BUFS 16 //windows number
 struct FRAME
 {
     unsigned char kind; /* FRAME_DATA */
@@ -71,9 +72,24 @@ static void send_nak_frame(void)
 }
 int main(int argc, char **argv)
 {
-    int event, arg;
-    struct FRAME f;
-    int len = 0;
+    int event, arg, len = 0;
+    int i;                  //contol the number of circle of arrived
+    struct FRAME r;         //scratch variable
+    int next_frame_to_send; //the upper of the send's window
+    int ack_expected;       //the lower of the send's window
+    int frame_expected;     //the lower of the reciver's window
+    int too_far;            //the upper of the reciver's window
+    int nbuffered;          //currently window
+    // packet out_buf[NR_BUFS];   //buffer for the outbound stream
+    // packet in_buf[NR_BUFS];    //buffer for the in stream
+    bool arrived[NR_BUFS];
+    ack_expected = 0;
+    next_frame_to_send = 0;
+    frame_expected = 0;
+    too_far = NR_BUFS;
+    nbuffered = 0;
+    for (i = 0; i < NR_BUFS; i++)
+        arrived[i] = false;
 
     protocol_init(argc, argv); //初始化物理层信道以及debug参数
     lprintf("Designed by Jiang Yanjun, build: " __DATE__ "  "__TIME__

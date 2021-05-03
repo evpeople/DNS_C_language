@@ -1,0 +1,238 @@
+000.000 =============================================================
+000.000                     Station B                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
+000.000 Log file "Bfile5.logmake", TCP port 59144, debug mask 0x03
+000.000 Station B is connecting station A (TCP port 59144) ... Done.
+000.668 New epoch: Mon May  3 18:08:59 2021
+000.668 =================================================================
+000.668 
+000.668 Designed by Jiang Yanjun, build: May  3 2021  18:08:56
+000.668 启动了网络层，phlready 是 1  numberOFSend 是 0 have_ack[number_of_send] = 0
+001.046 Send DATA 0 0, ID 20000
+001.220 接收到了帧、
+001.220 Recv DATA 0 0, ID 10000  frame_expect is 0
+001.220 预备了缓冲区,1 缓冲区已有数量0 
+001.220 frame_expected 0 tonet_work.seq 0  toofar 2 
+001.220 放入了网络层
+001.220 0  have_arr[temp] 1 
+001.220 进入了while循环
+001.220 Send ACK  0
+001.283 启动了网络层，phlready 是 1  numberOFSend 是 1 have_ack[number_of_send] = 0
+001.283 Send DATA 1 0, ID 20001
+001.488 接收到了帧、
+001.488 Recv DATA 1 0, ID 10001  frame_expect is 1
+001.488 预备了缓冲区,1 缓冲区已有数量0 
+001.488 frame_expected 1 tonet_work.seq 1  toofar 3 
+001.488 放入了网络层
+001.488 0  have_arr[temp] 2 
+001.488 进入了while循环
+001.488 Send ACK  1
+001.551 启动了网络层，phlready 是 1  numberOFSend 是 2 have_ack[number_of_send] = 0
+001.551 Send DATA 2 0, ID 20002
+001.754 接收到了帧、
+001.754 Recv DATA 2 0, ID 10002  frame_expect is 2
+001.754 预备了缓冲区,1 缓冲区已有数量0 
+001.754 frame_expected 2 tonet_work.seq 2  toofar 4 
+001.754 放入了网络层
+001.754 0  have_arr[temp] 3 
+001.755 进入了while循环
+001.755 Send ACK  2
+001.834 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.834 Send DATA 3 0, ID 20003
+002.023 接收到了帧、
+002.023 Recv DATA 3 0, ID 10003  frame_expect is 3
+002.023 预备了缓冲区,1 缓冲区已有数量0 
+002.023 frame_expected 3 tonet_work.seq 3  toofar 5 
+002.023 放入了网络层
+002.023 0  have_arr[temp] 4 
+002.023 进入了while循环
+002.023 Send ACK  3
+002.101 启动了网络层，phlready 是 1  numberOFSend 是 4 have_ack[number_of_send] = 0
+002.101 Send DATA 4 0, ID 20004
+002.259 接收到了帧、
+002.260 Recv DATA 4 0, ID 10004  frame_expect is 4
+002.260 预备了缓冲区,1 缓冲区已有数量0 
+002.260 frame_expected 4 tonet_work.seq 4  toofar 6 
+002.260 放入了网络层
+002.260 0  have_arr[temp] 5 
+002.260 进入了while循环
+002.260 Send ACK  4
+002.303 接收到了帧、
+002.305 对NAK的反应，重发的是0
+002.305 Send DATA 1 0, ID 20001
+002.530 接收到了帧、
+002.530 Recv DATA 5 0, ID 10005  frame_expect is 5
+002.530 预备了缓冲区,1 缓冲区已有数量0 
+002.530 frame_expected 5 tonet_work.seq 5  toofar 7 
+002.530 放入了网络层
+002.530 0  have_arr[temp] 6 
+002.530 进入了while循环
+002.530 Send ACK  5
+002.641 启动了网络层，phlready 是 1  numberOFSend 是 5 have_ack[number_of_send] = 0
+002.641 Send DATA 5 0, ID 20005
+002.798 接收到了帧、
+002.798 Recv DATA 6 0, ID 10006  frame_expect is 6
+002.798 预备了缓冲区,1 缓冲区已有数量0 
+002.798 frame_expected 6 tonet_work.seq 6  toofar 8 
+002.798 放入了网络层
+002.798 0  have_arr[temp] 7 
+002.798 进入了while循环
+002.798 Send ACK  6
+002.908 启动了网络层，phlready 是 1  numberOFSend 是 6 have_ack[number_of_send] = 0
+002.908 Send DATA 6 0, ID 20006
+003.062 接收到了帧、
+003.062 Recv DATA 7 0, ID 10007  frame_expect is 7
+003.062 预备了缓冲区,1 缓冲区已有数量0 
+003.062 frame_expected 7 tonet_work.seq 7  toofar 9 
+003.062 放入了网络层
+003.062 .... 8 packets received, 7761 bps, 97.02%, Err 0 (0.0e+00)
+003.062 0  have_arr[temp] 8 
+003.062 进入了while循环
+003.062 Send ACK  7
+003.188 启动了网络层，phlready 是 1  numberOFSend 是 7 have_ack[number_of_send] = 0
+003.188 Send DATA 7 0, ID 20007
+003.331 接收到了帧、
+003.331 Recv DATA 8 0, ID 10008  frame_expect is 8
+003.331 预备了缓冲区,1 缓冲区已有数量0 
+003.331 frame_expected 8 tonet_work.seq 8  toofar 10 
+003.331 放入了网络层
+003.331 0  have_arr[temp] 9 
+003.331 进入了while循环
+003.331 Send ACK  8
+003.459 启动了网络层，phlready 是 1  numberOFSend 是 8 have_ack[number_of_send] = 0
+003.459 Send DATA 8 0, ID 20008
+003.554 ---- DATA 0 timeout
+003.554 被重发的都有0 
+003.554 Send DATA 0 0, ID 20000
+003.554 被重发的都有1 
+003.554 Send DATA 1 0, ID 20001
+003.555 被重发的都有2 
+003.555 Send DATA 2 0, ID 20002
+003.555 被重发的都有3 
+003.555 Send DATA 3 0, ID 20003
+003.555 被重发的都有4 
+003.555 Send DATA 4 0, ID 20004
+003.555 被重发的都有5 
+003.555 Send DATA 5 0, ID 20005
+003.555 被重发的都有6 
+003.555 Send DATA 6 0, ID 20006
+003.555 被重发的都有7 
+003.555 Send DATA 7 0, ID 20007
+003.555 被重发的都有8 
+003.555 Send DATA 8 0, ID 20008
+003.602 接收到了帧、
+003.602 Recv DATA 9 0, ID 10009  frame_expect is 9
+003.602 预备了缓冲区,1 缓冲区已有数量0 
+003.602 frame_expected 9 tonet_work.seq 9  toofar 11 
+003.602 放入了网络层
+003.602 0  have_arr[temp] 10 
+003.603 进入了while循环
+003.603 Send ACK  9
+003.852 接收到了帧、
+003.852 Recv DATA 10 0, ID 10010  frame_expect is 10
+003.852 预备了缓冲区,1 缓冲区已有数量0 
+003.852 frame_expected 10 tonet_work.seq 10  toofar 0 
+003.852 放入了网络层
+003.852 0  have_arr[temp] 11 
+003.852 进入了while循环
+003.852 Send ACK  10
+004.138 接收到了帧、
+004.138 Recv DATA 11 0, ID 10011  frame_expect is 11
+004.138 预备了缓冲区,1 缓冲区已有数量0 
+004.138 frame_expected 11 tonet_work.seq 11  toofar 1 
+004.138 放入了网络层
+004.138 0  have_arr[temp] 0 
+004.138 进入了while循环
+004.138 Send ACK  11
+004.393 接收到了帧、
+004.393 Recv DATA 0 0, ID 10012  frame_expect is 0
+004.394 预备了缓冲区,1 缓冲区已有数量0 
+004.394 frame_expected 0 tonet_work.seq 0  toofar 2 
+004.394 放入了网络层
+004.394 0  have_arr[temp] 1 
+004.394 进入了while循环
+004.394 Send ACK  0
+004.663 接收到了帧、
+004.663 Recv DATA 1 0, ID 10013  frame_expect is 1
+004.663 预备了缓冲区,1 缓冲区已有数量0 
+004.663 frame_expected 1 tonet_work.seq 1  toofar 3 
+004.663 放入了网络层
+004.664 0  have_arr[temp] 2 
+004.664 进入了while循环
+004.664 Send ACK  1
+004.679 接收到了帧、
+004.680 收到了  ACK  帧， ACK  号是 8 not_receive 是 0  number_OF_SEND  9 
+004.680 停止了计时器0 
+004.680 停止了计时器1 
+004.680 停止了计时器2 
+004.680 停止了计时器3 
+004.680 停止了计时器4 
+004.680 停止了计时器5 
+004.680 停止了计时器6 
+004.680 停止了计时器7 
+004.680 停止了计时器8 
+004.932 接收到了帧、
+004.932 Recv DATA 2 0, ID 10014  frame_expect is 2
+004.932 预备了缓冲区,1 缓冲区已有数量0 
+004.932 frame_expected 2 tonet_work.seq 2  toofar 4 
+004.932 放入了网络层
+004.932 1  have_arr[temp] 3 
+004.932 进入了while循环
+004.932 Send ACK  2
+004.948 接收到了帧、
+004.948 对NAK的反应，重发的是9
+004.948 Send DATA 10 0, ID 0
+005.200 接收到了帧、
+005.200 Recv DATA 3 0, ID 10015  frame_expect is 3
+005.200 预备了缓冲区,1 缓冲区已有数量0 
+005.200 frame_expected 3 tonet_work.seq 3  toofar 5 
+005.200 放入了网络层
+005.200 .... 16 packets received, 7712 bps, 96.40%, Err 0 (0.0e+00)
+005.200 1  have_arr[temp] 4 
+005.200 进入了while循环
+005.200 Send ACK  3
+005.467 接收到了帧、
+005.467 Recv DATA 4 0, ID 10016  frame_expect is 4
+005.467 预备了缓冲区,1 缓冲区已有数量0 
+005.467 frame_expected 4 tonet_work.seq 4  toofar 6 
+005.467 放入了网络层
+005.467 1  have_arr[temp] 5 
+005.467 进入了while循环
+005.467 Send ACK  4
+005.737 接收到了帧、
+005.737 Recv DATA 5 0, ID 10017  frame_expect is 5
+005.737 预备了缓冲区,1 缓冲区已有数量0 
+005.737 frame_expected 5 tonet_work.seq 5  toofar 7 
+005.737 放入了网络层
+005.737 1  have_arr[temp] 6 
+005.737 进入了while循环
+005.737 Send ACK  5
+005.988 接收到了帧、
+005.988 Recv DATA 6 0, ID 10018  frame_expect is 6
+005.988 预备了缓冲区,1 缓冲区已有数量0 
+005.988 frame_expected 6 tonet_work.seq 6  toofar 8 
+005.989 放入了网络层
+005.989 1  have_arr[temp] 7 
+005.989 进入了while循环
+005.989 Send ACK  6
+006.238 接收到了帧、
+006.238 CRC校验出错！1
+006.424 启动了网络层，phlready 是 1  numberOFSend 是 9 have_ack[number_of_send] = 0
+006.424 Send DATA 9 0, ID 20009
+006.504 接收到了帧、
+006.504 Recv DATA 1 0, ID 10013  frame_expect is 7
+006.504 发送了NAK帧，帧是7 
+006.504 Send NAK  7
+006.504 预备了缓冲区,0 缓冲区已有数量0 
+006.504 frame_expected 7 tonet_work.seq 1  toofar 9 
+006.693 启动了网络层，phlready 是 1  numberOFSend 是 10 have_ack[number_of_send] = 0
+006.693 Send DATA 10 0, ID 20010
+006.788 接收到了帧、
+006.788 Recv DATA 2 0, ID 10014  frame_expect is 7
+006.788 预备了缓冲区,0 缓冲区已有数量0 
+006.788 frame_expected 7 tonet_work.seq 2  toofar 9 
+006.961 启动了网络层，phlready 是 1  numberOFSend 是 11 have_ack[number_of_send] = 0
+006.961 Send DATA 11 0, ID 20011
+006.992 TCP disconnected.
