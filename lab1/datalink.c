@@ -1,296 +1,155 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-//遇见的问题，fileB4是所有的问题，大概就是丢了ACK之后，会导致原本的发送方一直发送实际上已经到达的消息，导致死锁，
 #include "protocol.h"
 #include "datalink.h"
 
-#define DATA_TIMER 2000
-#define BUFFERS_NUM 11
-#define RECEVE_NUM 6
-#define SEND_NUM 6
-static unsigned char send_buffers[BUFFERS_NUM + 1][PKT_LEN + 1];
-static unsigned char rece_buffers[BUFFERS_NUM + 1][PKT_LEN];
-static unsigned char number_of_send;
-static unsigned char frame_expected;
-static unsigned char too_far = 2;
-static unsigned char have_nak[BUFFERS_NUM + 1];
-static unsigned char have_ack[BUFFERS_NUM + 1];
-static unsigned char have_arrived[BUFFERS_NUM + 1];          //我发送的，已经收到了ACK
-static unsigned char have_arrived_for_send[BUFFERS_NUM + 1]; //对面发送的，没有放到网络层
-
-static unsigned char have_send_but_not_ack[BUFFERS_NUM + 1];
-static bool phl_ready = false;
-#define inc(k)           \
-    if (k < BUFFERS_NUM) \
-        k = k + 1;       \
-    else                 \
+#define MAX_SEQ 31
+#define DATA_TIMER 3800
+#define ACK_TIMER 1100
+#define NR_BUFS ((MAX_SEQ + 1) / 2) //保证没有重叠，否则要很复杂的处理的重传帧的问题
+#define inc(k)       \
+    if (k < MAX_SEQ) \
+        k++;         \
+    else             \
         k = 0
+
+static int phl_ready = 0;
+bool no_nak = true;                // 避免多次发送NAK，如果不做这个处理，会导致NAK多次发送，同时发送方就会多次重传此帧
+static char have_arrived[NR_BUFS]; //初始化为0
+unsigned char to_phy_buffer[NR_BUFS][PKT_LEN];
+unsigned char to_network_buffer[NR_BUFS][PKT_LEN];
+
 struct FRAME
 {
-    unsigned char kind; /* FRAME_DATA */
+    unsigned char kind;
     unsigned char ack;
     unsigned char seq;
     unsigned char data[PKT_LEN];
-    unsigned int padding;
+    unsigned int padding; //填充字段
 };
-static struct FRAME to_phls[BUFFERS_NUM + 1];
+static int between(unsigned char a, unsigned char b, unsigned char c); //
 static void put_frame(unsigned char *frame, int len);
-static void send_data_frame(unsigned char);
-static void send_ack_frame(unsigned char);
-static void chang_number(unsigned char *);
-static bool in_middle(unsigned char, unsigned char, unsigned char);
-static void send_nak_frame(unsigned char to_send_nak);
-static int minus(int);
-static void put_frame_in_buffers(unsigned char *packet, int seq);
-static bool buffers_ordered();
+static void send_data(unsigned char kind_of_frame, unsigned char frame_nr, unsigned char frame_expected);
 int main(int argc, char **argv)
 {
-    int event, arg;
-    int minACK = 0;
-    int haveACK = 0;
-    int len; //帧的长度？
-    unsigned char not_recvive = 0;
-    struct FRAME to_network;
-    struct FRAME to_phl;
 
-    protocol_init(argc, argv); //初始化物理层信道以及debug参数
+    int event, arg; // arg 超时计时器的编号
+    int len = 0;
+    struct FRAME r;                       //待发的帧
+    unsigned char next_frame_to_send = 0; //发送窗口上界，在没有ACK的时候，我应该不断往前发送，直到发送窗口被填满
+    unsigned char ack_expected = 0;       //发送窗口的下界，收到ACK则代表之前的帧全部被确认了
+    unsigned char frame_expected = 0;     //接受窗口的下界，接收到这个，就直接塞到网络层，然后整个窗口平移
+    unsigned char too_far = NR_BUFS;      //接受窗口的上界，不能等于总大小，分不清新帧和旧帧了
+
+    //发送是慢慢长的，接受是一开始就最大
+    unsigned char now_postion = 0; //新来的帧将会在的位置
+
+    //不用全局变量是为了
+    enable_network_layer();
+    //disable_network_layer();//allow netword_layer_ready events
+    protocol_init(argc, argv);
     lprintf("Designed by Jiang Yanjun, build: " __DATE__ "  "__TIME__
             "\n");
-    dbg_warning("beofore disable event is %d\n", event);
-
-    disable_network_layer();
-    dbg_warning("after disable event is %d\n", event);
-    bool frame_ok = true;
-    have_send_but_not_ack[0] = 0;
-    for (;;)
+    while (true)
     {
-        dbg_error("numberOFSEND is %d\n", number_of_send);
-        dbg_warning("event before is %d\n", event);
-        event = wait_for_event(&arg); //arg 是超时的计时器的编号
-        dbg_warning("event is %d\n", event);
-        int xx = 0;
+        event = wait_for_event(&arg);
         switch (event)
         {
-        case NETWORK_LAYER_READY: //可以发送新的数据了（可以从网络层拿包了
-            // dbg_warning("进入了网络层准备好、\n");
-            get_packet(send_buffers[number_of_send]);
-            have_ack[number_of_send] = 1;
-            have_send_but_not_ack[1] = number_of_send;
-            // have_arrived[number_of_send] = 0;
-            send_data_frame(number_of_send);
-            // number_of_send++;
-            inc(number_of_send);
-            dbg_error("完成网络层准备好后的 numOFSEND %d\n", number_of_send);
+        case NETWORK_LAYER_READY:
+            dbg_warning("进入了网络层准备好、\n");
+            get_packet(to_phy_buffer[next_frame_to_send % NR_BUFS]);   //虽然在扩大发送口的时候，已经用了会归零的INC，但是此处仍要取模，为的是将其二分
+            send_data(FRAME_DATA, next_frame_to_send, frame_expected); //发包
+            inc(next_frame_to_send);                                   //扩大发送窗口
+            now_postion++;
             break;
         case PHYSICAL_LAYER_READY:
             dbg_warning("进入了物理层准备好、\n");
             phl_ready = 1;
             break;
-        case FRAME_RECEIVED: //收到了帧，需要发送到网络层
+        case FRAME_RECEIVED:
             dbg_event("接收到了帧、\n");
-            len = recv_frame((unsigned char *)&to_network, sizeof(to_network));
-            if (len < 5 || crc32((unsigned char *)&to_network, len) != 0)
-            {
-                dbg_event("CRC校验出错！%d\n", to_network.kind);
-                frame_ok = false;
+            len = recv_frame((unsigned char *)&r, sizeof r); //？？可能是计算帧长？
+            if (len < 5 || crc32((unsigned char *)&r, len) != 0)
+            { //CRC error
+                dbg_event("CRC 校验出错！\n");
+                if (no_nak) //第一次NAK
+                {
+                    send_data(FRAME_NAK, 0, frame_expected);
+                }
                 break;
             }
-            if (to_network.kind == FRAME_DATA)
+            if (r.kind == FRAME_DATA)
             {
-                dbg_frame("Recv DATA %d %d, ID %d  frame_expect is %d\n", to_network.seq, to_network.ack, *(short *)to_network.data, frame_expected);
-
-                if (to_network.seq != frame_expected)
-                {
-                    frame_ok = false;
-                    if (have_nak[frame_expected] == 0)
-                    {
-                        dbg_frame("发送了NAK帧，帧是%d \n", frame_expected);
-                        send_nak_frame(frame_expected);
-                        have_nak[frame_expected] = 1;
-                    }
+                dbg_frame("Recv DATA %d %d, ID %d  frame_expect is %d\n", r.seq, r.ack, *(short *)r.data, frame_expected);
+                if ((r.seq != frame_expected) && no_nak) //还没发送过NAK
+                {                                        //只要不是我想要的，都该发送NAK,只是有些可以存，有些缓存都不行
+                    dbg_frame("发送了NAK");
+                    send_data(FRAME_NAK, 0, frame_expected);
                 }
                 else
                 {
-                    frame_ok = true;
+                    dbg_frame("启动了ACK计时器");
+                    start_ack_timer(ACK_TIMER); //捎带确认
                 }
-                // if (to_network.seq == 1)
-                // {
-                //     memcpy(&to_phl, &to_network, sizeof(to_network));
-                // }
+                if (between(frame_expected, r.seq, too_far) && (have_arrived[r.seq % NR_BUFS] == false))
+                {                                         //在发送窗口，但是还没收到过
+                    have_arrived[r.seq % NR_BUFS] = true; //
 
-                dbg_frame("预备了缓冲区,%d 缓冲区已有数量%d \n", in_middle(frame_expected, to_network.seq, too_far), have_arrived[BUFFERS_NUM + 1]);
-
-                dbg_frame("frame_expected %d tonet_work.seq %d  toofar %d \n", frame_expected, to_network.seq, too_far);
-                if (frame_ok)
-                {
-                    dbg_frame("放入了网络层\n");
-                    // dbg_frame("*************%s\n", to_network.data);
-                    put_packet(to_network.data, len - 7);
-                    have_arrived_for_send[to_network.seq] = 0; //对面发送的，已经放到了网络层
-                    //此处先不考虑捎带确认。
-                    //frame_expected++;
-                    int temp = frame_expected;
-
-                    inc(temp);
-                    dbg_frame("%d  have_arr[temp] %d \n", have_arrived[temp], temp);
-                    while (1)
+                    memcpy(to_network_buffer[r.seq % NR_BUFS], r.data, sizeof(r.data));
+                    //只用缓存数据
+                    //检测是否排序好了，只要首个排好了，后面直接加就行，直到一个不可以的
+                    while (have_arrived[frame_expected % NR_BUFS])
                     {
-                        dbg_frame("进入了while循环\n");
-
-                        if (have_arrived_for_send[temp] == 1) //还没放进了网络层
-                        {
-                            // if ((frame_expected + 1) == 1)
-                            // {
-                            //     put_packet(to_phl.data, 256);
-                            //     dbg_frame("赋值帧成功\n");
-                            // }
-
-                            // dbg_frame("%s \n", send_buffers[frame_expected + 1]);
-                            put_packet(to_phls[temp].data, 256);
-                            have_arrived_for_send[temp] = 0; // 放进了网络层。
-                            dbg_frame("在 while 循环  放入了 网络层\n");
-                            have_nak[temp] = 0;
-                            inc(frame_expected);
-                            inc(temp);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        put_packet(to_network_buffer[frame_expected % NR_BUFS], len - 7);
+                        no_nak = true; //已经是对以后的帧而言了
+                        have_arrived[frame_expected % NR_BUFS] = false;
+                        inc(frame_expected);
+                        inc(too_far);
+                        start_ack_timer(ACK_TIMER); //按照之前的ACK超时，
+                        //就是说，对于正确该放到网络层的和不该放到网络层的，都在一起处理，所以需要一个ACK就可，这个的作用是，限定时间没捎带确认，就自己确认
                     }
-                    send_ack_frame(minus(temp));
-                    have_nak[temp] = 0;
-                    inc(frame_expected);
-                    inc(too_far);
-                    // send_ack_frame(to_network.seq);
                 }
-
-                else if (in_middle(frame_expected, to_network.seq, too_far) && have_arrived[BUFFERS_NUM + 1] != BUFFERS_NUM)
-                {
-                    memcpy(&to_phls[to_network.seq], &to_network, sizeof(to_network));
-                    inc(too_far);
-                    have_arrived[to_network.seq] == 1;
-                    have_arrived[BUFFERS_NUM + 1]++;
-                    have_arrived_for_send[to_network.seq] = 1; //被缓冲，还没放进网络层。
-                    dbg_frame("放入了缓冲区,%d 缓冲区已有数量%d \n", to_network.seq, have_arrived[BUFFERS_NUM + 1]);
-                    // send_ack_frame(to_network.seq);
-                    // while (1)
-                    // {
-                    //     if (have_arrived[frame_expected] == 1)
-                    //     {
-                    //         put_packet(rece_buffers[frame_expected], 256);
-                    //         frame_expected++;
-                    //     }
-                    //     else
-                    //     {
-                    //         break;
-                    //     }
-                    // }
-                }
-                // else if (have_arrived[to_network.seq])
-                // {
-                //
-                //     send_nak_frame(frame_expected);
-                //     //todo
-                // }
             }
-            if (to_network.kind == FRAME_ACK)
+            if ((r.kind == FRAME_NAK) && between(ack_expected, (r.ack + 1) % (MAX_SEQ + 1), next_frame_to_send))
             {
-                dbg_error("***************************************收到ACK后的 numOFSEND*************%d\n", number_of_send);
-                dbg_event("收到了  ACK  帧， ACK  号是 %d not_receive 是 %d  number_OF_SEND  %d \n", to_network.ack, not_recvive, number_of_send);
-
-                // minACK = minACK < to_network.ack ? minACK : to_network.ack;
-
-                for (size_t i = minACK; i != to_network.ack;)
-                {
-                    if (have_ack[i] == 1)
-                    {
-                        stop_timer(i);
-                        have_ack[i] = 0;
-                        have_arrived[i] = 1;
-                        dbg_event("停止了计时器%d \n", i);
-                    }
-                    inc(i);
-                }
-                minACK = to_network.ack;
-                stop_timer(to_network.ack);
-                have_ack[to_network.ack] = 0;
-                have_arrived[to_network.ack] = 1;
-                dbg_event("停止了计时器%d \n", to_network.ack);
-                if (have_send_but_not_ack[0] == to_network.ack)
-                {
-                    have_send_but_not_ack[0]++;
-                }
-                else if (to_network.ack > have_send_but_not_ack[0])
-                {
-                    have_send_but_not_ack[0] = to_network.ack;
-                }
-
-                // if (in_middle(to_network.ack, not_recvive, number_of_send)) //大于就算成功，能大于说明之前也得到了
-                // {
-                //     dbg_frame("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功\n");
-                //     dbg_error("#######################到have_ack[not_recvive] = 1;后的 numOFSEND*************%d\n", number_of_send);
-                //     have_ack[not_recvive] = 0;
-                //     // for (size_t i = (not_recvive + 1) % BUFFERS_NUM; i <= to_network.ack; i++)
-                //     // {
-                //     //     have_ack[i] = 1;
-                //     // }
-                //     not_recvive = to_network.ack;
-                //     dbg_error("#######################到 have_ack[1 + BUFFERS_NUM]++;后的 numOFSEND*************%d\n", number_of_send);
-                //     have_ack[1 + BUFFERS_NUM]++;
-                //     dbg_error("#######################到后stop_timer(not_recvive);的 numOFSEND*************%d\n", number_of_send);
-                //     stop_timer(not_recvive);
-                //     number_of_send = minus(number_of_send);
-                //     dbg_error("#######################到后的not_recvive++; numOFSEND*************%d\n", number_of_send);
-                //     not_recvive++;
-                //     dbg_error("#######################到后chang_number(&not_recvive);的 numOFSEND*************%d\n", number_of_send);
-                //     chang_number(&not_recvive);
-                //     dbg_error("#######################到ACK后的 numOFSEND*************%d\n", number_of_send);
-                // }
-                dbg_error("处理ACK后的 numOFSEND %d\n", number_of_send);
+                send_data(FRAME_DATA, (r.ack + 1) % (MAX_SEQ + 1), frame_expected);
             }
-            if (to_network.kind == FRAME_NAK)
-            {
-                dbg_frame("对NAK的反应，重发的是%d\n", to_network.ack);
-                send_data_frame((to_network.ack + 1) % (BUFFERS_NUM + 1));
+            while (between(ack_expected, r.ack, next_frame_to_send))
+            { //收到一个ACK，就把之前的全部确认了
+                now_postion--;
+                stop_timer(ack_expected % NR_BUFS);
+                inc(ack_expected);
             }
-
-            dbg_error("完成获取数据后的 numOFSEND %d\n", number_of_send);
+            break;
+        case ACK_TIMEOUT:
+            dbg_event("---- DATA的ACK %d 超时了\n", arg);
+            send_data(FRAME_ACK, 0, frame_expected); //发送的是，最后接受的那个，就是塞到网络层的那个，即便后面还收到了一些，也不发ACK，避免其实丢了一些
+            dbg_frame("ACK 发送\n");
             break;
         case DATA_TIMEOUT:
             dbg_event("---- DATA %d timeout\n", arg);
-            for (size_t i = 0; i <= BUFFERS_NUM; i++)
-            {
-
-                if (have_ack[i])
-                {
-                    // dbg_frame("have_ack = %d\n", have_ack[i]);
-                    dbg_frame("被重发的都有%d \n", i);
-                    send_data_frame(i);
-                }
-            }
-            break;
-            dbg_error("完成超时后的 numOFSEND %d\n", number_of_send);
-        case ACK_TIMEOUT:
+            if (!between(ack_expected, arg, next_frame_to_send))
+                arg = arg + NR_BUFS;
+            send_data(FRAME_DATA, arg, frame_expected); //select the bad frame and resend it
             break;
         }
-        dbg_error("完成swich后的 numOFSEND %d\n", number_of_send);
-        dbg_warning("完成了switch,number_of_send 是%d \n", number_of_send);
-        //物理层准备好，缓冲没有满，待发送的位置的ack已经到了
-        if (phl_ready && (have_ack[(number_of_send)] == 0))
+        if (now_postion < NR_BUFS && phl_ready)
         {
-            dbg_warning("启动了网络层\n");
-            dbg_frame("启动了网络层，phlready 是 %d  numberOFSend 是 %d have_ack[number_of_send] = %d\n", phl_ready, number_of_send, have_ack[number_of_send % BUFFERS_NUM]);
             enable_network_layer();
         }
         else
         {
-            dbg_warning("关闭了网络层，phlready 是 %d  numberOFSend 是 %d have_ack[number_of_send] = %d  have_ack[1 + BUFFERS_NUM]\n");
             disable_network_layer();
         }
-        // chang_number(&number_of_send);
     }
+}
+static int between(unsigned char a, unsigned char b, unsigned char c)
+{
+    if ((a <= b && b < c) || (c < a && a <= b) || (b < c && c < a))
+        return true;
+    else
+        return false;
 }
 
 static void put_frame(unsigned char *frame, int len)
@@ -300,66 +159,23 @@ static void put_frame(unsigned char *frame, int len)
     phl_ready = 0;
 }
 
-static void send_data_frame(unsigned char to_send)
+static void send_data(unsigned char kind_of_frame, unsigned char frame_nr, unsigned char frame_expected)
 {
-    struct FRAME temp;
+    struct FRAME s;
+    s.kind = kind_of_frame;
+    s.seq = frame_nr;                                   //insert sequence number into frame
+    s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1); //piggyback ack
+    if (kind_of_frame == FRAME_DATA)
+        memcpy(s.data, to_phy_buffer[frame_nr % NR_BUFS], PKT_LEN); //insert packet into frame
 
-    temp.seq = to_send;
-    temp.kind = FRAME_DATA;
-
-    memcpy(temp.data, send_buffers[to_send], PKT_LEN);
-
-    dbg_frame("Send DATA %d %d, ID %d\n", temp.seq, temp.ack, *(short *)temp.data);
-    put_frame((unsigned char *)&temp, 3 + PKT_LEN);
-
-    start_timer(to_send, DATA_TIMER);
-}
-
-static void send_ack_frame(unsigned char to_send_ack)
-{
-    struct FRAME temp;
-    temp.kind = FRAME_ACK;
-    temp.ack = to_send_ack;
-    dbg_frame("Send ACK  %d\n", temp.ack);
-    put_frame((unsigned char *)&temp, 2);
-}
-static void send_nak_frame(unsigned char to_send_nak)
-{
-    struct FRAME temp;
-    temp.kind = FRAME_NAK;
-    temp.ack = to_send_nak;
-    dbg_frame("Send NAK  %d\n", temp.ack);
-    put_frame((unsigned char *)&temp, 2);
-}
-static void chang_number(unsigned char *t)
-{
-    if (*t > BUFFERS_NUM)
-    {
-        *t = 0;
-    }
-}
-static bool in_middle(unsigned char a, unsigned char b, unsigned char c)
-{
-    if (((a <= b) && (b < c)) || ((b < c) && (c <= a)) || ((c < a) && (a <= b)))
-    {
-        return true;
-    }
-    return false;
-}
-static int minus(int a)
-{
-    if (a == 0)
-    {
-        return BUFFERS_NUM;
-    }
-    else
-    {
-        return (a - 1);
-    }
-}
-static void put_frame_in_buffers(unsigned char *packet, int seq)
-{
-    memcpy(send_buffers[seq], packet, PKT_LEN + 1);
-    dbg_frame("put %s to %s \n", packet, send_buffers[seq]);
-    dbg_frame("将帧 %d 放入了缓冲区\n", seq);
+    if (kind_of_frame == FRAME_NAK)
+        no_nak = false; //one nak per frame,please
+    dbg_frame("Send DATA %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
+    if (kind_of_frame == FRAME_DATA)
+        put_frame((unsigned char *)&s, 3 + PKT_LEN); //put CRC following the frame
+    if (kind_of_frame == FRAME_NAK || kind_of_frame == FRAME_ACK)
+        put_frame((unsigned char *)&s, 2); //put CRC following the frame
+    if (kind_of_frame == FRAME_DATA)
+        start_timer(frame_nr % NR_BUFS, DATA_TIMER);
+    stop_ack_timer(); //no need for separate ack frame
 }
