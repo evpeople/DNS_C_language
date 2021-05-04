@@ -3,255 +3,465 @@
 000.000 -------------------------------------------------------------
 000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
 000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-05
-000.000 Log file "Bfile5.logmake", TCP port 59144, debug mask 0x03
-000.000 Station B is connecting station A (TCP port 59144) ... Failed!
+000.000 Log file "Bfile5.logmake", TCP port 59144, debug mask 0x07
 000.000 Station B is connecting station A (TCP port 59144) ... Failed!
 000.000 Station B is connecting station A (TCP port 59144) ... Done.
-000.086 New epoch: Mon May  3 20:18:06 2021
-000.086 =================================================================
-000.086 
-000.086 Designed by Jiang Yanjun, build: May  3 2021  20:17:58
-000.726 接收到了帧、
-000.726 Recv DATA 0 31, ID 10000  frame_expect is 0
-000.726 启动了ACK计时器接收到了帧、
-000.991 Recv DATA 1 31, ID 10001  frame_expect is 1
-000.991 启动了ACK计时器Send DATA 0 1, ID 20000
-001.261 接收到了帧、
-001.261 Recv DATA 2 31, ID 10002  frame_expect is 2
-001.261 启动了ACK计时器Send DATA 1 2, ID 20001
-001.527 接收到了帧、
-001.527 Recv DATA 3 31, ID 10003  frame_expect is 3
-001.527 启动了ACK计时器Send DATA 2 3, ID 20002
-001.779 接收到了帧、
-001.779 Recv DATA 4 31, ID 10004  frame_expect is 4
-001.779 启动了ACK计时器Send DATA 3 4, ID 20003
-002.044 接收到了帧、
-002.044 Recv DATA 5 31, ID 10005  frame_expect is 5
-002.044 启动了ACK计时器接收到了帧、
-002.059 Send DATA 0 5, ID 20000
-002.327 接收到了帧、
-002.327 Recv DATA 6 31, ID 10006  frame_expect is 6
-002.327 启动了ACK计时器Send DATA 4 6, ID 20004
-002.578 接收到了帧、
-002.578 Recv DATA 7 31, ID 10007  frame_expect is 7
-002.578 启动了ACK计时器.... 8 packets received, 7688 bps, 96.11%, Err 0 (0.0e+00)
-002.595 Send DATA 5 7, ID 20005
-002.844 接收到了帧、
-002.844 Recv DATA 8 31, ID 10008  frame_expect is 8
-002.844 启动了ACK计时器Send DATA 6 8, ID 20006
-003.111 接收到了帧、
-003.111 Recv DATA 9 31, ID 10009  frame_expect is 9
-003.111 启动了ACK计时器Send DATA 7 9, ID 20007
-003.379 接收到了帧、
-003.379 Recv DATA 10 3, ID 10010  frame_expect is 10
-003.380 启动了ACK计时器Send DATA 8 10, ID 20008
-003.649 接收到了帧、
-003.649 Recv DATA 11 4, ID 10011  frame_expect is 11
-003.649 启动了ACK计时器Send DATA 9 11, ID 20009
-003.902 接收到了帧、
-003.902 Recv DATA 12 5, ID 10012  frame_expect is 12
-003.902 启动了ACK计时器Send DATA 10 12, ID 20010
-004.169 接收到了帧、
-004.169 Recv DATA 13 6, ID 10013  frame_expect is 13
-004.169 启动了ACK计时器Send DATA 11 13, ID 20011
-004.436 接收到了帧、
-004.436 Recv DATA 14 7, ID 10014  frame_expect is 14
-004.436 启动了ACK计时器Send DATA 12 14, ID 20012
-004.685 接收到了帧、
-004.685 Recv DATA 15 8, ID 10015  frame_expect is 15
-004.685 启动了ACK计时器.... 16 packets received, 7732 bps, 96.65%, Err 1 (2.8e-05)
-004.701 Send DATA 13 15, ID 20013
-004.968 接收到了帧、
-004.968 CRC 校验出错！
-004.968 Send DATA 0 15, ID 0
-004.968 Send DATA 14 15, ID 20014
-005.234 接收到了帧、
-005.234 Recv DATA 17 10, ID 10017  frame_expect is 16
-005.234 启动了ACK计时器Send DATA 15 15, ID 20015
-005.483 接收到了帧、
-005.483 Recv DATA 18 11, ID 10018  frame_expect is 16
-005.483 启动了ACK计时器Send DATA 16 15, ID 20016
-005.748 接收到了帧、
-005.748 Recv DATA 19 12, ID 10019  frame_expect is 16
-005.748 启动了ACK计时器Send DATA 17 15, ID 20017
-006.012 接收到了帧、
-006.013 Recv DATA 16 13, ID 10016  frame_expect is 16
-006.013 启动了ACK计时器Send DATA 18 19, ID 20018
-006.280 接收到了帧、
-006.280 Recv DATA 20 14, ID 10020  frame_expect is 20
-006.280 启动了ACK计时器Send DATA 19 20, ID 20019
-006.548 接收到了帧、
-006.548 Recv DATA 21 15, ID 10021  frame_expect is 21
-006.548 启动了ACK计时器Send DATA 20 21, ID 20020
-006.814 接收到了帧、
-006.814 Recv DATA 22 16, ID 10022  frame_expect is 22
-006.814 启动了ACK计时器.... 23 packets received, 7398 bps, 92.48%, Err 1 (1.9e-05)
-006.815 Send DATA 21 22, ID 20021
-007.066 接收到了帧、
-007.067 Recv DATA 23 17, ID 10023  frame_expect is 23
-007.067 启动了ACK计时器Send DATA 22 23, ID 20022
-007.333 接收到了帧、
-007.333 Recv DATA 24 18, ID 10024  frame_expect is 24
-007.333 启动了ACK计时器Send DATA 23 24, ID 20023
-007.600 接收到了帧、
-007.600 Recv DATA 25 19, ID 10025  frame_expect is 25
-007.600 启动了ACK计时器Send DATA 24 25, ID 20024
-007.866 接收到了帧、
-007.866 Recv DATA 26 20, ID 10026  frame_expect is 26
-007.866 启动了ACK计时器Send DATA 25 26, ID 20025
-008.118 接收到了帧、
-008.118 Recv DATA 27 21, ID 10027  frame_expect is 27
-008.118 启动了ACK计时器Send DATA 26 27, ID 20026
-008.382 接收到了帧、
-008.382 Recv DATA 28 22, ID 10028  frame_expect is 28
-008.382 启动了ACK计时器Send DATA 27 28, ID 20027
-008.648 接收到了帧、
-008.648 Recv DATA 29 23, ID 10029  frame_expect is 29
-008.648 启动了ACK计时器Send DATA 28 29, ID 20028
-008.917 接收到了帧、
-008.917 Recv DATA 30 24, ID 10030  frame_expect is 30
-008.917 启动了ACK计时器.... 31 packets received, 7496 bps, 93.70%, Err 1 (1.4e-05)
-008.933 Send DATA 29 30, ID 20029
-009.183 接收到了帧、
-009.183 Recv DATA 31 25, ID 10031  frame_expect is 31
-009.183 启动了ACK计时器Send DATA 30 31, ID 20030
-009.431 接收到了帧、
-009.431 Recv DATA 0 26, ID 10032  frame_expect is 0
-009.431 启动了ACK计时器Send DATA 31 0, ID 20031
-009.695 接收到了帧、
-009.695 Recv DATA 1 27, ID 10033  frame_expect is 1
-009.695 启动了ACK计时器Send DATA 0 1, ID 20032
-009.977 接收到了帧、
-009.977 Recv DATA 2 28, ID 10034  frame_expect is 2
-009.977 启动了ACK计时器Send DATA 1 2, ID 20033
-010.242 接收到了帧、
-010.242 Recv DATA 3 29, ID 10035  frame_expect is 3
-010.242 启动了ACK计时器Send DATA 2 3, ID 20034
-010.508 接收到了帧、
-010.508 Recv DATA 4 30, ID 10036  frame_expect is 4
-010.508 启动了ACK计时器Send DATA 3 4, ID 20035
-010.776 接收到了帧、
-010.776 Recv DATA 5 31, ID 10037  frame_expect is 5
-010.777 启动了ACK计时器Send DATA 4 5, ID 20036
-011.044 接收到了帧、
-011.044 Recv DATA 6 0, ID 10038  frame_expect is 6
-011.044 启动了ACK计时器.... 39 packets received, 7537 bps, 94.22%, Err 1 (1.2e-05)
-011.044 Send DATA 5 6, ID 20037
-011.294 接收到了帧、
-011.294 Recv DATA 7 1, ID 10039  frame_expect is 7
-011.294 启动了ACK计时器Send DATA 6 7, ID 20038
-011.560 接收到了帧、
-011.560 Recv DATA 8 2, ID 10040  frame_expect is 8
-011.560 启动了ACK计时器Send DATA 7 8, ID 20039
-011.808 接收到了帧、
-011.808 Recv DATA 9 3, ID 10041  frame_expect is 9
-011.808 启动了ACK计时器Send DATA 8 9, ID 20040
-012.075 接收到了帧、
-012.075 Recv DATA 10 4, ID 10042  frame_expect is 10
-012.075 启动了ACK计时器Send DATA 9 10, ID 20041
-012.358 接收到了帧、
-012.358 Recv DATA 11 5, ID 10043  frame_expect is 11
-012.358 启动了ACK计时器Send DATA 10 11, ID 20042
-012.607 接收到了帧、
-012.607 Recv DATA 12 6, ID 10044  frame_expect is 12
-012.607 启动了ACK计时器Send DATA 11 12, ID 20043
-012.874 接收到了帧、
-012.874 Recv DATA 13 7, ID 10045  frame_expect is 13
-012.874 启动了ACK计时器Send DATA 12 13, ID 20044
-013.141 接收到了帧、
-013.141 Recv DATA 14 8, ID 10046  frame_expect is 14
-013.141 启动了ACK计时器.... 47 packets received, 7583 bps, 94.78%, Err 1 (9.7e-06)
-013.157 Send DATA 13 14, ID 20045
-013.391 接收到了帧、
-013.391 Recv DATA 15 9, ID 10047  frame_expect is 15
-013.391 启动了ACK计时器Send DATA 14 15, ID 20046
-013.656 接收到了帧、
-013.657 Recv DATA 16 10, ID 10048  frame_expect is 16
-013.657 启动了ACK计时器Send DATA 15 16, ID 20047
-013.923 接收到了帧、
-013.923 Recv DATA 17 11, ID 10049  frame_expect is 17
-013.923 启动了ACK计时器Send DATA 16 17, ID 20048
-014.190 接收到了帧、
-014.190 Recv DATA 18 12, ID 10050  frame_expect is 18
-014.190 启动了ACK计时器Send DATA 17 18, ID 20049
-014.455 接收到了帧、
-014.456 Recv DATA 19 13, ID 10051  frame_expect is 19
-014.456 启动了ACK计时器Send DATA 18 19, ID 20050
-014.720 接收到了帧、
-014.720 Recv DATA 20 14, ID 10052  frame_expect is 20
-014.720 启动了ACK计时器Send DATA 19 20, ID 20051
-015.001 接收到了帧、
-015.002 Recv DATA 21 15, ID 10053  frame_expect is 21
-015.002 启动了ACK计时器Send DATA 20 21, ID 20052
-015.253 接收到了帧、
-015.253 Recv DATA 22 16, ID 10054  frame_expect is 22
-015.253 启动了ACK计时器.... 55 packets received, 7608 bps, 95.10%, Err 1 (8.3e-06)
-015.269 Send DATA 21 22, ID 20053
-015.521 接收到了帧、
-015.521 Recv DATA 23 17, ID 10055  frame_expect is 23
-015.521 启动了ACK计时器Send DATA 22 23, ID 20054
-015.773 接收到了帧、
-015.773 Recv DATA 24 18, ID 10056  frame_expect is 24
-015.773 启动了ACK计时器Send DATA 23 24, ID 20055
-016.055 接收到了帧、
-016.055 Recv DATA 25 19, ID 10057  frame_expect is 25
-016.055 启动了ACK计时器Send DATA 24 25, ID 20056
-016.323 接收到了帧、
-016.323 Recv DATA 26 20, ID 10058  frame_expect is 26
-016.323 启动了ACK计时器Send DATA 25 26, ID 20057
-016.591 接收到了帧、
-016.591 Recv DATA 27 21, ID 10059  frame_expect is 27
-016.591 启动了ACK计时器Send DATA 26 27, ID 20058
-016.828 接收到了帧、
-016.828 Recv DATA 28 22, ID 10060  frame_expect is 28
-016.828 启动了ACK计时器Send DATA 27 28, ID 20059
-017.092 接收到了帧、
-017.092 Recv DATA 29 23, ID 10061  frame_expect is 29
-017.092 启动了ACK计时器Send DATA 28 29, ID 20060
-017.373 接收到了帧、
-017.373 Recv DATA 30 24, ID 10062  frame_expect is 30
-017.373 启动了ACK计时器.... 63 packets received, 7623 bps, 95.29%, Err 1 (7.3e-06)
-017.373 Send DATA 29 30, ID 20061
-017.640 接收到了帧、
-017.640 Recv DATA 31 25, ID 10063  frame_expect is 31
-017.640 启动了ACK计时器Send DATA 30 31, ID 20062
-017.906 接收到了帧、
-017.906 Recv DATA 0 26, ID 10064  frame_expect is 0
-017.906 启动了ACK计时器Send DATA 31 0, ID 20063
-018.173 接收到了帧、
-018.173 Recv DATA 1 27, ID 10065  frame_expect is 1
-018.173 启动了ACK计时器Send DATA 0 1, ID 20064
-018.425 接收到了帧、
-018.425 Recv DATA 2 28, ID 10066  frame_expect is 2
-018.425 启动了ACK计时器Send DATA 1 2, ID 20065
-018.674 接收到了帧、
-018.674 Recv DATA 3 29, ID 10067  frame_expect is 3
-018.674 启动了ACK计时器Send DATA 2 3, ID 20066
-018.957 接收到了帧、
-018.957 Recv DATA 4 30, ID 10068  frame_expect is 4
-018.957 启动了ACK计时器Send DATA 3 4, ID 20067
-019.224 接收到了帧、
-019.224 Recv DATA 5 31, ID 10069  frame_expect is 5
-019.224 启动了ACK计时器Send DATA 4 5, ID 20068
-019.492 接收到了帧、
-019.492 Recv DATA 6 0, ID 10070  frame_expect is 6
-019.492 启动了ACK计时器.... 71 packets received, 7635 bps, 95.44%, Err 1 (6.5e-06)
-019.492 Send DATA 5 6, ID 20069
-019.733 接收到了帧、
-019.733 Recv DATA 7 1, ID 10071  frame_expect is 7
-019.733 启动了ACK计时器Send DATA 6 7, ID 20070
-020.001 接收到了帧、
-020.001 Recv DATA 8 2, ID 10072  frame_expect is 8
-020.001 启动了ACK计时器Send DATA 7 8, ID 20071
-020.284 接收到了帧、
-020.284 Recv DATA 9 3, ID 10073  frame_expect is 9
-020.284 启动了ACK计时器Send DATA 8 9, ID 20072
-020.532 接收到了帧、
-020.532 Recv DATA 10 4, ID 10074  frame_expect is 10
-020.532 启动了ACK计时器Send DATA 9 10, ID 20073
-020.796 接收到了帧、
-020.796 Recv DATA 11 5, ID 10075  frame_expect is 11
-020.796 启动了ACK计时器Send DATA 10 11, ID 20074
-021.062 接收到了帧、
-021.062 Recv DATA 12 6, ID 10076  frame_expect is 12
-021.062 启动了ACK计时器TCP disconnected.
+000.310 New epoch: Tue May  4 23:15:25 2021
+000.311 =================================================================
+000.311 
+000.311 Designed by Jiang Yanjun, build: May  4 2021  23:15:21
+000.311 进入了物理层准备好、
+000.846 接收到了帧、
+000.846 Recv DATA 0 31, ID 10000  frame_expect is 0
+000.846 启动了ACK计时器进入了网络层准备好、
+001.049 Send DATA 0 0, ID 0
+001.129 接收到了帧、
+001.129 Recv DATA 1 31, ID 10001  frame_expect is 1
+001.129 启动了ACK计时器进入了物理层准备好、
+001.286 进入了网络层准备好、
+001.286 Send DATA 1 1, ID 0
+001.395 接收到了帧、
+001.395 Recv DATA 2 31, ID 10002  frame_expect is 2
+001.395 启动了ACK计时器进入了物理层准备好、
+001.553 进入了网络层准备好、
+001.553 Send DATA 2 2, ID 0
+001.663 接收到了帧、
+001.663 Recv DATA 3 31, ID 10003  frame_expect is 3
+001.663 启动了ACK计时器进入了物理层准备好、
+001.804 进入了网络层准备好、
+001.804 Send DATA 3 3, ID 0
+001.914 接收到了帧、
+001.914 Recv DATA 4 31, ID 10004  frame_expect is 4
+001.914 启动了ACK计时器接收到了帧、
+001.930 Send DATA 0 4, ID 0
+002.197 接收到了帧、
+002.197 Recv DATA 5 31, ID 10005  frame_expect is 5
+002.197 启动了ACK计时器进入了物理层准备好、
+002.336 进入了网络层准备好、
+002.336 Send DATA 4 5, ID 0
+002.445 接收到了帧、
+002.445 Recv DATA 6 31, ID 10006  frame_expect is 6
+002.445 启动了ACK计时器进入了物理层准备好、
+002.603 进入了网络层准备好、
+002.604 Send DATA 5 6, ID 0
+002.715 接收到了帧、
+002.715 Recv DATA 7 31, ID 10007  frame_expect is 7
+002.715 启动了ACK计时器.... 8 packets received, 7670 bps, 95.88%, Err 0 (0.0e+00)
+002.872 进入了物理层准备好、
+002.872 进入了网络层准备好、
+002.872 Send DATA 6 7, ID 0
+002.982 接收到了帧、
+002.982 Recv DATA 8 31, ID 10008  frame_expect is 8
+002.982 启动了ACK计时器进入了物理层准备好、
+003.124 进入了网络层准备好、
+003.124 Send DATA 7 8, ID 0
+003.249 接收到了帧、
+003.249 Recv DATA 9 3, ID 10009  frame_expect is 9
+003.249 启动了ACK计时器进入了物理层准备好、
+003.391 进入了网络层准备好、
+003.391 Send DATA 8 9, ID 0
+003.518 接收到了帧、
+003.518 Recv DATA 10 4, ID 10010  frame_expect is 10
+003.518 启动了ACK计时器进入了物理层准备好、
+003.660 进入了网络层准备好、
+003.660 Send DATA 9 10, ID 0
+003.770 接收到了帧、
+003.770 Recv DATA 11 5, ID 10011  frame_expect is 11
+003.770 启动了ACK计时器进入了物理层准备好、
+003.927 进入了网络层准备好、
+003.927 Send DATA 10 11, ID 0
+004.037 接收到了帧、
+004.037 Recv DATA 12 6, ID 10012  frame_expect is 12
+004.037 启动了ACK计时器进入了物理层准备好、
+004.193 进入了网络层准备好、
+004.193 Send DATA 11 12, ID 0
+004.303 接收到了帧、
+004.303 Recv DATA 13 7, ID 10013  frame_expect is 13
+004.303 启动了ACK计时器进入了物理层准备好、
+004.446 进入了网络层准备好、
+004.446 Send DATA 12 13, ID 0
+004.554 接收到了帧、
+004.555 Recv DATA 14 8, ID 10014  frame_expect is 14
+004.555 启动了ACK计时器进入了物理层准备好、
+004.711 进入了网络层准备好、
+004.711 Send DATA 13 14, ID 0
+004.821 接收到了帧、
+004.821 Recv DATA 15 9, ID 10015  frame_expect is 15
+004.821 启动了ACK计时器.... 16 packets received, 7725 bps, 96.56%, Err 0 (0.0e+00)
+004.979 进入了物理层准备好、
+004.979 进入了网络层准备好、
+004.979 Send DATA 14 15, ID 0
+005.026 Impose noise on received data, 1/37608=2.7E-05
+005.089 接收到了帧、
+005.089 Recv DATA 16 10, ID 10016  frame_expect is 16
+005.089 启动了ACK计时器进入了物理层准备好、
+005.247 进入了网络层准备好、
+005.247 Send DATA 15 16, ID 0
+005.358 接收到了帧、
+005.358 CRC 校验出错！
+005.358 Send NAK 0 16, ID 0
+005.515 进入了物理层准备好、
+005.515 进入了网络层准备好、
+005.515 Send DATA 16 16, ID 0
+005.625 接收到了帧、
+005.625 Recv DATA 18 12, ID 10018  frame_expect is 17
+005.625 启动了ACK计时器进入了物理层准备好、
+005.782 进入了网络层准备好、
+005.783 Send DATA 17 16, ID 0
+005.894 接收到了帧、
+005.894 Recv DATA 19 13, ID 10019  frame_expect is 17
+005.894 启动了ACK计时器进入了物理层准备好、
+006.034 进入了网络层准备好、
+006.034 Send DATA 18 16, ID 0
+006.129 接收到了帧、
+006.129 Recv DATA 20 14, ID 10020  frame_expect is 17
+006.129 启动了ACK计时器进入了物理层准备好、
+006.303 进入了网络层准备好、
+006.303 Send DATA 19 16, ID 0
+006.413 接收到了帧、
+006.413 Recv DATA 17 15, ID 10017  frame_expect is 17
+006.413 启动了ACK计时器进入了物理层准备好、
+006.573 进入了网络层准备好、
+006.573 Send DATA 20 20, ID 0
+006.684 接收到了帧、
+006.684 Recv DATA 21 16, ID 10021  frame_expect is 21
+006.684 启动了ACK计时器进入了物理层准备好、
+006.825 进入了网络层准备好、
+006.825 Send DATA 21 21, ID 0
+006.934 接收到了帧、
+006.934 Recv DATA 22 17, ID 10022  frame_expect is 22
+006.934 启动了ACK计时器.... 23 packets received, 7412 bps, 92.65%, Err 1 (1.9e-05)
+007.091 进入了物理层准备好、
+007.091 进入了网络层准备好、
+007.091 Send DATA 22 22, ID 0
+007.201 接收到了帧、
+007.201 Recv DATA 23 18, ID 10023  frame_expect is 23
+007.201 启动了ACK计时器进入了物理层准备好、
+007.359 进入了网络层准备好、
+007.359 Send DATA 23 23, ID 0
+007.469 接收到了帧、
+007.469 Recv DATA 24 19, ID 10024  frame_expect is 24
+007.469 启动了ACK计时器进入了物理层准备好、
+007.626 进入了网络层准备好、
+007.626 Send DATA 24 24, ID 0
+007.735 接收到了帧、
+007.735 Recv DATA 25 20, ID 10025  frame_expect is 25
+007.735 启动了ACK计时器进入了物理层准备好、
+007.892 进入了网络层准备好、
+007.892 Send DATA 25 25, ID 0
+007.986 接收到了帧、
+007.986 Recv DATA 26 21, ID 10026  frame_expect is 26
+007.986 启动了ACK计时器进入了物理层准备好、
+008.159 进入了网络层准备好、
+008.159 Send DATA 26 26, ID 0
+008.253 接收到了帧、
+008.253 Recv DATA 27 22, ID 10027  frame_expect is 27
+008.253 启动了ACK计时器进入了物理层准备好、
+008.411 进入了网络层准备好、
+008.411 Send DATA 27 27, ID 0
+008.504 接收到了帧、
+008.504 Recv DATA 28 23, ID 10028  frame_expect is 28
+008.505 启动了ACK计时器进入了物理层准备好、
+008.679 进入了网络层准备好、
+008.679 Send DATA 28 28, ID 0
+008.773 接收到了帧、
+008.773 Recv DATA 29 24, ID 10029  frame_expect is 29
+008.773 启动了ACK计时器进入了物理层准备好、
+008.947 进入了网络层准备好、
+008.947 Send DATA 29 29, ID 0
+009.042 接收到了帧、
+009.042 Recv DATA 30 25, ID 10030  frame_expect is 30
+009.042 启动了ACK计时器.... 31 packets received, 7502 bps, 93.77%, Err 1 (1.4e-05)
+009.216 进入了物理层准备好、
+009.216 进入了网络层准备好、
+009.216 Send DATA 30 30, ID 0
+009.309 接收到了帧、
+009.309 Recv DATA 31 26, ID 10031  frame_expect is 31
+009.309 启动了ACK计时器进入了物理层准备好、
+009.466 进入了网络层准备好、
+009.466 Send DATA 31 31, ID 0
+009.576 接收到了帧、
+009.576 Recv DATA 0 27, ID 10032  frame_expect is 0
+009.576 启动了ACK计时器进入了物理层准备好、
+009.733 进入了网络层准备好、
+009.733 Send DATA 0 0, ID 0
+009.844 接收到了帧、
+009.845 Recv DATA 1 28, ID 10033  frame_expect is 1
+009.845 启动了ACK计时器进入了物理层准备好、
+010.001 进入了网络层准备好、
+010.001 Send DATA 1 1, ID 0
+010.095 接收到了帧、
+010.095 Recv DATA 2 29, ID 10034  frame_expect is 2
+010.095 启动了ACK计时器进入了物理层准备好、
+010.267 进入了网络层准备好、
+010.268 Send DATA 2 2, ID 0
+010.377 接收到了帧、
+010.377 Recv DATA 3 30, ID 10035  frame_expect is 3
+010.377 启动了ACK计时器进入了物理层准备好、
+010.532 进入了网络层准备好、
+010.532 Send DATA 3 3, ID 0
+010.642 接收到了帧、
+010.642 Recv DATA 4 31, ID 10036  frame_expect is 4
+010.642 启动了ACK计时器进入了物理层准备好、
+010.800 进入了网络层准备好、
+010.800 Send DATA 4 4, ID 0
+010.908 接收到了帧、
+010.908 Recv DATA 5 0, ID 10037  frame_expect is 5
+010.908 启动了ACK计时器进入了物理层准备好、
+011.064 进入了网络层准备好、
+011.064 Send DATA 5 5, ID 0
+011.159 接收到了帧、
+011.159 Recv DATA 6 1, ID 10038  frame_expect is 6
+011.159 启动了ACK计时器.... 39 packets received, 7549 bps, 94.37%, Err 1 (1.2e-05)
+011.316 进入了物理层准备好、
+011.316 进入了网络层准备好、
+011.316 Send DATA 6 6, ID 0
+011.426 接收到了帧、
+011.426 Recv DATA 7 2, ID 10039  frame_expect is 7
+011.426 启动了ACK计时器进入了物理层准备好、
+011.584 进入了网络层准备好、
+011.584 Send DATA 7 7, ID 0
+011.679 接收到了帧、
+011.679 Recv DATA 8 3, ID 10040  frame_expect is 8
+011.679 启动了ACK计时器进入了物理层准备好、
+011.854 进入了网络层准备好、
+011.854 Send DATA 8 8, ID 0
+011.963 接收到了帧、
+011.963 Recv DATA 9 4, ID 10041  frame_expect is 9
+011.963 启动了ACK计时器进入了物理层准备好、
+012.105 进入了网络层准备好、
+012.105 Send DATA 9 9, ID 0
+012.229 接收到了帧、
+012.229 Recv DATA 10 5, ID 10042  frame_expect is 10
+012.229 启动了ACK计时器进入了物理层准备好、
+012.370 进入了网络层准备好、
+012.370 Send DATA 10 10, ID 0
+012.480 接收到了帧、
+012.480 Recv DATA 11 6, ID 10043  frame_expect is 11
+012.480 启动了ACK计时器进入了物理层准备好、
+012.638 进入了网络层准备好、
+012.638 Send DATA 11 11, ID 0
+012.748 接收到了帧、
+012.748 Recv DATA 12 7, ID 10044  frame_expect is 12
+012.748 启动了ACK计时器进入了物理层准备好、
+012.906 进入了网络层准备好、
+012.906 Send DATA 12 12, ID 0
+013.016 接收到了帧、
+013.016 Recv DATA 13 8, ID 10045  frame_expect is 13
+013.016 启动了ACK计时器进入了物理层准备好、
+013.172 进入了网络层准备好、
+013.173 Send DATA 13 13, ID 0
+013.284 接收到了帧、
+013.284 Recv DATA 14 9, ID 10046  frame_expect is 14
+013.284 启动了ACK计时器.... 47 packets received, 7576 bps, 94.70%, Err 1 (9.7e-06)
+013.439 进入了物理层准备好、
+013.439 进入了网络层准备好、
+013.439 Send DATA 14 14, ID 0
+013.534 接收到了帧、
+013.534 Recv DATA 15 10, ID 10047  frame_expect is 15
+013.534 启动了ACK计时器进入了物理层准备好、
+013.691 进入了网络层准备好、
+013.691 Send DATA 15 15, ID 0
+013.800 接收到了帧、
+013.800 Recv DATA 16 11, ID 10048  frame_expect is 16
+013.800 启动了ACK计时器进入了物理层准备好、
+013.956 进入了网络层准备好、
+013.956 Send DATA 16 16, ID 0
+014.051 接收到了帧、
+014.051 Recv DATA 17 12, ID 10049  frame_expect is 17
+014.051 启动了ACK计时器进入了物理层准备好、
+014.225 进入了网络层准备好、
+014.225 Send DATA 17 17, ID 0
+014.318 接收到了帧、
+014.319 Recv DATA 18 13, ID 10050  frame_expect is 18
+014.319 启动了ACK计时器进入了物理层准备好、
+014.491 进入了网络层准备好、
+014.491 Send DATA 18 18, ID 0
+014.586 接收到了帧、
+014.587 Recv DATA 19 14, ID 10051  frame_expect is 19
+014.587 启动了ACK计时器进入了物理层准备好、
+014.759 进入了网络层准备好、
+014.759 Send DATA 19 19, ID 0
+014.869 接收到了帧、
+014.869 Recv DATA 20 15, ID 10052  frame_expect is 20
+014.869 启动了ACK计时器进入了物理层准备好、
+015.010 进入了网络层准备好、
+015.010 Send DATA 20 20, ID 0
+015.119 接收到了帧、
+015.119 Recv DATA 21 16, ID 10053  frame_expect is 21
+015.119 启动了ACK计时器接收到了帧、
+015.135 Send DATA 17 21, ID 0
+015.401 接收到了帧、
+015.402 Recv DATA 22 16, ID 10054  frame_expect is 22
+015.402 启动了ACK计时器.... 55 packets received, 7600 bps, 94.99%, Err 1 (8.3e-06)
+015.543 进入了物理层准备好、
+015.543 进入了网络层准备好、
+015.543 Send DATA 21 22, ID 0
+015.670 接收到了帧、
+015.670 Recv DATA 23 16, ID 10055  frame_expect is 23
+015.670 启动了ACK计时器进入了物理层准备好、
+015.811 进入了网络层准备好、
+015.811 Send DATA 22 23, ID 0
+015.905 接收到了帧、
+015.905 Recv DATA 24 16, ID 10056  frame_expect is 24
+015.905 启动了ACK计时器进入了物理层准备好、
+016.078 进入了网络层准备好、
+016.078 Send DATA 23 24, ID 0
+016.172 接收到了帧、
+016.172 Recv DATA 25 16, ID 10057  frame_expect is 25
+016.172 启动了ACK计时器进入了物理层准备好、
+016.344 进入了网络层准备好、
+016.344 Send DATA 24 25, ID 0
+016.438 接收到了帧、
+016.438 Recv DATA 26 20, ID 10058  frame_expect is 26
+016.438 启动了ACK计时器进入了物理层准备好、
+016.595 进入了网络层准备好、
+016.595 Send DATA 25 26, ID 0
+016.704 接收到了帧、
+016.704 Recv DATA 27 21, ID 10059  frame_expect is 27
+016.704 启动了ACK计时器进入了物理层准备好、
+016.861 进入了网络层准备好、
+016.861 Send DATA 26 27, ID 0
+016.972 接收到了帧、
+016.972 Recv DATA 28 22, ID 10060  frame_expect is 28
+016.972 启动了ACK计时器进入了物理层准备好、
+017.131 进入了网络层准备好、
+017.131 Send DATA 27 28, ID 0
+017.240 接收到了帧、
+017.240 Recv DATA 29 23, ID 10061  frame_expect is 29
+017.240 启动了ACK计时器进入了物理层准备好、
+017.398 进入了网络层准备好、
+017.398 Send DATA 28 29, ID 0
+017.507 接收到了帧、
+017.507 Recv DATA 30 24, ID 10062  frame_expect is 30
+017.507 启动了ACK计时器.... 63 packets received, 7622 bps, 95.27%, Err 1 (7.3e-06)
+017.649 进入了物理层准备好、
+017.649 进入了网络层准备好、
+017.649 Send DATA 29 30, ID 0
+017.775 接收到了帧、
+017.775 Recv DATA 31 25, ID 10063  frame_expect is 31
+017.775 启动了ACK计时器进入了物理层准备好、
+017.916 进入了网络层准备好、
+017.916 Send DATA 30 31, ID 0
+018.042 接收到了帧、
+018.042 Recv DATA 0 26, ID 10064  frame_expect is 0
+018.042 启动了ACK计时器进入了物理层准备好、
+018.184 进入了网络层准备好、
+018.184 Send DATA 31 0, ID 0
+018.312 接收到了帧、
+018.312 Recv DATA 1 27, ID 10065  frame_expect is 1
+018.312 启动了ACK计时器进入了物理层准备好、
+018.452 进入了网络层准备好、
+018.452 Send DATA 0 1, ID 0
+018.562 接收到了帧、
+018.562 Recv DATA 2 28, ID 10066  frame_expect is 2
+018.562 启动了ACK计时器进入了物理层准备好、
+018.705 进入了网络层准备好、
+018.705 Send DATA 1 2, ID 0
+018.830 接收到了帧、
+018.830 Recv DATA 3 29, ID 10067  frame_expect is 3
+018.830 启动了ACK计时器进入了物理层准备好、
+018.971 进入了网络层准备好、
+018.971 Send DATA 2 3, ID 0
+019.096 接收到了帧、
+019.096 Recv DATA 4 30, ID 10068  frame_expect is 4
+019.096 启动了ACK计时器进入了物理层准备好、
+019.237 进入了网络层准备好、
+019.237 Send DATA 3 4, ID 0
+019.361 接收到了帧、
+019.361 Recv DATA 5 31, ID 10069  frame_expect is 5
+019.361 启动了ACK计时器进入了物理层准备好、
+019.502 进入了网络层准备好、
+019.502 Send DATA 4 5, ID 0
+019.612 接收到了帧、
+019.612 Recv DATA 6 0, ID 10070  frame_expect is 6
+019.612 启动了ACK计时器.... 71 packets received, 7640 bps, 95.50%, Err 1 (6.5e-06)
+019.769 进入了物理层准备好、
+019.769 进入了网络层准备好、
+019.769 Send DATA 5 6, ID 0
+019.881 接收到了帧、
+019.881 Recv DATA 7 1, ID 10071  frame_expect is 7
+019.881 启动了ACK计时器进入了物理层准备好、
+020.036 进入了网络层准备好、
+020.036 Send DATA 6 7, ID 0
+020.146 接收到了帧、
+020.146 Recv DATA 8 2, ID 10072  frame_expect is 8
+020.146 启动了ACK计时器进入了物理层准备好、
+020.303 进入了网络层准备好、
+020.303 Send DATA 7 8, ID 0
+020.412 接收到了帧、
+020.412 Recv DATA 9 3, ID 10073  frame_expect is 9
+020.412 启动了ACK计时器进入了物理层准备好、
+020.554 进入了网络层准备好、
+020.554 Send DATA 8 9, ID 0
+020.679 接收到了帧、
+020.679 Recv DATA 10 4, ID 10074  frame_expect is 10
+020.679 启动了ACK计时器进入了物理层准备好、
+020.821 进入了网络层准备好、
+020.821 Send DATA 9 10, ID 0
+020.947 接收到了帧、
+020.947 Recv DATA 11 5, ID 10075  frame_expect is 11
+020.947 启动了ACK计时器进入了物理层准备好、
+021.089 进入了网络层准备好、
+021.089 Send DATA 10 11, ID 0
+021.199 接收到了帧、
+021.199 Recv DATA 12 6, ID 10076  frame_expect is 12
+021.199 启动了ACK计时器进入了物理层准备好、
+021.357 进入了网络层准备好、
+021.357 Send DATA 11 12, ID 0
+021.467 接收到了帧、
+021.467 Recv DATA 13 7, ID 10077  frame_expect is 13
+021.467 启动了ACK计时器进入了物理层准备好、
+021.623 进入了网络层准备好、
+021.623 Send DATA 12 13, ID 0
+021.717 接收到了帧、
+021.717 Recv DATA 14 8, ID 10078  frame_expect is 14
+021.717 启动了ACK计时器.... 79 packets received, 7654 bps, 95.68%, Err 1 (5.8e-06)
+021.876 进入了物理层准备好、
+021.876 进入了网络层准备好、
+021.876 Send DATA 13 14, ID 0
+022.002 接收到了帧、
+022.002 Recv DATA 15 9, ID 10079  frame_expect is 15
+022.002 启动了ACK计时器进入了物理层准备好、
+022.145 进入了网络层准备好、
+022.145 Send DATA 14 15, ID 0
+022.255 接收到了帧、
+022.255 Recv DATA 16 10, ID 10080  frame_expect is 16
+022.255 启动了ACK计时器进入了物理层准备好、
+022.414 进入了网络层准备好、
+022.414 Send DATA 15 16, ID 0
+022.524 接收到了帧、
+022.524 Recv DATA 17 11, ID 10081  frame_expect is 17
+022.524 启动了ACK计时器进入了物理层准备好、
+022.666 进入了网络层准备好、
+022.666 Send DATA 16 17, ID 0
+022.791 接收到了帧、
+022.791 Recv DATA 18 12, ID 10082  frame_expect is 18
+022.791 启动了ACK计时器进入了物理层准备好、
+022.934 进入了网络层准备好、
+022.934 Send DATA 17 18, ID 0
+023.058 接收到了帧、
+023.058 Recv DATA 19 13, ID 10083  frame_expect is 19
+023.058 启动了ACK计时器进入了物理层准备好、
+023.201 进入了网络层准备好、
+023.201 Send DATA 18 19, ID 0
+023.311 接收到了帧、
+023.311 Recv DATA 20 14, ID 10084  frame_expect is 20
+023.311 启动了ACK计时器进入了物理层准备好、
+023.468 进入了网络层准备好、
+023.468 Send DATA 19 20, ID 0
+023.564 接收到了帧、
+023.564 Recv DATA 21 15, ID 10085  frame_expect is 21
+023.564 启动了ACK计时器进入了物理层准备好、
+023.724 进入了网络层准备好、
+023.724 Send DATA 20 21, ID 0
+023.833 接收到了帧、
+023.833 Recv DATA 22 16, ID 10086  frame_expect is 22
+023.833 启动了ACK计时器.... 87 packets received, 7662 bps, 95.78%, Err 1 (5.3e-06)
+023.990 Impose noise on received data, 2/189392=1.1E-05
+023.990 进入了物理层准备好、
+023.990 进入了网络层准备好、
+023.990 Send DATA 21 22, ID 0
+024.099 接收到了帧、
+024.099 Recv DATA 23 17, ID 10087  frame_expect is 23
+024.099 启动了ACK计时器TCP disconnected.

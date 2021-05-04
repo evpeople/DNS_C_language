@@ -31,6 +31,7 @@ struct FRAME
 static int between(unsigned char a, unsigned char b, unsigned char c); //
 static void put_frame(unsigned char *frame, int len);
 static void send_data(unsigned char kind_of_frame, unsigned char frame_nr, unsigned char frame_expected);
+static void send_ack(unsigned char frame_nr, unsigned char frame_expected);
 int main(int argc, char **argv)
 {
 
@@ -129,8 +130,12 @@ int main(int argc, char **argv)
             break;
         case DATA_TIMEOUT:
             dbg_event("---- DATA %d timeout\n", arg);
-            if (!between(ack_expected, arg, next_frame_to_send))
-                arg = arg + NR_BUFS;
+            // if (!between(ack_expected, arg, next_frame_to_send)) //超时的的这个有可能超过了发送窗口，就是说ACK我没收到，
+            // {
+            //     dbg_event("进入了超过了发送窗口的地方");
+            //     arg = arg + NR_BUFS;
+            // }
+            //我已经把之前的ACK都确认了，理论上不会有这个
             send_data(FRAME_DATA, arg, frame_expected); //select the bad frame and resend it
             break;
         }
@@ -163,19 +168,35 @@ static void send_data(unsigned char kind_of_frame, unsigned char frame_nr, unsig
 {
     struct FRAME s;
     s.kind = kind_of_frame;
-    s.seq = frame_nr;                                   //insert sequence number into frame
-    s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1); //piggyback ack
-    if (kind_of_frame == FRAME_DATA)
-        memcpy(s.data, to_phy_buffer[frame_nr % NR_BUFS], PKT_LEN); //insert packet into frame
-
-    if (kind_of_frame == FRAME_NAK)
-        no_nak = false; //one nak per frame,please
-    dbg_frame("Send DATA %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
-    if (kind_of_frame == FRAME_DATA)
-        put_frame((unsigned char *)&s, 3 + PKT_LEN); //put CRC following the frame
-    if (kind_of_frame == FRAME_NAK || kind_of_frame == FRAME_ACK)
-        put_frame((unsigned char *)&s, 2); //put CRC following the frame
-    if (kind_of_frame == FRAME_DATA)
+    s.seq = frame_nr;
+    s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
+    switch (kind_of_frame)
+    {
+    case FRAME_DATA:
+        dbg_frame("Send DATA %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
+        memcpy(s.data, to_phy_buffer[frame_nr % NR_BUFS], PKT_LEN);
+        put_frame((unsigned char *)&s, 3 + PKT_LEN);
         start_timer(frame_nr % NR_BUFS, DATA_TIMER);
-    stop_ack_timer(); //no need for separate ack frame
+        break;
+    case FRAME_NAK:
+        dbg_frame("Send NAK %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
+        no_nak = false;
+        put_frame((unsigned char *)&s, 2);
+        break;
+    case FRAME_ACK:
+        dbg_frame("Send ACK %d %d, ID %d\n", s.seq, s.ack, *(short *)s.data);
+        put_frame((unsigned char *)&s, 2);
+    default:
+        dbg_warning("！！！！！！！不可能\n");
+        break;
+    }
+    stop_ack_timer(); //只要有帧发过去，捎带确认就成立了！！！！！！！
+}
+static void send_ack(unsigned char frame_nr, unsigned char frame_expected)
+{
+    struct FRAME s;
+    s.kind = FRAME_ACK;
+    s.seq = frame_nr;
+    s.ack = (frame_expected + MAX_SEQ) % (MAX_SEQ + 1);
+    put_frame((unsigned char *)&s, 2);
 }
