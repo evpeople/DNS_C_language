@@ -758,17 +758,7 @@ void dbg_warning(char *fmt, ...)
         va_end(arg_ptr);
     }
 }
-void dbg_error(char *fmt, ...)
-{
-    va_list arg_ptr;
 
-    if (debug_mask & DBG_ERROR)
-    {
-        va_start(arg_ptr, fmt);
-        __v_lprintf(fmt, arg_ptr);
-        va_end(arg_ptr);
-    }
-}
 /* Event Generator */
 
 #define PHL_SQ_LEVEL 50
