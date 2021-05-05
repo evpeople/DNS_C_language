@@ -5,14 +5,12 @@
 #include "protocol.h"
 #include "datalink.h"
 
-#define DATA_TIMER 2000
-#define BUFFERS_NUM 11
+#define DATA_TIMER 600
+#define BUFFERS_NUM 19
 static unsigned char send_buffers[BUFFERS_NUM + 1][PKT_LEN];
 static unsigned char frame_expected = 0;
 static unsigned int number_of_send = 0;
-static unsigned char get_buffer[PKT_LEN];
 static unsigned char have_ack[BUFFERS_NUM + 1];
-static unsigned char have_send[BUFFERS_NUM + 1];
 static unsigned char have_arrived[BUFFERS_NUM + 1];
 
 static bool phl_ready = false;
@@ -64,7 +62,6 @@ int main(int argc, char **argv)
         case NETWORK_LAYER_READY: //可以发送新的数据了（可以从网络层拿包了
             dbg_warning("进入了网络层准备好、\n");
             get_packet(send_buffers[number_of_send]);
-            have_send[number_of_send] = 1;
             have_ack[number_of_send] = 1;
             send_data_frame(number_of_send);
             // number_of_send++;
@@ -109,7 +106,6 @@ int main(int argc, char **argv)
                     send_ack_frame(to_network.seq);
                     have_arrived[minus(to_network.seq)] = 0;
                     have_arrived[to_network.seq] = 1;
-                    have_send[to_network.seq] = 0;
                 }
                 else if (have_arrived[to_network.seq])
                 {
@@ -156,7 +152,7 @@ int main(int argc, char **argv)
             for (size_t i = 0; i <= BUFFERS_NUM; i++)
             {
 
-                dbg_frame("被重发的都有%d 判断一下是否有过ACK%d 是否发送过   %d\n", i, have_ack[i], have_send[i]);
+                dbg_frame("被重发的都有%d 判断一下是否有过ACK%d 是否发送过   \n", i, have_ack[i]);
                 if (have_ack[i])
                 {
                     // dbg_frame("have_ack = %d\n", have_ack[i]);
