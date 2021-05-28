@@ -5,8 +5,8 @@
 #include "datalink.h"
 
 #define MAX_SEQ 31
-#define DATA_TIMER 3600             //270+270+800=1400
-#define ACK_TIMER 700               //普通模式下700多毫秒才有一帧
+#define DATA_TIMER 2800             //270+270+800=1400   低误码率用低时延
+#define ACK_TIMER 1000              //普通模式下700多毫秒才有一帧
 #define NR_BUFS ((MAX_SEQ + 1) / 2) //保证没有重叠，否则要很复杂的处理的重传帧的问题
 #define inc(k)       \
     if (k < MAX_SEQ) \
