@@ -4,8 +4,15 @@ CFLAGS=-O2
 DNS.out: main.o lprintf.o log.o hlist.o
 	gcc main.o lprintf.o log.o hlist.o -o DNS.out -lm
 
-test.out:  lprintf.o log.o hlist.o test.o
-	gcc  lprintf.o log.o hlist.o test.o -o test.out -lm
+test : test.o lprintf.o log.o hlist.o
+	gcc test.o lprintf.o log.o hlist.o -o test.out -lm
 
+
+
+.PHONY:clean
 clean:
-	${RM} *.o datalink *.log *.out
+		@echo "=======clean project========="
+		rm   *.o
+		rm	 *.out
+		rm   *.log
+		@echo "=======clean completed========="t
