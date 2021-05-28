@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <errno.h>
+#include <error.h>
+#include <err.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,6 +24,7 @@ void handle_udp_msg(int fd)
         if (count == -1)
         {
             printf("recieve data fail!\n");
+            strerror(errno);
             return;
         }
         printf("client:%s\n", buf); //打印client发过来的信息
