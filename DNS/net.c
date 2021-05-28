@@ -1,34 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <stdint.h>
-#include "log.h"
-
-#define SERVER_PORT 8888
-#define BUFF_LEN 256
-
-struct HEADER
-{
-    unsigned id : 16;    /* query identification number */
-    unsigned rd : 1;     /* recursion desired */
-    unsigned tc : 1;     /* truncated message */
-    unsigned aa : 1;     /* authoritive answer */
-    unsigned opcode : 4; /* purpose of message */
-    unsigned qr : 1;     /* response flag */
-    unsigned rcode : 4;  /* response code */
-    unsigned cd : 1;     /* checking disabled by resolver */
-    unsigned ad : 1;     /* authentic data from named */
-    unsigned z : 1;      /* unused bits, must be ZERO */
-    unsigned ra : 1;     /* recursion available */
-    uint16_t qdcount;    /* number of question entries */
-    uint16_t ancount;    /* number of answer entries */
-    uint16_t nscount;    /* number of authority entries */
-    uint16_t arcount;    /* number of resource entries */
-};
-
+#include "net.h"
+#include <unistd.h>
 void toDomainName(char *buf)
 {
     char *p = buf;
@@ -59,7 +30,7 @@ void toDomainName(char *buf)
     dbg_info("%s\n", buf);
 }
 
-void handle_udp_msg(int fd)
+void handleDnsMsg(int fd)
 {
     char buf[BUFF_LEN]; //接收缓冲区，1024字节
     socklen_t len;
@@ -87,9 +58,8 @@ void handle_udp_msg(int fd)
     }
 }
 
-int main(int argc, char **argv)
+void initServer()
 {
-    config(argc, argv);
     int server_fd, ret;
     struct sockaddr_in ser_addr;
 
@@ -112,8 +82,13 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    handle_udp_msg(server_fd); //处理接收到的数据
+    handleDnsMsg(server_fd); //处理接收到的数据
 
     close(server_fd);
+}
+int main(int argc, char **argv)
+{
+    config(argc, argv);
+
     return 0;
 }
