@@ -17,9 +17,10 @@ int main(int argc, char **argv)
 
     int fd = initServer();
     char *temp = malloc(400);
-    handleDnsMsg(fd, (temp));
+    char *x = handleDnsMsg(fd, (temp));
     dbg_info("after handle domain is %s\n", (temp));
     char *ans = findHashMap(&hashMap, (temp + 1));
+
     dbg_info("got ip is %s\n", ans);
 
     return 0;

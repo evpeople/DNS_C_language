@@ -39,7 +39,7 @@ void toDomainName(char *buf)
     dbg_info("%s\n", buf);
 }
 
-void handleDnsMsg(int fd, char *temp)
+char *handleDnsMsg(int fd, char *temp)
 {
     char buf[BUFF_LEN]; //接收缓冲区，1024字节
     socklen_t len;
@@ -53,7 +53,7 @@ void handleDnsMsg(int fd, char *temp)
         if (count == -1)
         {
             printf("recieve data fail!\n");
-            return;
+            return NULL;
         }
         // temp = malloc(400);
         unsigned char *x = malloc(sizeof(buf));
@@ -64,19 +64,40 @@ void handleDnsMsg(int fd, char *temp)
         //RD is same
         //RA is 0         1
         //Z is 000        3
-        //Rcode  is 0000  //todo : 应该根据源数据判断
+        //Rcode  is 0000  //todo : 应该根据源数据判断 0.0.0.0 则设计为5
         // | 1 0000 0 0 0   或用来设置1 与用来设置0 0x80
         // ^ 1 1111 0 1 1   0xFB
-
-        memcpy(x, buf, 4);
-        *(x + 2) |= 0x81;
-        *(x + 3) &= 0x00;
-
-        *(x + 3) = '\0';
+        // struct HEADER *forX = (struct HEADER *)x;
+        memcpy(x, buf, sizeof(buf));
+        struct HEADER *forX = (struct HEADER *)x;
+        ((struct HEADER *)x)->aa = 0;
+        ((struct HEADER *)x)->qr = 1;
+        ((struct HEADER *)x)->rcode = 0;
+        ((struct HEADER *)x)->ra = 0;
+        // *(x + 3) = '\0';
         dbg_info("id is %x  \n", x);
         strcpy(temp, buf + sizeof(struct HEADER));
         dbg_info("domain is %s \n", temp);
         toDomainName(temp);
+
+        // makeDnsAns(x, "0.0.0.0");
+
+        {
+            struct sockaddr_in DnsSrvAddr;
+            bzero(&DnsSrvAddr, sizeof(DnsSrvAddr));
+            DnsSrvAddr.sin_family = AF_INET;
+
+            inet_aton("10.3.9.4", &DnsSrvAddr.sin_addr);
+            DnsSrvAddr.sin_port = htons(53);
+
+            unsigned int i = sizeof(DnsSrvAddr);
+            len = sendto(fd, buf, 1024, 0, (struct sockaddr *)&DnsSrvAddr, sizeof(DnsSrvAddr));
+            len = recvfrom(fd, buf, 1024, 0, (struct sockaddr *)&DnsSrvAddr, &i);
+        }
+        // return x;
+        len = sizeof(clent_addr);
+        // sendto(fd, buf, sizeof(struct HEADER) + sizeof(struct QUERY) + sizeof(struct ANS) + 2, 0, (struct sockaddr *)&clent_addr, len); //发送信息给client，注意使用了clent_addr结构体指针
+        sendto(fd, buf, 1024, 0, (struct sockaddr *)&clent_addr, len); //发送信息给client，注意使用了clent_addr结构体指针
         // temp += 1;
         // printf("%s", temp);
         break;
@@ -84,7 +105,6 @@ void handleDnsMsg(int fd, char *temp)
         // memset(buf, 0, BUFF_LEN);
         // sprintf(buf, "I have recieved %d bytes data!\n", count); //回复client
         // printf("server:%s\n", buf);                              //打印自己发送的信息给
-        // sendto(fd, buf, BUFF_LEN, 0, (struct sockaddr *)&clent_addr, len); //发送信息给client，注意使用了clent_addr结构体指针
     }
 }
 
@@ -115,4 +135,42 @@ int initServer()
     // handleDnsMsg(server_fd); //处理接收到的数据
 
     // close(server_fd);
+}
+
+void makeDnsAns(unsigned char *buf, char *ip)
+{
+    struct HEADER *header = (struct HEADER *)buf;
+    struct ANS *rr;
+    if (*ip == (char)0 && *(ip + 1) == (char)0 && *(ip + 2) == (char)0 && *(ip + 3) == (char)0)
+    {
+        header->rcode = htons(5);
+    }
+    header->ancount = htons(1);
+    char *dn = buf + sizeof(struct HEADER);
+    //printf("%lu\n", strlen(dn));
+    //dnsQuery *query = (dnsQuery *)(dn + strlen(dn) + 1);
+    //query->type = htons((unsigned short)1);
+    //query->classes = htons((unsigned short)1);
+    char *name = dn + 2 + sizeof(struct QUERY); //给C0定位
+    unsigned short *_name = (unsigned short *)name;
+    *_name = htons((unsigned short)0xC00C);
+    //为报文压缩
+
+    rr = (struct ANS *)(name); //name 完紧跟着type
+    rr->type = htons(1);       //0.0.0.0 的type 为 TXT？
+    rr->class = htons(1);
+    rr->ttl = htons(0x1565);
+    // void *temp = &(rr->ttl);
+    // *(&(rr->ttl) + 8) = htons(4);
+    // rr->rdlength = htons(4); //如果TYPE是A CLASS 是IN 则RDATA是四个八位组的ARPA互联网地址　
+    char *temp = (char *)rr + 10;
+    *temp = 0;
+    *(temp + 1) = 4;
+    char *data = (char *)rr + 12; //到了rdata 部分
+    *data = *ip;
+    //ip应该需要处理。
+
+    *(data + 1) = *(ip + 2);
+    *(data + 2) = *(ip + 4);
+    *(data + 3) = *(ip + 6);
 }
