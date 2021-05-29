@@ -7,8 +7,10 @@
             "args": [
                 "-g",
                 "${file}",
-                "/home/wangzhe/DNS/DNS/log.c",
                 "/home/wangzhe/DNS/DNS/lprintf.c",
+                "/home/wangzhe/DNS/DNS/log.c",
+                "/home/wangzhe/DNS/DNS/hlist.c",
+                "/home/wangzhe/DNS/DNS/net.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],

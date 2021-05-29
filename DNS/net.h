@@ -31,5 +31,5 @@ struct HEADER
     uint16_t arcount;    /* number of resource entries */
 };
 void toDomainName(char *buf);
-void handleDnsMsg(int fd);
-void initServer();
+void handleDnsMsg(int fd,char*temp);
+int initServer();

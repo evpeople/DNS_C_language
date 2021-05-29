@@ -1,5 +1,5 @@
 #include "net.h"
-#include <unistd.h>
+#include "hlist.h"
 void toDomainName(char *buf)
 {
     char *p = buf;
@@ -16,8 +16,16 @@ void toDomainName(char *buf)
     //     }
     // }
     int temp = *p;
+    // // *p = 0;
+    // int fir = 1;
     while (*p != 0)
     {
+        // if (fir)
+        // {
+        //     *p = 0;
+        //     fir = 0;
+        // }
+
         for (int i = temp; i >= 0; i--)
         {
             p++;
@@ -26,11 +34,12 @@ void toDomainName(char *buf)
         *p = '.';
         p++;
     }
-
+    p--;
+    *p = 0;
     dbg_info("%s\n", buf);
 }
 
-void handleDnsMsg(int fd)
+void handleDnsMsg(int fd, char *temp)
 {
     char buf[BUFF_LEN]; //接收缓冲区，1024字节
     socklen_t len;
@@ -46,10 +55,13 @@ void handleDnsMsg(int fd)
             printf("recieve data fail!\n");
             return;
         }
-        char *temp = malloc(400);
+        // temp = malloc(400);
         strcpy(temp, buf + sizeof(struct HEADER));
         dbg_info("domain is %s \n", temp);
         toDomainName(temp);
+        // temp += 1;
+        // printf("%s", temp);
+        break;
         // printf("client:%s\n", buf); //打印client发过来的信息
         // memset(buf, 0, BUFF_LEN);
         // sprintf(buf, "I have recieved %d bytes data!\n", count); //回复client
@@ -58,7 +70,7 @@ void handleDnsMsg(int fd)
     }
 }
 
-void initServer()
+int initServer()
 {
     int server_fd, ret;
     struct sockaddr_in ser_addr;
@@ -81,14 +93,8 @@ void initServer()
         printf("socket bind fail!\n");
         return -1;
     }
+    return server_fd;
+    // handleDnsMsg(server_fd); //处理接收到的数据
 
-    handleDnsMsg(server_fd); //处理接收到的数据
-
-    close(server_fd);
-}
-int main(int argc, char **argv)
-{
-    config(argc, argv);
-
-    return 0;
+    // close(server_fd);
 }
