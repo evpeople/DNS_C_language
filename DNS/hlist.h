@@ -29,6 +29,6 @@ struct domainMap
 
 void hashMapInit(struct hashMap **hashMap);
 int hashCode(char *key);
-void createHasMap(struct hashMap *hashMap);
+void createHasMap(struct hashMap **hashMap);
 char *findHashMap(struct hashMap **hashMap, char *key);
-void addHashMap(char *key, char *value, struct hashMap *hashMap); //key 是 domin， value 是ip
+void addHashMap(char *key, char *value, struct hashMap **hashMap); //key 是 domin， value 是ip

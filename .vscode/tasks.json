@@ -12,7 +12,7 @@
                 "/home/wangzhe/DNS/DNS/hlist.c",
                 "/home/wangzhe/DNS/DNS/net.c",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}.out"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

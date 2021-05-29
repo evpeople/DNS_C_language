@@ -56,6 +56,24 @@ void handleDnsMsg(int fd, char *temp)
             return;
         }
         // temp = malloc(400);
+        unsigned char *x = malloc(sizeof(buf));
+        //QR  set to 1    1
+        //opcode not set  4
+        //AA is 0         1
+        //TC is 0         1
+        //RD is same
+        //RA is 0         1
+        //Z is 000        3
+        //Rcode  is 0000  //todo : 应该根据源数据判断
+        // | 1 0000 0 0 0   或用来设置1 与用来设置0 0x80
+        // ^ 1 1111 0 1 1   0xFB
+
+        memcpy(x, buf, 4);
+        *(x + 2) |= 0x81;
+        *(x + 3) &= 0x00;
+
+        *(x + 3) = '\0';
+        dbg_info("id is %x  \n", x);
         strcpy(temp, buf + sizeof(struct HEADER));
         dbg_info("domain is %s \n", temp);
         toDomainName(temp);

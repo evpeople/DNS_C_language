@@ -19,10 +19,11 @@ int hashCode(char *key)
     return h % MAPLENGTH;
 }
 
-void createHasMap(struct hashMap *hashMap)
+void createHasMap(struct hashMap **hashMap)
 {
-    hashMap = malloc(sizeof(struct hashMap));
-    // memset(hashMap->hlist, 0, sizeof(hashMap->hlist));
+
+    (*hashMap) = malloc(sizeof(struct hashMap));
+    memset((*hashMap)->hlist, 0, sizeof((*hashMap)->hlist));
     // for (size_t i = 0; i < MAPLENGTH; i++)
     // {
     //     hashMap->hlist[i] = NULL;
@@ -30,7 +31,7 @@ void createHasMap(struct hashMap *hashMap)
 
     dbg_info("2m init success \n");
 }
-void addHashMap(char *key, char *value, struct hashMap *hashMap) //key 是 domin， value 是ip
+void addHashMap(char *key, char *value, struct hashMap **hashMap) //key 是 domin， value 是ip
 {
     struct domainMap *node;
     node = malloc(sizeof(struct domainMap));
@@ -43,17 +44,17 @@ void addHashMap(char *key, char *value, struct hashMap *hashMap) //key 是 domin
     node->hash.next = NULL;
     int index = hashCode(key);
 
-    if (hashMap->hlist[index] == NULL)
+    if ((*hashMap)->hlist[index] == NULL)
     {
-        hashMap->hlist[index] = malloc(sizeof(struct hlistHead));
-        hashMap->hlist[index]->first = &(node->hash);
-        node->hash.pprev = &(hashMap->hlist[index])->first;
+        (*hashMap)->hlist[index] = malloc(sizeof(struct hlistHead));
+        (*hashMap)->hlist[index]->first = &(node->hash);
+        node->hash.pprev = &((*hashMap)->hlist[index])->first;
     }
     else
     {
-        node->hash.pprev = hashMap->hlist[index]->first->pprev;
-        node->hash.next = hashMap->hlist[index]->first;
-        hashMap->hlist[index]->first->pprev = &(node->hash).next;
+        node->hash.pprev = (*hashMap)->hlist[index]->first->pprev;
+        node->hash.next = (*hashMap)->hlist[index]->first;
+        (*hashMap)->hlist[index]->first->pprev = &(node->hash).next;
         *(node->hash.pprev) = &(node->hash);
     }
 }
@@ -61,11 +62,7 @@ void addHashMap(char *key, char *value, struct hashMap *hashMap) //key 是 domin
 void hashMapInit(struct hashMap **hashMap)
 {
     // createHasMap(hashMap);
-    *hashMap = malloc(sizeof(struct hashMap));
-    for (size_t i = 0; i < MAPLENGTH; i++)
-    {
-        (*hashMap)->hlist[i] = NULL;
-    }
+    // *hashMap = malloc(sizeof(struct hashMap));
 
     FILE *fp = NULL;
     char ip[IPLENGTH];
@@ -83,7 +80,7 @@ void hashMapInit(struct hashMap **hashMap)
         fscanf(fp, "%s", ip);
         fscanf(fp, "%s", domain);
         dbg_temp("ip is %s \n", ip);
-        addHashMap(domain, ip, *hashMap);
+        addHashMap(domain, ip, hashMap);
     }
     fclose(fp);
 }
