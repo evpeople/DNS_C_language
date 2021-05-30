@@ -6,7 +6,7 @@ int main(int argc, char **argv)
 {
     config(argc, argv);
 
-    lprintf("\nde\n");
+    // lprintf("\nde\n");
     dbg_info("befor 7 init success \n");
     struct hashMap *hashMap;
     dbg_info("befor 3 init success \n");
