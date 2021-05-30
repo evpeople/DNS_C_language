@@ -9,8 +9,8 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 }
 void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr, unsigned flags)
 {
-    uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-    uv_buf_t recvBuf;
+    char *reply;
+    size_t replyLen;
     if (nread < 0)
     {
         fprintf(stderr, "Read error %s\n", uv_err_name(nread));
@@ -22,8 +22,19 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
     fprintf(stdout, "xxxxx%x", rawmsg);
     if (isQuery(rawmsg))
     {
-        /* code */
+        //查询表
+
+        //构造响应
     }
+    else
+    {
+        //暂且为空，可能需要解决序号问题更改相应。
+    }
+
+    //发送构造好的相应。
+    uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
+    uv_buf_t recvBuf = uv_buf_init(reply, replyLen);
+    uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
 }
 bool isQuery(char *rawMsg)
 {
