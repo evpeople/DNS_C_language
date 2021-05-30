@@ -25,6 +25,38 @@
                 "isDefault": true
             },
             "detail": "调试器生成的任务。"
+        },
+                {
+            "type": "cppbuild",
+            "label": "C/C++: gcc-9uv",
+            "command": "/usr/bin/gcc-9",
+            "args": [
+                "-g",
+                "${file}",
+                "-L/usr/local/lib/",
+                "-luv",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.out"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "detail": "自己写的"
         }
     ],
     "version": "2.0.0"
