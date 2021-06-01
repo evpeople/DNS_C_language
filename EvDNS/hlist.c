@@ -41,7 +41,7 @@ void addHashMap(char *key, char *value, struct hashMap **hashMap) //key 是 domi
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
     strcpy(node->value, value);
     node->hash.next = NULL;
-    node->hash.next = NULL;
+    // node->hash.next = NULL;
     int index = hashCode(key);
 
     if ((*hashMap)->hlist[index] == NULL)
@@ -85,30 +85,36 @@ void hashMapInit(struct hashMap **hashMap)
     fclose(fp);
 }
 
-char *findHashMap(struct hashMap **hashMap, char *key)
+char *findHashMap(struct hashMap **hashMap, char *key, char **value)
 {
+    bool find = false;
     int index = hashCode(key);
+
     if ((*hashMap)->hlist[index] != NULL)
     {
         struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 1); //为内存偏移的起始地址
-        while (temp != NULL)
+        while (&(temp->hash) != NULL)
         {
             if (!strcasecmp(key, temp->key))
             {
-                if (!strcmp(temp->value, "0.0.0.0"))
-                {
-                    dbg_info("屏蔽网站");
-                    return "Not have this";
-                }
+                // if (!strcmp(temp->value, "0.0.0.0"))
+                // {
+                //     dbg_info("屏蔽网站");
+                //     return "Not have this";
+                // }
+                find = true;
                 dbg_info("返回的ip是%s\n", temp->value);
-                return temp->value;
+                strcpy(*value, temp->value);
+                break;
+                // return temp->value;
             }
             temp = (struct domainMap *)(temp->hash.next - 1);
         }
     }
-    else
+    if (!find)
     {
         dbg_info("没有匹配到\n");
+        **value = "Z";
         return NULL;
     }
 }
