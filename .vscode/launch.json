@@ -22,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C/C++: gcc-9uv",
+            "preLaunchTask": "C/C++: uv",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]

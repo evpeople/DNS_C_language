@@ -1,30 +1,91 @@
 #include "net.h"
+#include "hlist.h"
+#include "log.h"
+#include <string.h>
+
 #define DNS_MAX_PACKET 1024
+
+extern struct hashMap *hashMap;
+extern uv_udp_t send_socket;
+extern uv_udp_t recv_socket;
 
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 {
     // static char slab[DNS_MAX_PACK_SIZE];
     buf->base = malloc(sizeof(char) * DNS_MAX_PACKET);
     buf->len = DNS_MAX_PACKET;
+    dbg_info("over alloc\n");
+}
+void getAddress(char **rawMsg)
+{
+    // rawMsg += sizeof(struct HEADER);
+    char *p = *rawMsg;
+    // for (size_t i = 0; i < 20; i++)
+    // {
+    //     rawMsg += 1;
+    // }
+
+    int temp = *p;
+
+    // // *p = 0;
+    // int fir = 1;
+    while (*p != 0)
+    {
+
+        for (int i = temp; i >= 0; i--)
+        {
+            p++;
+        }
+        temp = *p;
+        if (temp == 0)
+        {
+            break;
+        }
+        *p = '.';
+        // rawMsg++;
+    }
+    (*rawMsg)++;
+    // rawMsg--;
+    // *rawMsg = 0;
+    dbg_info("get Address is %s\n", *rawMsg);
+}
+void succse_send_cb(uv_udp_send_t *req, int status)
+{
+    if (status == 0)
+    {
+        dbg_info("succ\n");
+    }
+
+    // PLOG(LDEBUG, "[Server]\tSend Successful\n");
+    // uv_close((uv_handle_t *)req->handle, close_cb);
+    free(req);
 }
 void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr, unsigned flags)
 {
+    dbg_info("get packet\n");
     char *reply;
     size_t replyLen;
     if (nread < 0)
     {
         fprintf(stderr, "Read error %s\n", uv_err_name(nread));
-        uv_close((uv_handle_t *)req, NULL);
+        // uv_close((uv_handle_t *)handl, NULL);
         free(buf->base);
         return;
     }
-    char *rawmsg = buf;
-    fprintf(stdout, "xxxxx%x", rawmsg);
+    char *rawmsg = malloc(sizeof(char) * (buf->len));
+    memcpy(rawmsg, buf->base, buf->len);
+    fprintf(stdout, "xxxxx%s", rawmsg);
     if (isQuery(rawmsg))
     {
-        //查询表
+        char *domain = malloc(sizeof(char) * (buf->len));
 
+        // memcpy(domain, rawmsg, buf->len);
+        strcpy(domain, rawmsg + sizeof(struct HEADER));
+        getAddress(&domain);
+        //查询表
+        printf("%%%%%%%% %s\n", domain);
         //构造响应
+        free(domain);
     }
     else
     {
@@ -38,4 +99,6 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
 }
 bool isQuery(char *rawMsg)
 {
+    return !(((struct HEADER *)rawMsg)->qr); //qr==0 is Query;
 }
+//todo : char * -> void

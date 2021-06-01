@@ -69,6 +69,7 @@ char *handleDnsMsg(int fd, char *temp)
         // ^ 1 1111 0 1 1   0xFB
         // struct HEADER *forX = (struct HEADER *)x;
         memcpy(x, buf, sizeof(buf));
+        char tempxx = ((struct HEADER *)x)->qr;
         struct HEADER *forX = (struct HEADER *)x;
         ((struct HEADER *)x)->aa = 0;
         ((struct HEADER *)x)->qr = 1;

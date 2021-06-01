@@ -2,8 +2,8 @@
 #include "log.h"
 #include "hlist.h"
 
-uv_loop_t *loop;
-uv_udp_t send_socket;
-uv_udp_t recv_socket;
+// uv_loop_t *loop;
+// uv_udp_t send_socket;
+// uv_udp_t recv_socket;
 
-void initDNS(struct hashMap **hashMap, struct sockaddr_in *recv_addr);
+void initDNS(struct hashMap **hashMap);

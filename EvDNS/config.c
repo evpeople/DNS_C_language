@@ -1,10 +1,17 @@
 
 #include "config.h"
 
-void initDNS(struct hashMap **hashMap, struct sockaddr_in *recv_addr)
+extern uv_loop_t *loop;
+extern uv_udp_t send_socket;
+extern uv_udp_t recv_socket;
+
+void initDNS(struct hashMap **hashMap)
 {
     createHasMap(hashMap);
     hashMapInit(hashMap);
-    uv_ip4_addr("0.0.0.0", 6800, &recv_addr);
+    uv_udp_init(loop, &recv_socket);
+    struct sockaddr_in recv_addr;
+    uv_ip4_addr("0.0.0.0", 6801, &recv_addr);
     uv_udp_bind(&recv_socket, (const struct sockaddr *)&recv_addr, UV_UDP_REUSEADDR);
+    dbg_info("ip udp bind success\n");
 }

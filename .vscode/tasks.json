@@ -2,7 +2,7 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc-9 生成活动文件",
+            "label": "C/C++: temp",
             "command": "/usr/bin/gcc-9",
             "args": [
                 "-g",
@@ -28,11 +28,16 @@
         },
                 {
             "type": "cppbuild",
-            "label": "C/C++: gcc-9uv",
+            "label": "C/C++: uv",
             "command": "/usr/bin/gcc-9",
             "args": [
                 "-g",
                 "${file}",
+                "/home/wangzhe/DNS/EvDNS/config.c",
+                "/home/wangzhe/DNS/EvDNS/hlist.c",
+                "/home/wangzhe/DNS/EvDNS/net.c",
+                "/home/wangzhe/DNS/EvDNS/lprintf.c",
+                "/home/wangzhe/DNS/EvDNS/log.c",
                 "-L/usr/local/lib/",
                 "-luv",
                 "-o",
