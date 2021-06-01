@@ -9,6 +9,7 @@ void initDNS(struct hashMap **hashMap)
 {
     createHasMap(hashMap);
     hashMapInit(hashMap);
+    fflush(stdin);
     uv_udp_init(loop, &recv_socket);
     struct sockaddr_in recv_addr;
     uv_ip4_addr("0.0.0.0", 6801, &recv_addr);

@@ -117,6 +117,19 @@ void dbg_temp(char *fmt, ...)
         va_end(arg_ptr);
     }
 }
+void dbg_ip(unsigned char *temp, int n)
+{
+    for (size_t i = 0; i < n; i++)
+    {
+        printf("%2x\t", *temp);
+        temp++;
+        if (i % 10 == 0 && i != 0)
+        {
+            printf("\n");
+        }
+    }
+    printf("IP IS OVER  \n\n");
+}
 
 unsigned int get_ms(void)
 {
