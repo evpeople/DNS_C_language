@@ -107,9 +107,10 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         {
             stateCode = GOTIT;
         }
-
         makeDnsPacket(rawmsg, ans, stateCode, &reply);
+
         free(domain);
+        free(ans);
     }
     else
     {

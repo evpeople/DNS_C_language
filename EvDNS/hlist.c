@@ -113,8 +113,9 @@ char *findHashMap(struct hashMap **hashMap, char *key, char **value)
     }
     if (!find)
     {
+        // char w = "z";
         dbg_info("没有匹配到\n");
-        **value = "Z";
+        **value = 'Z';
         return NULL;
     }
 }
