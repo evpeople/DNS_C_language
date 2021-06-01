@@ -4,6 +4,11 @@
 #include <string.h>
 
 #define DNS_MAX_PACKET 1024
+#define IP_LEN 40
+
+#define NOTFOUND 1
+#define CANTGIVE 2
+#define GOTIT 3
 
 extern struct hashMap *hashMap;
 extern uv_udp_t send_socket;
@@ -15,6 +20,9 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
     buf->base = malloc(sizeof(char) * DNS_MAX_PACKET);
     buf->len = DNS_MAX_PACKET;
     dbg_info("over alloc\n");
+}
+void makeDnsPacket(char *rawmsg, char *ans, int stateCode, char **reply)
+{
 }
 void getAddress(char **rawMsg)
 {
@@ -82,9 +90,25 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         // memcpy(domain, rawmsg, buf->len);
         strcpy(domain, rawmsg + sizeof(struct HEADER));
         getAddress(&domain);
+        char *ans = malloc(sizeof(char) * IP_LEN);
+        findHashMap(&hashMap, domain, &ans);
+
+        int stateCode = 0;
         //查询表
-        printf("%%%%%%%% %s\n", domain);
-        //构造响应
+        if (!strcmp(ans, "Z")) //没有找到
+        {
+            stateCode = NOTFOUND;
+        }
+        else if (!strcmp(ans, "0.0.0.0"))
+        {
+            stateCode = CANTGIVE;
+        }
+        else
+        {
+            stateCode = GOTIT;
+        }
+
+        makeDnsPacket(rawmsg, ans, stateCode, &reply);
         free(domain);
     }
     else
@@ -92,6 +116,7 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         //暂且为空，可能需要解决序号问题更改相应。
     }
 
+    free(rawmsg);
     //发送构造好的相应。
     uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
     uv_buf_t recvBuf = uv_buf_init(reply, replyLen);
@@ -101,4 +126,3 @@ bool isQuery(char *rawMsg)
 {
     return !(((struct HEADER *)rawMsg)->qr); //qr==0 is Query;
 }
-//todo : char * -> void
