@@ -3,18 +3,21 @@
 // #define DNS_MAX_PACK_SIZ 1024
 struct HEADER
 {
-    uint16_t id; /* query identification number */
-    uint8_t qr;
-    uint8_t opcode;
-    uint8_t aa;
-    uint8_t tc;
-    uint8_t rd;
-    uint8_t ra;
-    uint16_t rcode;
-    uint16_t qdcount; /* number of question entries */
-    uint16_t ancount; /* number of answer entries */
-    uint16_t nscount; /* number of authority entries */
-    uint16_t arcount; /* number of resource entries */
+    unsigned id : 16;    /* query identification number */
+    unsigned rd : 1;     /* recursion desired */
+    unsigned tc : 1;     /* truncated message */
+    unsigned aa : 1;     /* authoritive answer */
+    unsigned opcode : 4; /* purpose of message */
+    unsigned qr : 1;     /* response flag */
+    unsigned rcode : 4;  /* response code */
+    unsigned cd : 1;     /* checking disabled by resolver */
+    unsigned ad : 1;     /* authentic data from named */
+    unsigned z : 1;      /* unused bits, must be ZERO */
+    unsigned ra : 1;     /* recursion available */
+    uint16_t qdcount;    /* number of question entries */
+    uint16_t ancount;    /* number of answer entries */
+    uint16_t nscount;    /* number of authority entries */
+    uint16_t arcount;    /* number of resource entries */
 };
 struct QUERY
 {

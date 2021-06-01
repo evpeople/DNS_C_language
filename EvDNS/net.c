@@ -14,30 +14,42 @@
 extern struct hashMap *hashMap;
 extern uv_udp_t send_socket;
 extern uv_udp_t recv_socket;
-void makeDnsRR(char *rawmsg, char *ans, char *reply)
+
+void strToIp(char *ans, char *ip)
 {
-    char *ip = ans;
-    struct HEADER *header = (struct HEADER *)rawmsg;
+    int i = 0;
+    int num = 0;
+    while (*ip)
+    {
+        if (*ip != '.')
+        {
+            num = 10 * num + (*ip - '0');
+        }
+        else
+        {
+            *ans = num;
+            ans++;
+            num = 0;
+        }
+        ip++;
+    }
+    *ans = num;
+}
+void makeDnsRR(char *buf, char *ip)
+{
+    struct HEADER *header = (struct HEADER *)buf;
     struct ANS *rr;
     if (*ip == (char)0 && *(ip + 1) == (char)0 && *(ip + 2) == (char)0 && *(ip + 3) == (char)0)
     {
-        dbg_debug("rcode qian \n");
-        dbg_ip(rawmsg, 40);
         header->rcode = htons(5);
-        dbg_debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%hou\n");
-        dbg_ip(rawmsg, 40);
     }
-    dbg_debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ancount1\n");
-    dbg_ip(rawmsg, 40);
     header->ancount = htons(1);
-    dbg_ip(rawmsg, 40);
-    dbg_debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%after ancount\n");
-    char *dn = rawmsg + sizeof(struct HEADER);
-    //printf("%lu\n", strlen(dn));
-    //dnsQuery *query = (dnsQuery *)(dn + strlen(dn) + 1);
-    //query->type = htons((unsigned short)1);
-    //query->classes = htons((unsigned short)1);
-    char *name = dn - 3 + sizeof(struct QUERY); //给C0定位
+    char *dn = buf + sizeof(struct HEADER);
+    // //printf("%lu\n", strlen(dn));
+    // //dnsQuery *query = (dnsQuery *)(dn + strlen(dn) + 1);
+    // //query->type = htons((unsigned short)1);
+    // //query->classes = htons((unsigned short)1);
+    char *name = dn + 3 + sizeof(struct QUERY); //给C0定位
     unsigned short *_name = (unsigned short *)name;
     *_name = htons((unsigned short)0xC00C);
     //为报文压缩
@@ -55,11 +67,15 @@ void makeDnsRR(char *rawmsg, char *ans, char *reply)
     char *data = (char *)rr + 12; //到了rdata 部分
     *data = *ip;
     //ip应该需要处理。
-
-    *(data + 1) = *(ip + 2) - '0';
-    *(data + 2) = *(ip + 4) - '0';
-    *(data + 3) = *(ip + 6) - '0';
-    memcpy((reply) + 3, rawmsg, DNS_MAX_PACKET / 10);
+    dbg_warning("ip is %s\n", ip);
+    strToIp(data, ip);
+    dbg_warning("ip is %s\n", data);
+    // *(data + 1) = *(ip + 2) - '0';
+    // *(data + 2) = *(ip + 4) - '0';
+    // *(data + 3) = *(ip + 6) - '0';
+    // *(data + 1) = 2;
+    // *(data + 2) = 4;
+    // *(data + 3) = 2;
 }
 
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
@@ -71,8 +87,8 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 }
 void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
 {
-    memcpy((*reply), rawmsg, DNS_MAX_PACKET);
-    char *x = *reply;
+    // memcpy((*reply), rawmsg, DNS_MAX_PACKET);
+    char *x = rawmsg;
     switch (stateCode)
     {
     case NOTFOUND:
@@ -83,12 +99,12 @@ void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
     case GOTIT:
         dbg_ip(x, 22);
         dbg_info("############################################################################3before change header\n");
-        // ((struct HEADER *)x)->aa = htons(0);
-        // ((struct HEADER *)x)->qr = htons(1);
-        ((struct HEADER *)x)->rcode = htons(0);
-        ((struct HEADER *)x)->ra = htons(0);
+        ((struct HEADER *)rawmsg)->aa = 0;
+        ((struct HEADER *)rawmsg)->qr = 1;
+        ((struct HEADER *)rawmsg)->rcode = 0;
+        ((struct HEADER *)rawmsg)->ra = 0;
         dbg_ip(x, 22);
-        makeDnsRR(rawmsg, ans, x + sizeof(struct HEADER));
+        makeDnsRR(rawmsg, ans);
         dbg_info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
         dbg_ip(x, 60);
         break;
