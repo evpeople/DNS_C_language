@@ -35,29 +35,73 @@ void strToIp(char *ans, char *ip)
     }
     *ans = num;
 }
-void makeDnsRR(char *buf, char *ip)
+void strToStr(char *ans, char *sentence)
+{
+    while (*sentence)
+    {
+        *ans = *sentence;
+        ans++;
+        sentence++;
+    }
+}
+int lenOfQuery(char *rawmsg)
+{
+    int temp;
+    temp = strlen(rawmsg) + 5;
+    return temp;
+}
+void makeDnsRR(char *buf, char *ip, int state)
 {
     struct HEADER *header = (struct HEADER *)buf;
     struct ANS *rr;
-    if (*ip == (char)0 && *(ip + 1) == (char)0 && *(ip + 2) == (char)0 && *(ip + 3) == (char)0)
+    // if (*ip == (char)0 && *(ip + 1) == (char)0 && *(ip + 2) == (char)0 && *(ip + 3) == (char)0)
+    // {
+    //     header->rcode = htons(5);
+    // }
+    if (state == CANTGIVE)
     {
-        header->rcode = htons(5);
+        header->rcode = 5;
     }
+
     header->ancount = htons(1);
     char *dn = buf + sizeof(struct HEADER);
     // //printf("%lu\n", strlen(dn));
     // //dnsQuery *query = (dnsQuery *)(dn + strlen(dn) + 1);
     // //query->type = htons((unsigned short)1);
     // //query->classes = htons((unsigned short)1);
-    char *name = dn + 3 + sizeof(struct QUERY); //给C0定位
+    int lenght = lenOfQuery(dn);
+    char *name = dn + lenght; //给C0定位
+    dbg_info("%d", lenght);
     unsigned short *_name = (unsigned short *)name;
     *_name = htons((unsigned short)0xC00C);
     //为报文压缩
 
     rr = (struct ANS *)(name); //name 完紧跟着type
-    rr->type = htons(1);       //0.0.0.0 的type 为 TXT？
+    // if (state == CANTGIVE)
+    // {
+    //     rr->type = htons(16); //0.0.0.0 的type 为 TXT？
+    //     rr->class = htons(1);
+    //     rr->ttl = htons(0x1565);
+    // }
+
+    rr->type = htons(1); //0.0.0.0 的type 为 TXT？
     rr->class = htons(1);
     rr->ttl = htons(0x1565);
+    if (state == CANTGIVE)
+    {
+        rr->type = htons(16); //0.0.0.0 的type 为 TXT？
+        rr->class = htons(1);
+        rr->ttl = htons(0x1565);
+        char *temp = (char *)rr + 10;
+        *temp = 0;
+        *(temp + 1) = 1;
+        *(temp + 2) = strlen("it is a bad net website");
+        char *data = (char *)rr + 13; //到了rdata 部分
+        // *data = 'i';
+        // *(data + 1) = 't';
+        data = "it is a bad website";
+    }
+
     // void *temp = &(rr->ttl);
     // *(&(rr->ttl) + 8) = htons(4);
     // rr->rdlength = htons(4); //如果TYPE是A CLASS 是IN 则RDATA是四个八位组的ARPA互联网地址　
@@ -70,6 +114,23 @@ void makeDnsRR(char *buf, char *ip)
     dbg_warning("ip is %s\n", ip);
     strToIp(data, ip);
     dbg_warning("ip is %s\n", data);
+
+    if (state == CANTGIVE)
+    {
+        rr->type = htons(16); //0.0.0.0 的type 为 TXT？
+        rr->class = htons(1);
+        rr->ttl = htons(0x1565);
+        char *temp = (char *)rr + 10;
+        *temp = 0;
+        *(temp + 1) = 1;
+        *(temp + 2) = strlen("it is a bad net website");
+        // *(temp + 2) = 15;
+        char *data = (char *)rr + 13; //到了rdata 部分
+        strToStr(data, "it is a bad net website");
+        // *data = 'i';
+        // *(data + 1) = 't';
+        // data = "it is a bad website";
+    }
     // *(data + 1) = *(ip + 2) - '0';
     // *(data + 2) = *(ip + 4) - '0';
     // *(data + 3) = *(ip + 6) - '0';
@@ -95,6 +156,11 @@ void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
 
         break;
     case CANTGIVE:
+        ((struct HEADER *)rawmsg)->aa = 0;
+        ((struct HEADER *)rawmsg)->qr = 1;
+        ((struct HEADER *)rawmsg)->rcode = htons(5);
+        ((struct HEADER *)rawmsg)->ra = 0;
+        makeDnsRR(rawmsg, ans, stateCode);
         break;
     case GOTIT:
         dbg_ip(x, 22);
@@ -104,7 +170,7 @@ void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
         ((struct HEADER *)rawmsg)->rcode = 0;
         ((struct HEADER *)rawmsg)->ra = 0;
         dbg_ip(x, 22);
-        makeDnsRR(rawmsg, ans);
+        makeDnsRR(rawmsg, ans, stateCode);
         dbg_info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
         dbg_ip(x, 60);
         break;
@@ -186,7 +252,7 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         dbg_debug("%s\n", ans);
         int stateCode = 0;
         //查询表
-        if (!strcmp(ans, "Z")) //没有找到
+        if (*ans == 'Z') //没有找到
         {
             stateCode = NOTFOUND;
         }
@@ -224,7 +290,7 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
     uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
     // fflush(NULL);
     uv_buf_t recvBuf;
-    recvBuf = uv_buf_init(rawmsg, reply - reply + 50);
+    recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
     uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
     dbg_ip(reply, 60);
     dbg_info("\n SSSSSSS\n");
