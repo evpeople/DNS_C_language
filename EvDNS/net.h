@@ -51,3 +51,4 @@ void succse_send_cb(uv_udp_send_t *req, int status);
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
 void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr, unsigned flags);
 bool isQuery(char *rawMsg);
+void addCacheMap(char **rawmsg, const struct sockaddr *addr);

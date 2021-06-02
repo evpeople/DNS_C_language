@@ -1,6 +1,7 @@
 #include "hlist.h"
 #include "log.h"
 #include "net.h"
+
 int hashCode(char *key)
 {
     ////UNIX系统使用的哈希
@@ -35,11 +36,11 @@ void addHashMap(char *key, char *value, struct hashMap **hashMap) //key 是 domi
 {
     struct domainMap *node;
     node = malloc(sizeof(struct domainMap));
-    node->key = malloc(strlen(key) + 1);
-    node->value = malloc(strlen(value) + 1);
-    strcpy(node->key, key);
+    node->key = malloc(40);   //用于存域名的大小，和存数字的大小
+    node->value = malloc(24); //ip的大小和socketAdder的大小
+    memcpy(node->key, key, 40);
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
-    strcpy(node->value, value);
+    memcpy(node->value, value, 24);
     node->hash.next = NULL;
     // node->hash.next = NULL;
     int index = hashCode(key);
@@ -58,6 +59,7 @@ void addHashMap(char *key, char *value, struct hashMap **hashMap) //key 是 domi
         *(node->hash.pprev) = &(node->hash);
     }
 }
+// void addCacheMap(char *key, );
 
 void hashMapInit(struct hashMap **hashMap)
 {
@@ -85,17 +87,17 @@ void hashMapInit(struct hashMap **hashMap)
     fclose(fp);
 }
 
-char *findHashMap(struct hashMap **hashMap, char **key, char **value)
+char *findHashMap(struct hashMap **hashMap, char *key, char **value)
 {
     bool find = false;
-    int index = hashCode(*key);
+    int index = hashCode(key);
 
     if ((*hashMap)->hlist[index] != NULL)
     {
         struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 1); //为内存偏移的起始地址
         while (&(temp->hash) != NULL)
         {
-            if (!strcasecmp(*key, temp->key))
+            if (!strcasecmp(key, temp->key))
             {
                 // if (!strcmp(temp->value, "0.0.0.0"))
                 // {
@@ -113,7 +115,6 @@ char *findHashMap(struct hashMap **hashMap, char **key, char **value)
     }
     if (!find)
     {
-        // char w = "z";
         dbg_info("没有匹配到\n");
         **value = 'Z';
         return NULL;

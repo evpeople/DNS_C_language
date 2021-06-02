@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-O2
 
 DNS.out: main.o lprintf.o log.o hlist.o net.o config.o
-	gcc main.o lprintf.o log.o hlist.o net.o config.o -L/usr/local/lib/ -luv -o DNS.out -lm
+	gcc main.c config.c hlist.c net.c lprintf.c log.c -L/usr/local/lib -luv -o DNS.out -lm
 
 test : test.o lprintf.o log.o hlist.o net.o
 	gcc test.o net.o lprintf.o log.o hlist.o -o test.out -lm
