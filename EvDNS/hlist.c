@@ -85,17 +85,17 @@ void hashMapInit(struct hashMap **hashMap)
     fclose(fp);
 }
 
-char *findHashMap(struct hashMap **hashMap, char *key, char **value)
+char *findHashMap(struct hashMap **hashMap, char **key, char **value)
 {
     bool find = false;
-    int index = hashCode(key);
+    int index = hashCode(*key);
 
     if ((*hashMap)->hlist[index] != NULL)
     {
         struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 1); //为内存偏移的起始地址
         while (&(temp->hash) != NULL)
         {
-            if (!strcasecmp(key, temp->key))
+            if (!strcasecmp(*key, temp->key))
             {
                 // if (!strcmp(temp->value, "0.0.0.0"))
                 // {

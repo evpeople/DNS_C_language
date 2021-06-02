@@ -3,7 +3,7 @@
 #include "log.h"
 #include <string.h>
 
-#define DNS_MAX_PACKET 1024
+#define DNS_MAX_PACKET 2048
 #define IP_LEN 40
 #define ANS_LEN 1024
 
@@ -54,89 +54,43 @@ void makeDnsRR(char *buf, char *ip, int state)
 {
     struct HEADER *header = (struct HEADER *)buf;
     struct ANS *rr;
-    // if (*ip == (char)0 && *(ip + 1) == (char)0 && *(ip + 2) == (char)0 && *(ip + 3) == (char)0)
-    // {
-    //     header->rcode = htons(5);
-    // }
-    if (state == CANTGIVE)
-    {
-        header->rcode = 5;
-    }
 
-    header->ancount = htons(1);
+    header->ancount = htons(1); //确定有多少条消息
+
     char *dn = buf + sizeof(struct HEADER);
-    // //printf("%lu\n", strlen(dn));
-    // //dnsQuery *query = (dnsQuery *)(dn + strlen(dn) + 1);
-    // //query->type = htons((unsigned short)1);
-    // //query->classes = htons((unsigned short)1);
     int lenght = lenOfQuery(dn);
     char *name = dn + lenght; //给C0定位
-    dbg_info("%d", lenght);
     unsigned short *_name = (unsigned short *)name;
     *_name = htons((unsigned short)0xC00C);
     //为报文压缩
 
-    rr = (struct ANS *)(name); //name 完紧跟着type
-    // if (state == CANTGIVE)
-    // {
-    //     rr->type = htons(16); //0.0.0.0 的type 为 TXT？
-    //     rr->class = htons(1);
-    //     rr->ttl = htons(0x1565);
-    // }
-
-    rr->type = htons(1); //0.0.0.0 的type 为 TXT？
+    rr = (struct ANS *)(name); //设置rr的类型
     rr->class = htons(1);
     rr->ttl = htons(0x1565);
-    if (state == CANTGIVE)
-    {
-        rr->type = htons(16); //0.0.0.0 的type 为 TXT？
-        rr->class = htons(1);
-        rr->ttl = htons(0x1565);
-        char *temp = (char *)rr + 10;
-        *temp = 0;
-        *(temp + 1) = 1;
-        *(temp + 2) = strlen("it is a bad net website");
-        char *data = (char *)rr + 13; //到了rdata 部分
-        // *data = 'i';
-        // *(data + 1) = 't';
-        data = "it is a bad website";
-    }
 
-    // void *temp = &(rr->ttl);
-    // *(&(rr->ttl) + 8) = htons(4);
-    // rr->rdlength = htons(4); //如果TYPE是A CLASS 是IN 则RDATA是四个八位组的ARPA互联网地址　
+    //数据区域
     char *temp = (char *)rr + 10;
     *temp = 0;
-    *(temp + 1) = 4;
-    char *data = (char *)rr + 12; //到了rdata 部分
-    *data = *ip;
-    //ip应该需要处理。
-    dbg_warning("ip is %s\n", ip);
-    strToIp(data, ip);
-    dbg_warning("ip is %s\n", data);
 
-    if (state == CANTGIVE)
+    if (state == CANTGIVE) //屏蔽网站
     {
+        header->rcode = 5;
         rr->type = htons(16); //0.0.0.0 的type 为 TXT？
-        rr->class = htons(1);
-        rr->ttl = htons(0x1565);
-        char *temp = (char *)rr + 10;
-        *temp = 0;
         *(temp + 1) = 1;
         *(temp + 2) = strlen("it is a bad net website");
-        // *(temp + 2) = 15;
         char *data = (char *)rr + 13; //到了rdata 部分
         strToStr(data, "it is a bad net website");
-        // *data = 'i';
-        // *(data + 1) = 't';
-        // data = "it is a bad website";
     }
-    // *(data + 1) = *(ip + 2) - '0';
-    // *(data + 2) = *(ip + 4) - '0';
-    // *(data + 3) = *(ip + 6) - '0';
-    // *(data + 1) = 2;
-    // *(data + 2) = 4;
-    // *(data + 3) = 2;
+    else //正常应答
+    {
+        rr->type = htons(1); //0.0.0.0 的type 为 TXT？
+        *(temp + 1) = 4;
+        char *data = (char *)rr + 12; //到了rdata 部分
+        *data = *ip;
+        dbg_warning("ip is %s\n", ip);
+        strToIp(data, ip);
+        dbg_warning("ip is %s\n", data);
+    }
 }
 
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
@@ -146,10 +100,9 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
     buf->len = sizeof(slab);
     dbg_info("has alloc\n");
 }
+
 void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
 {
-    // memcpy((*reply), rawmsg, DNS_MAX_PACKET);
-    char *x = rawmsg;
     switch (stateCode)
     {
     case NOTFOUND:
@@ -160,19 +113,13 @@ void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
         ((struct HEADER *)rawmsg)->qr = 1;
         ((struct HEADER *)rawmsg)->rcode = htons(5);
         ((struct HEADER *)rawmsg)->ra = 0;
-        makeDnsRR(rawmsg, ans, stateCode);
         break;
     case GOTIT:
-        dbg_ip(x, 22);
         dbg_info("############################################################################3before change header\n");
         ((struct HEADER *)rawmsg)->aa = 0;
         ((struct HEADER *)rawmsg)->qr = 1;
         ((struct HEADER *)rawmsg)->rcode = 0;
         ((struct HEADER *)rawmsg)->ra = 0;
-        dbg_ip(x, 22);
-        makeDnsRR(rawmsg, ans, stateCode);
-        dbg_info("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n");
-        dbg_ip(x, 60);
         break;
     default:
         dbg_error("接收包的函数遇到严重的错误\n");
@@ -182,17 +129,8 @@ void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
 
 void getAddress(char **rawMsg)
 {
-    // rawMsg += sizeof(struct HEADER);
     char *p = *rawMsg;
-    // for (size_t i = 0; i < 20; i++)
-    // {
-    //     rawMsg += 1;
-    // }
-
     int temp = *p;
-
-    // // *p = 0;
-    // int fir = 1;
     while (*p != 0)
     {
 
@@ -206,23 +144,16 @@ void getAddress(char **rawMsg)
             break;
         }
         *p = '.';
-        // rawMsg++;
     }
     (*rawMsg)++;
-    // rawMsg--;
-    // *rawMsg = 0;
     dbg_info("get Address is %s\n", *rawMsg);
 }
 void succse_send_cb(uv_udp_send_t *req, int status)
 {
     if (status == 0)
     {
-        dbg_info("fa song cheng gong\n");
+        dbg_info("success send UDP\n");
     }
-    // dbg_info("fasongs\n");
-    // PLOG(LDEBUG, "[Server]\tSend Successful\n");
-    // uv_close((uv_handle_t *)req->handle, close_cb);
-    // free(req);
 }
 void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr, unsigned flags)
 {
@@ -239,17 +170,15 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
     char *rawmsg = malloc(sizeof(char) * (buf->len));
     memcpy(rawmsg, buf->base, buf->len);
 
-    fprintf(stdout, "xxxxx%s", rawmsg);
     if (isQuery(rawmsg))
     {
         char *domain = malloc(sizeof(char) * (buf->len));
-
-        // memcpy(domain, rawmsg, buf->len);
         strcpy(domain, rawmsg + sizeof(struct HEADER));
         getAddress(&domain);
         char *ans = malloc(sizeof(char) * IP_LEN);
-        findHashMap(&hashMap, domain, &ans);
-        dbg_debug("%s\n", ans);
+        findHashMap(&hashMap, &domain, &ans);
+        free(domain - 1);
+
         int stateCode = 0;
         //查询表
         if (*ans == 'Z') //没有找到
@@ -265,49 +194,24 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
             stateCode = GOTIT;
         }
         makeDnsHead(rawmsg, ans, stateCode, &reply);
-        // free(domain);
-        dbg_info("after Make DNSHEAD\n");
-        dbg_ip(reply, 60);
-        // free(ans);
-        dbg_info("after free ans \n");
-        dbg_ip(reply, 60);
+        makeDnsRR(rawmsg, ans, stateCode);
+        free(ans);
     }
     else
     {
         //暂且为空，可能需要解决序号问题更改相应。
     }
-
-    // free(rawmsg);
-    dbg_info("after free rawmsg\n ");
-    dbg_ip(reply, 60);
     //发送构造好的相应。
-    dbg_info("kai shi fa song udp\n");
-    // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-    // // fflush(NULL);
-    // uv_buf_t recvBuf;
-    // recvBuf = uv_buf_init(rawmsg, 2);
     dbg_info("\n\n reply is \n\n");
     uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-    // fflush(NULL);
     uv_buf_t recvBuf;
     recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
     uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
-    dbg_ip(reply, 60);
-    dbg_info("\n SSSSSSS\n");
-    dbg_ip(recvBuf.base, 50);
-    // uv_buf_t recvBuf = uv_buf_init("sc", 2);
     free(reply);
     free(rawmsg);
-    // free(ans);
-
-    // uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
     dbg_info("wan cheng udp_send\n");
 }
 bool isQuery(char *rawMsg)
 {
-    // uint16_t t = 1;
-    // char *x = rawMsg;
-    // char s = ((struct HEADER *)rawMsg); //qr==0 is Query;
-    // struct HEADER *y = (struct HEADER *)rawMsg;
     return !*(rawMsg + 3); //qr==0 is Query;
 }
