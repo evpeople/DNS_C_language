@@ -45,4 +45,4 @@ void hashMapInit(struct hashMap **hashMap);
 int hashCode(char *key);
 void createHasMap(struct hashMap **hashMap);
 int findHashMap(struct hashMap **hashMap, char *key, ulong *value);
-void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind); //key 是 domin， value 是ip
+void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind, int ttl); //key 是 domin， value 是ip

@@ -268,7 +268,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
             // dbg_info("jingru");
             char *ip = malloc(sizeof(char) * IP_LEN);
             getIP(rawmsg, &ip);
-            addHashMap(domain, ip, &cacheMap, DYNAMIC);
+            addHashMap(domain, ip, &cacheMap, DYNAMIC, 100);
 
             free(ip);
             // dbg_ip(ip, 5);
@@ -320,7 +320,7 @@ void getIP(char *rawmsg, char **ans)
     char *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 6);
     dbg_info("Fun getIP \n");
 
-    dbg_ip(*temp, 20);
+    dbg_ip(temp, 20);
     // inet_addr()
     // char *p = *ans;a
     // for (size_t i = 0; i < 4; i++)
