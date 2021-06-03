@@ -184,14 +184,14 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
 
     char *rawmsg = malloc(sizeof(char) * ANS_LEN);
     memcpy(rawmsg, buf, ANS_LEN);
-
+    char *domain = malloc(sizeof(char) * ANS_LEN);
+    strcpy(domain, rawmsg + sizeof(struct HEADER));
+    getAddress(&domain);
     if (isQuery(rawmsg))
     {
         // dbg_ip(rawmsg, 60);
         dbg_info("in is query\n");
-        char *domain = malloc(sizeof(char) * ANS_LEN);
-        strcpy(domain, rawmsg + sizeof(struct HEADER));
-        getAddress(&domain);
+
         char *ans = malloc(sizeof(char) * IP_LEN);
         findHashMap(&hashMap, domain, &ans);
         free(domain - 1);
@@ -253,6 +253,24 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         stateCode = NOTFOUND;
         uint16_t id = *(uint16_t *)rawmsg;
         dbg_info("get id is %hu\n", id);
+        // char *domain = malloc(sizeof(char) * ANS_LEN);
+        // strcpy(domain, rawmsg + sizeof(struct HEADER));
+        // getAddress(&domain);
+
+        // printf("%d sssssssssssssssssssssssss\n", (*(uint16_t *)(rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 4)));
+        // dbg_ip(((rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 3)), 10);
+        if ((*(uint16_t *)(rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 3)) == 1)
+        {
+            // dbg_info("jingru");
+            char *ip = malloc(sizeof(char) * IP_LEN);
+            getIP(rawmsg, &ip);
+            addHashMap(domain, ip, &cacheMap, DYNAMIC);
+
+            free(ip);
+            // dbg_ip(ip, 5);
+        }
+
+        free(domain - 1);
         makeDnsHead(rawmsg, "", FROMFAR, &reply);
         dbg_info("relly send is \n");
         dbg_ip(rawmsg, 10);
@@ -291,6 +309,27 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     free(reply);
     free(rawmsg);
     dbg_info("wan cheng udp_send\n");
+}
+void getIP(char *rawmsg, char **ans)
+{
+    // memcpy(*ans, rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 19, 5);
+    char *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 6);
+    dbg_info("Fun getIP \n");
+
+    dbg_ip(*temp, 20);
+    inet_addr()
+        // char *p = *ans;a
+        // for (size_t i = 0; i < 4; i++)
+        // {
+        //     *p = *rawmsg;
+        //     p++;
+        //     rawmsg++;
+        // }
+        //   dbg_info("get Address is %s\n", *rawMsg);
+        dbg_ip(*ans, 5);
+}
+void getTTl(char *raw, char **ans)
+{
 }
 bool isQuery(char *rawMsg)
 {

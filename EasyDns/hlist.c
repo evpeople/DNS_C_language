@@ -2,9 +2,6 @@
 #include "log.h"
 #include "net.h"
 
-#define STATIC 1
-#define DYNAMIC 2
-
 int hashCode(char *key)
 {
     ////UNIX系统使用的哈希
@@ -35,23 +32,24 @@ void createHasMap(struct hashMap **hashMap)
 
     dbg_info("2m init success \n");
 }
-void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind) //key 是 domin， value 是ip
+void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind, int ttl) //key 是 domin， value 是ip
 {
     struct domainMap *node;
     node = malloc(sizeof(struct domainMap));
-    node->key = malloc(40);   //用于存域名的大小，和存数字的大小
-    node->value = malloc(24); //ip的大小和socketAdder的大小
-    if (kind == STATIC)
-    {
-        node->TTL == -1;
-    }
+    node->key = malloc(40); //用于存域名的大小，和存数字的大小
+    // node->value = malloc(24); //ip的大小和socketAdder的大小
     memcpy(node->key, key, 40);
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
-    memcpy(node->value, value, 24);
-    node->hash.next = NULL;
-    // node->hash.next = NULL;
-    int index = hashCode(key);
+    // memcpy(node->value, value, 24);
 
+    node->value = inet_addr(value);
+
+    node->hash.next = NULL;
+
+    node->TTL = ttl;
+    node->lastCallTime = clock();
+
+    int index = hashCode(key);
     if ((*hashMap)->hlist[index] == NULL)
     {
         (*hashMap)->hlist[index] = malloc(sizeof(struct hlistHead));
@@ -89,7 +87,7 @@ void hashMapInit(struct hashMap **hashMap)
         fscanf(fp, "%s", ip);
         fscanf(fp, "%s", domain);
         dbg_temp("ip is %s \n", ip);
-        addHashMap(domain, ip, hashMap, STATIC);
+        addHashMap(domain, ip, hashMap, STATIC, -1);
     }
     fclose(fp);
 }
