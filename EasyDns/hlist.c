@@ -2,6 +2,9 @@
 #include "log.h"
 #include "net.h"
 
+#define STATIC 1
+#define DYNAMIC 2
+
 int hashCode(char *key)
 {
     ////UNIX系统使用的哈希
@@ -32,12 +35,16 @@ void createHasMap(struct hashMap **hashMap)
 
     dbg_info("2m init success \n");
 }
-void addHashMap(char *key, char *value, struct hashMap **hashMap) //key 是 domin， value 是ip
+void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind) //key 是 domin， value 是ip
 {
     struct domainMap *node;
     node = malloc(sizeof(struct domainMap));
     node->key = malloc(40);   //用于存域名的大小，和存数字的大小
     node->value = malloc(24); //ip的大小和socketAdder的大小
+    if (kind == STATIC)
+    {
+        node->TTL == -1;
+    }
     memcpy(node->key, key, 40);
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
     memcpy(node->value, value, 24);
@@ -82,7 +89,7 @@ void hashMapInit(struct hashMap **hashMap)
         fscanf(fp, "%s", ip);
         fscanf(fp, "%s", domain);
         dbg_temp("ip is %s \n", ip);
-        addHashMap(domain, ip, hashMap);
+        addHashMap(domain, ip, hashMap, STATIC);
     }
     fclose(fp);
 }
@@ -94,7 +101,7 @@ char *findHashMap(struct hashMap **hashMap, char *key, char **value)
 
     if ((*hashMap)->hlist[index] != NULL)
     {
-        struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 1); //为内存偏移的起始地址
+        struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 2); //为内存偏移的起始地址
         while (&(temp->hash) != NULL)
         {
             if (!strcasecmp(key, temp->key))
@@ -110,7 +117,7 @@ char *findHashMap(struct hashMap **hashMap, char *key, char **value)
                 break;
                 // return temp->value;
             }
-            temp = (struct domainMap *)(temp->hash.next - 1);
+            temp = (struct domainMap *)(temp->hash.next - 2);
         }
     }
     if (!find)

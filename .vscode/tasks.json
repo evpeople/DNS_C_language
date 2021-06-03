@@ -26,7 +26,7 @@
             },
             "detail": "调试器生成的任务。"
         },
-                {
+        {
             "type": "cppbuild",
             "label": "C/C++: uv",
             "command": "/usr/bin/gcc-9",
@@ -38,6 +38,43 @@
                 "/home/wangzhe/DNS/EvDNS/net.c",
                 "/home/wangzhe/DNS/EvDNS/lprintf.c",
                 "/home/wangzhe/DNS/EvDNS/log.c",
+                "-L/usr/local/lib/",
+                "-luv",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.out"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "detail": "自己写的"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: easy",
+            "command": "/usr/bin/gcc-9",
+            "args": [
+                "-g",
+                "/home/wangzhe/DNS/EasyDns/main.c",
+                "/home/wangzhe/DNS/EasyDns/config.c",
+                "/home/wangzhe/DNS/EasyDns/hlist.c",
+                "/home/wangzhe/DNS/EasyDns/net.c",
+                "/home/wangzhe/DNS/EasyDns/lprintf.c",
+                "/home/wangzhe/DNS/EasyDns/log.c",
                 "-L/usr/local/lib/",
                 "-luv",
                 "-o",

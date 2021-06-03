@@ -3,6 +3,9 @@
 #include "log.h"
 #include <string.h>
 #include <time.h>
+#include <sys/epoll.h>
+#include <fcntl.h>
+#include <arpa/inet.h>
 
 #define DNS_MAX_PACKET 548
 #define IP_LEN 40
@@ -13,11 +16,13 @@
 #define CANTGIVE 2
 #define GOTIT 3
 #define FROMFAR 4
+#define SERVER_PORT 8888
+#define MAXEPOLLSIZE 50
 
 extern struct hashMap *hashMap;
 extern struct hashMap *cacheMap;
-extern uv_udp_t send_socket;
-extern uv_udp_t recv_socket;
+uv_udp_t send_socket;
+uv_udp_t recv_socket;
 
 static struct cache cacheForId[300];
 
@@ -169,28 +174,22 @@ void succse_send_cb(uv_udp_send_t *req, int status)
         dbg_info("success send UDP\n");
     }
 }
-void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const struct sockaddr *addr, unsigned flags)
+void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
 {
     fflush(NULL);
     int stateCode = 0;
     dbg_info("get packet\n");
     char *reply = malloc(sizeof(char) * ANS_LEN);
     size_t replyLen = ANS_LEN;
-    if (nread < 0)
-    {
-        fprintf(stderr, "Read error %s\n", uv_err_name(nread));
-        // uv_close((uv_handle_t *)handl, NULL);
-        free(buf->base);
-        return;
-    }
-    char *rawmsg = malloc(sizeof(char) * (buf->len));
-    memcpy(rawmsg, buf->base, buf->len);
+
+    char *rawmsg = malloc(sizeof(char) * ANS_LEN);
+    memcpy(rawmsg, buf, ANS_LEN);
 
     if (isQuery(rawmsg))
     {
         // dbg_ip(rawmsg, 60);
         dbg_info("in is query\n");
-        char *domain = malloc(sizeof(char) * (buf->len));
+        char *domain = malloc(sizeof(char) * ANS_LEN);
         strcpy(domain, rawmsg + sizeof(struct HEADER));
         getAddress(&domain);
         char *ans = malloc(sizeof(char) * IP_LEN);
@@ -204,7 +203,7 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         {
             dbg_info("not find \n");
             stateCode = NOTFOUND;
-            uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
+            // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
             struct sockaddr_in dnsAdd;
 
             dbg_ip(rawmsg, 10);
@@ -215,10 +214,18 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
             {
                 printf("##after     ######################\n");
                 dbg_ip(rawmsg, 10);
-                uv_ip4_addr("10.3.9.4", 53, &dnsAdd);
-                uv_buf_t recvBuf = uv_buf_init(rawmsg, reply - reply + 0x7a);
-                //中继DNS
-                uv_udp_send(req, handl, &recvBuf, 1, (const struct sockaddr *)&dnsAdd, succse_send_cb);
+                dnsAdd.sin_family = AF_INET;
+                dnsAdd.sin_addr.s_addr = inet_addr("10.3.9.4"); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
+                dnsAdd.sin_port = htons(53);                    //端口号，需要网络序转换
+
+                // uv_ip4_addr("10.3.9.4", 53, &dnsAdd);
+                //     uv_buf_t recvBuf = uv_buf_init(rawmsg, reply - reply + 0x7a);
+                //     //中继DNS
+                //     uv_udp_send(req, handl, &recvBuf, 1, (const struct sockaddr *)&dnsAdd, succse_send_cb);
+                int len = sizeof(dnsAdd);
+
+                int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
+                printf("%d,%s\n", x, strerror(errno));
                 id = 0;
             }
 
@@ -247,14 +254,19 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
         uint16_t id = *(uint16_t *)rawmsg;
         dbg_info("get id is %hu\n", id);
         makeDnsHead(rawmsg, "", FROMFAR, &reply);
-        uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-        uv_buf_t recvBuf;
+        dbg_info("relly send is \n");
+        dbg_ip(rawmsg, 10);
+        // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
+        // uv_buf_t recvBuf;
         struct sockaddr *address = malloc(sizeof(struct sockaddr));
-        dbg_info("before memcpy %hu ^^^^ %hu\n", id, cacheForId[id].key);
+        // dbg_info("before memcpy %hu ^^^^ %hu\n", id, cacheForId[id].key);
         memcpy(address, cacheForId[id].value, sizeof(struct sockaddr));
-        dbg_info("after memcpy %hu\n", id);
-        recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
-        uv_udp_send(req, handl, &recvBuf, 1, address, succse_send_cb);
+        // dbg_info("after memcpy %hu\n", id);
+        // recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
+        // sendto(fd,rawmsg,0)
+        int len = sizeof(*address);
+        sendto(fd, rawmsg, ANS_LEN, 0, address, len);
+        // uv_udp_send(req, handl, &recvBuf, 1, address, succse_send_cb);
         // free(reply);
         // free(rawmsg);
         return;
@@ -264,10 +276,16 @@ void dealWithPacket(uv_udp_t *handl, ssize_t nread, const uv_buf_t *buf, const s
     if (stateCode != NOTFOUND)
     {
         dbg_info("\n\n reply is \n\n");
-        uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-        uv_buf_t recvBuf;
-        recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
-        uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
+        int len = sizeof(*addr);
+
+        int asd = sendto(fd, rawmsg, ANS_LEN, 0, addr, len);
+        dbg_info("%s\n", strerror(errno));
+
+        // printf("%d\n", asd);
+        // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
+        // uv_buf_t recvBuf;
+        // recvBuf = uv_buf_init(rawmsg, reply - reply + 0x5a);
+        // uv_udp_send(req, handl, &recvBuf, 1, addr, succse_send_cb);
     }
 
     free(reply);
@@ -289,7 +307,7 @@ void addCacheMap(char **rawmsg, const struct sockaddr *addr)
 {
     char *p = *rawmsg;
     uint16_t id = *(uint16_t *)(*rawmsg);
-
+    dbg_info("%x relayeasd change is %x\n", id, ((struct HEADER *)(*rawmsg))->id);
     clock_t idInCache = clock();
     cacheForId[idInCache % CACHELEN].key = id; //安装发过去的id存的
     //    uint16_t id = *(uint16_t *)rawmsg;
@@ -316,4 +334,111 @@ void addCacheMap(char **rawmsg, const struct sockaddr *addr)
     // printf("##inside   %x  ######################\n", ((struct HEADER *)(rawmsg))->id);
     printf("inside\n");
     dbg_ip(*rawmsg, 10);
+    printf("out side \n");
+}
+void runDns()
+
+{
+
+    int listenfd;
+    listenfd = initSocket();
+
+    if (listenfd == -1)
+    {
+        perror("can't create socket file");
+        return;
+    }
+    if (setnonblocking(listenfd) < 0)
+    {
+        perror("setnonblock error");
+    }
+
+    int len;
+    char buf[ANS_LEN]; //接收缓冲区，1024字节
+    struct sockaddr_in clent_addr;
+    len = sizeof(struct sockaddr_in);
+    // int count = recvfrom(listenfd, buf, 1024, 0, (struct sockaddr *)&clent_addr, &len); //recvfrom是拥塞函数，没有数据就一直拥塞    recvfrom()
+    // char *rawmsg = malloc(sizeof(char) * ANS_LEN);
+    // memcpy(rawmsg, buf, ANS_LEN);
+    // int asd = sendto(listenfd, buf, ANS_LEN, 0, (const struct sockaddr *)&clent_addr, len);
+    // dealWithPacket(rawmsg, (struct sockaddr *)&clent_addr, listenfd);
+
+    int epollfd = epoll_create(MAXEPOLLSIZE);
+    struct epoll_event ev;
+    struct epoll_event events[MAXEPOLLSIZE];
+
+    ev.events = EPOLLIN | EPOLLET;
+    ev.data.fd = listenfd;
+    epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &ev);
+    // int opt = 1;
+    // setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    // int netTimeOut = 6000;
+    // setsockopt(socket，SOL_S0CKET, SO_RCVTIMEO，(char *) & netTimeout, sizeof(int));
+    // char buf[ANS_LEN]; //接收缓冲区，1024字节
+    // struct sockaddr_in clent_addr;
+    //get buffer
+    while (1)
+    {
+        int nfds = epoll_wait(epollfd, events, 20, 500);
+        for (size_t i = 0; i < nfds; i++)
+        {
+            if (events[i].events & EPOLLIN)
+            {
+                int count = recvfrom(listenfd, buf, 1024, 0, (struct sockaddr *)&clent_addr, &len); //recvfrom是拥塞函数，没有数据就一直拥塞    recvfrom()
+                char *rawmsg = malloc(sizeof(char) * ANS_LEN);
+                memcpy(rawmsg, buf, ANS_LEN);
+                setblocking(listenfd);
+                dealWithPacket(rawmsg, (struct sockaddr *)&clent_addr, listenfd);
+                setnonblocking(listenfd);
+            }
+            else
+            {
+                dbg_info("yao fa bao !!!!!!!!!!");
+            }
+        }
+    }
+}
+int setnonblocking(int sockfd)
+{
+    if (fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) | O_NONBLOCK) == -1)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+int setblocking(int sockfd)
+{
+    // fcntl(sockfd, F_SETFL, flags & ~O_NONBLOCK);
+    if (fcntl(sockfd, F_SETFL, fcntl(sockfd, F_GETFD, 0) & ~O_NONBLOCK) == -1)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+int initSocket()
+{
+    int server_fd, ret;
+    struct sockaddr_in ser_addr;
+
+    server_fd = socket(AF_INET, SOCK_DGRAM, 0); //AF_INET:IPV4;SOCK_DGRAM:UDP
+    if (server_fd < 0)
+    {
+        printf("create socket fail!\n");
+        return -1;
+    }
+
+    memset(&ser_addr, 0, sizeof(ser_addr));
+    ser_addr.sin_family = AF_INET;
+    ser_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
+    ser_addr.sin_port = htons(SERVER_PORT);       //端口号，需要网络序转换
+
+    ret = bind(server_fd, (struct sockaddr *)&ser_addr, sizeof(ser_addr));
+    if (ret < 0)
+    {
+        printf("socket bind fail!\n");
+        return -1;
+    }
+    return server_fd;
 }
