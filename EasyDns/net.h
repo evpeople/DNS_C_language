@@ -43,9 +43,9 @@ void strToIp(char *ans, char *ip);
 void strToStr(char *ans, char *sentence);
 
 int lenOfQuery(char *rawmsg);
-void makeDnsRR(char *buf, char *ip, int state);
+void makeDnsRR(char *buf, ulong *ip, int state);
 
-void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply);
+void makeDnsHead(char *rawmsg, ulong *ans, int stateCode, char **reply);
 void getAddress(char **rawMsg);
 void getIP(char *, char **);
 void succse_send_cb(uv_udp_send_t *req, int status);

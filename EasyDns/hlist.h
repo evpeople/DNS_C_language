@@ -27,8 +27,9 @@ struct hashMap
 
 struct domainMap
 {
-    char *key;  //domin
-    long value; //ip
+    char *key; //domin
+    // char *value; //ip
+    ulong value;
     long TTL;
     long lastCallTime;
     struct hlistNode hash;
@@ -43,5 +44,5 @@ struct cache
 void hashMapInit(struct hashMap **hashMap);
 int hashCode(char *key);
 void createHasMap(struct hashMap **hashMap);
-char *findHashMap(struct hashMap **hashMap, char *key, char **value);
-void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind, int ttl); //key 是 domin， value 是ip
+int findHashMap(struct hashMap **hashMap, char *key, ulong *value);
+void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind); //key 是 domin， value 是ip
