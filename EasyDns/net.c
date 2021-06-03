@@ -61,7 +61,7 @@ int lenOfQuery(char *rawmsg)
     temp = strlen(rawmsg) + 5;
     return temp;
 }
-void makeDnsRR(char *buf, char *ip, int state)
+void makeDnsRR(char *buf, ulong *ip, int state)
 {
     struct HEADER *header = (struct HEADER *)buf;
     struct ANS *rr;
@@ -96,11 +96,12 @@ void makeDnsRR(char *buf, char *ip, int state)
     {
         rr->type = htons(1); //0.0.0.0 的type 为 TXT？
         *(temp + 1) = 4;
-        char *data = (char *)rr + 12; //到了rdata 部分
+        ulong *data = (char *)rr + 12; //到了rdata 部分
         *data = *ip;
-        dbg_warning("ip is %s\n", ip);
-        strToIp(data, ip);
-        dbg_warning("ip is %s\n", data);
+        dbg_info("%d", ip);
+        // dbg_warning("ip is %s\n", ip);
+        // strToIp(data, ip);
+        // dbg_warning("ip is %s\n", data);
     }
 }
 
@@ -112,7 +113,7 @@ void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
     dbg_info("has alloc\n");
 }
 
-void makeDnsHead(char *rawmsg, char *ans, int stateCode, char **reply)
+void makeDnsHead(char *rawmsg, ulong *ans, int stateCode, char **reply)
 {
     switch (stateCode)
     {
@@ -192,14 +193,15 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         char *domain = malloc(sizeof(char) * ANS_LEN);
         strcpy(domain, rawmsg + sizeof(struct HEADER));
         getAddress(&domain);
-        char *ans = malloc(sizeof(char) * IP_LEN);
-        findHashMap(&hashMap, domain, &ans);
+        // char *ans = malloc(sizeof(char) * IP_LEN);
+        ulong ans;
+        int ret = findHashMap(&hashMap, domain, &ans);
         free(domain - 1);
-        dbg_info("ans is %s\n", ans);
+        // dbg_info("ans is %s\n", ans);
         //查询表
-        dbg_info("*ans is %c\n", *ans);
+        // dbg_info("*ans is %c\n", *ans);
 
-        if (*ans == 'Z') //没有找到
+        if (ret == 0) //没有找到
         {
             dbg_info("not find \n");
             stateCode = NOTFOUND;
@@ -235,7 +237,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
             // free(ans);
             // return;
         }
-        else if (!strcmp(ans, "0.0.0.0"))
+        else if (ans == 0)
         {
             stateCode = CANTGIVE;
         }
@@ -244,16 +246,16 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
             stateCode = GOTIT;
         }
         dbg_info("state code is %d", stateCode);
-        makeDnsHead(rawmsg, ans, stateCode, &reply);
-        makeDnsRR(rawmsg, ans, stateCode);
-        free(ans);
+        makeDnsHead(rawmsg, &ans, stateCode, &reply);
+        makeDnsRR(rawmsg, &ans, stateCode);
+        // free(ans);
     }
     else
     {
         stateCode = NOTFOUND;
         uint16_t id = *(uint16_t *)rawmsg;
         dbg_info("get id is %hu\n", id);
-        makeDnsHead(rawmsg, "", FROMFAR, &reply);
+        makeDnsHead(rawmsg, NULL, FROMFAR, &reply);
         dbg_info("relly send is \n");
         dbg_ip(rawmsg, 10);
         // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));

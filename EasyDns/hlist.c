@@ -39,15 +39,16 @@ void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind) //ke
 {
     struct domainMap *node;
     node = malloc(sizeof(struct domainMap));
-    node->key = malloc(40);   //用于存域名的大小，和存数字的大小
-    node->value = malloc(24); //ip的大小和socketAdder的大小
+    node->key = malloc(40); //用于存域名的大小，和存数字的大小
+    // node->value = malloc(24); //ip的大小和socketAdder的大小
     if (kind == STATIC)
     {
         node->TTL == -1;
     }
     memcpy(node->key, key, 40);
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
-    memcpy(node->value, value, 24);
+    // memcpy(node->value, value, 24);
+    node->value = inet_addr(value);
     node->hash.next = NULL;
     // node->hash.next = NULL;
     int index = hashCode(key);
@@ -94,7 +95,7 @@ void hashMapInit(struct hashMap **hashMap)
     fclose(fp);
 }
 
-char *findHashMap(struct hashMap **hashMap, char *key, char **value)
+int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
 {
     bool find = false;
     int index = hashCode(key);
@@ -112,8 +113,9 @@ char *findHashMap(struct hashMap **hashMap, char *key, char **value)
                 //     return "Not have this";
                 // }
                 find = true;
-                dbg_info("返回的ip是%s\n", temp->value);
-                strcpy(*value, temp->value);
+                // dbg_info("返回的ip是%s\n", temp->value);
+                *value = temp->value;
+                // strcpy(*value, temp->value);
                 break;
                 // return temp->value;
             }
@@ -123,9 +125,10 @@ char *findHashMap(struct hashMap **hashMap, char *key, char **value)
     if (!find)
     {
         dbg_info("没有匹配到\n");
-        **value = 'Z';
-        return NULL;
+        // *value = 0;
+        return 0;
     }
+    return 1;
 }
 
 // int main(int argc, char **argv)
