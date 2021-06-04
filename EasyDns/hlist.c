@@ -32,20 +32,22 @@ void createHasMap(struct hashMap **hashMap)
 
     dbg_info("2m init success \n");
 }
-void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind, int ttl) //key 是 domin， value 是ip
+void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl) //key 是 domin， value 是ip
 {
     struct domainMap *node;
+    dbg_temp("baidu.com ip is %lu \n", value);
+
     node = malloc(sizeof(struct domainMap));
     node->key = malloc(40); //用于存域名的大小，和存数字的大小
     // node->value = malloc(24); //ip的大小和socketAdder的大小
-    if (kind == STATIC)
-    {
-        node->TTL == -1;
-    }
+    // if (kind == STATIC)
+    // {
+    //     node->TTL == -1;
+    // }
     memcpy(node->key, key, 40);
     // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
     // memcpy(node->value, value, 24);
-    node->value = inet_addr(value);
+    node->value = value;
     node->hash.next = NULL;
 
     node->TTL = ttl;
@@ -89,22 +91,36 @@ void hashMapInit(struct hashMap **hashMap)
         fscanf(fp, "%s", ip);
         fscanf(fp, "%s", domain);
         dbg_temp("ip is %s \n", ip);
-        addHashMap(domain, ip, hashMap, STATIC, -1);
+        addHashMap(domain, inet_addr(ip), hashMap, -1);
     }
     fclose(fp);
 }
 
 int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
 {
+    //根据TTL＝＝－１　判断是cache还是静态，若是cache 则大于第二个的时候就free加返回
     bool find = false;
+    int flag = 0;
     int index = hashCode(key);
 
     if ((*hashMap)->hlist[index] != NULL)
     {
+
         struct domainMap *temp = (struct domainMap *)((*hashMap)->hlist[index]->first - 2); //为内存偏移的起始地址
-        while (&(temp->hash) != NULL)
+        ulong ttl = temp->TTL;
+        if (ttl == -1)
         {
-            if (!strcasecmp(key, temp->key))
+            flag = -1;
+        }
+        else
+        {
+            flag = 0;
+        }
+
+        while ((&(temp->hash) != NULL && flag == -1) || (&(temp->hash) != NULL && flag <= 3))
+        {
+
+            if (!strcasecmp(key, temp->key) && overTime(temp))
             {
                 // if (!strcmp(temp->value, "0.0.0.0"))
                 // {
@@ -116,20 +132,55 @@ int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
                 *value = temp->value;
                 // strcpy(*value, temp->value);
                 break;
+                if (flag != -1)
+                {
+                    flag++;
+                }
+
                 // return temp->value;
             }
+
             temp = (struct domainMap *)(temp->hash.next - 2);
+            // delHashMap(&temp);
+            // temp = (struct domainMap *)(temp->hash.next - 2);
         }
     }
     if (!find)
     {
         dbg_info("没有匹配到\n");
         // *value = 0;
-        return 0;
+        // ;
     }
-    return 1;
+    return find;
 }
+int overTime(struct domainMap *temp)
+{
+    if (temp->TTL == -1 || (temp->TTL > (clock() - temp->lastCallTime)))
+    {
+        return 1;
+    }
+    return 0;
+}
+void delHashMap(struct domainMap **n)
+{
+    // if (*n == NULL)
+    // {
+    //     return;
+    // }
 
+    // struct hlistNode *next = (*n)->hash.next;
+    // struct hlistNode **pprev = (*n)->hash.pprev;
+    // // struct hlistNode *next = n->next;
+    // // struct hlistNode **pprev = n->pprev;
+    // *pprev = next;
+    // if (next)
+    //     next->pprev = pprev;
+}
+int freeHashMap(struct hashMap **hashMap, int num)
+{
+
+    free(*hashMap);
+}
 // int main(int argc, char **argv)
 // {
 //     config(argc, argv);

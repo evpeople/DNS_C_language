@@ -5,7 +5,7 @@
 
 #define IPLENGTH 20
 #define DOMAINLENTH 400
-#define MAPLENGTH 400
+#define MAPLENGTH 20
 
 #define STATIC 1
 #define DYNAMIC 2
@@ -29,7 +29,7 @@ struct domainMap
 {
     char *key; //domin
     // char *value; //ip
-    ulong value;
+    uint32_t value;
     long TTL;
     long lastCallTime;
     struct hlistNode hash;
@@ -45,4 +45,7 @@ void hashMapInit(struct hashMap **hashMap);
 int hashCode(char *key);
 void createHasMap(struct hashMap **hashMap);
 int findHashMap(struct hashMap **hashMap, char *key, ulong *value);
-void addHashMap(char *key, char *value, struct hashMap **hashMap, int kind, int ttl); //key 是 domin， value 是ip
+int freeHashMap(struct hashMap **hashMap, int num);
+void delHashMap(struct domainMap **n);
+int overTime(struct domainMap *temp);
+void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl); //key 是 domin， value 是ip

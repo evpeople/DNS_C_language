@@ -21,7 +21,7 @@ struct HEADER
 };
 struct QUERY
 {
-    unsigned qname : 16;  /* recursion desired */
+    // unsigned qname : 16;  /* recursion desired */
     unsigned qtype : 16;  /* truncated message */
     unsigned qclass : 16; /* authoritive answer */
 };
@@ -47,7 +47,7 @@ void makeDnsRR(char *buf, ulong *ip, int state);
 
 void makeDnsHead(char *rawmsg, ulong *ans, int stateCode, char **reply);
 void getAddress(char **rawMsg);
-void getIP(char *, char **);
+uint32_t getIP(char *);
 void succse_send_cb(uv_udp_send_t *req, int status);
 void alloc_buffer(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf);
 void dealWithPacket(char *buf, const struct sockaddr *addr, int fd);
@@ -57,3 +57,6 @@ int initSocket();
 void runDns();
 int setnonblocking(int sockfd);
 int setblocking(int sockfd);
+int isNotIpv4(char **rawmsg);
+void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd);
+uint getTTl(char *rawmsg);

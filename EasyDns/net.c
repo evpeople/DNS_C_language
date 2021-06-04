@@ -16,7 +16,7 @@
 #define CANTGIVE 2
 #define GOTIT 3
 #define FROMFAR 4
-#define SERVER_PORT 8888
+#define SERVER_PORT 8889
 #define MAXEPOLLSIZE 50
 
 extern struct hashMap *hashMap;
@@ -188,7 +188,12 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     char *domain = malloc(sizeof(char) * ANS_LEN);
     strcpy(domain, rawmsg + sizeof(struct HEADER));
     getAddress(&domain);
-    if (isQuery(rawmsg))
+    if (isNotIpv4(&rawmsg) && isQuery(rawmsg))
+    {
+        sendToDns(rawmsg, addr, fd);
+        stateCode = NOTFOUND;
+    }
+    else if (isQuery(rawmsg))
     {
         // dbg_ip(rawmsg, 60);
         dbg_info("in is query\n");
@@ -197,7 +202,23 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         getAddress(&domain);
         // char *ans = malloc(sizeof(char) * IP_LEN);
         ulong ans;
-        int ret = findHashMap(&hashMap, domain, &ans);
+        int ret = findHashMap(&cacheMap, domain, &ans);
+        if (ret == 0)
+        {
+            ret = findHashMap(&hashMap, domain, &ans);
+            if (ret == 1)
+            {
+                /* code */
+                dbg_warning("find from hash\n");
+                addHashMap(domain, ans, &cacheMap, -1);
+            }
+        }
+        else
+        {
+
+            dbg_warning("find from cache\n");
+        }
+
         free(domain - 1);
         // dbg_info("ans is %s\n", ans);
         //查询表
@@ -207,31 +228,32 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         {
             dbg_info("not find \n");
             stateCode = NOTFOUND;
+            sendToDns(rawmsg, addr, fd);
             // uv_udp_send_t *req = malloc(sizeof(uv_udp_send_t));
-            struct sockaddr_in dnsAdd;
+            // struct sockaddr_in dnsAdd;
 
-            dbg_ip(rawmsg, 10);
-            addCacheMap(&rawmsg, addr);
-            uint16_t id = *(uint16_t *)rawmsg;
-            printf("##before   %x  ######################\n", id);
-            if (id)
-            {
-                printf("##after     ######################\n");
-                dbg_ip(rawmsg, 10);
-                dnsAdd.sin_family = AF_INET;
-                dnsAdd.sin_addr.s_addr = inet_addr("10.3.9.4"); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
-                dnsAdd.sin_port = htons(53);                    //端口号，需要网络序转换
+            // dbg_ip(rawmsg, 10);
+            // addCacheMap(&rawmsg, addr);
+            // uint16_t id = *(uint16_t *)rawmsg;
+            // printf("##before   %x  ######################\n", id);
+            // if (id)
+            // {
+            //     printf("##after     ######################\n");
+            //     dbg_ip(rawmsg, 10);
+            //     dnsAdd.sin_family = AF_INET;
+            //     dnsAdd.sin_addr.s_addr = inet_addr("10.3.9.4"); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
+            //     dnsAdd.sin_port = htons(53);                    //端口号，需要网络序转换
 
-                // uv_ip4_addr("10.3.9.4", 53, &dnsAdd);
-                //     uv_buf_t recvBuf = uv_buf_init(rawmsg, reply - reply + 0x7a);
-                //     //中继DNS
-                //     uv_udp_send(req, handl, &recvBuf, 1, (const struct sockaddr *)&dnsAdd, succse_send_cb);
-                int len = sizeof(dnsAdd);
+            //     // uv_ip4_addr("10.3.9.4", 53, &dnsAdd);
+            //     //     uv_buf_t recvBuf = uv_buf_init(rawmsg, reply - reply + 0x7a);
+            //     //     //中继DNS
+            //     //     uv_udp_send(req, handl, &recvBuf, 1, (const struct sockaddr *)&dnsAdd, succse_send_cb);
+            //     int len = sizeof(dnsAdd);
 
-                int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
-                printf("%d,%s\n", x, strerror(errno));
-                id = 0;
-            }
+            //     int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
+            //     printf("%d,%s\n", x, strerror(errno));
+            //     id = 0;
+            // }
 
             // free(reply);
             // free(rawmsg);
@@ -266,11 +288,17 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         if ((*(uint16_t *)(rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 3)) == 1)
         {
             // dbg_info("jingru");
-            char *ip = malloc(sizeof(char) * IP_LEN);
-            getIP(rawmsg, &ip);
-            addHashMap(domain, ip, &cacheMap, DYNAMIC, 100);
+            // char *ip = malloc(sizeof(char) * IP_LEN);
+            uint32_t ip = getIP(rawmsg);
+            dbg_info("test\n");
+            // dbg_ip(ip, 20);
+            printf("%u  %u %u %u \n", ip, ip, ip, ip);
+            uint ttl = getTTl(rawmsg);
+            dbg_temp("test  ip is %lu \n", ip);
 
-            free(ip);
+            addHashMap(domain, ip, &cacheMap, ttl);
+
+            // free(ip);
             // dbg_ip(ip, 5);
         }
 
@@ -314,13 +342,113 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     free(rawmsg);
     dbg_info("wan cheng udp_send\n");
 }
-void getIP(char *rawmsg, char **ans)
+void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
+{
+    struct sockaddr_in dnsAdd;
+
+    dbg_ip(rawmsg, 10);
+    addCacheMap(&rawmsg, addr);
+    uint16_t id = *(uint16_t *)rawmsg;
+    printf("##before   %x  ######################\n", id);
+    if (id)
+    {
+        printf("##after     ######################\n");
+        dbg_ip(rawmsg, 10);
+        dnsAdd.sin_family = AF_INET;
+        dnsAdd.sin_addr.s_addr = inet_addr("10.3.9.4"); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
+        dnsAdd.sin_port = htons(53);                    //端口号，需要网络序转换
+
+        // uv_ip4_addr("10.3.9.4", 53, &dnsAdd);
+        //     uv_buf_t recvBuf = uv_buf_init(rawmsg, reply - reply + 0x7a);
+        //     //中继DNS
+        //     uv_udp_send(req, handl, &recvBuf, 1, (const struct sockaddr *)&dnsAdd, succse_send_cb);
+        int len = sizeof(dnsAdd);
+
+        int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
+        printf("%d,%s\n", x, strerror(errno));
+        id = 0;
+    }
+}
+int isNotIpv4(char **rawmsg)
+{
+    char *p = *rawmsg + sizeof(struct HEADER);
+    //    char *p = *rawMsg;
+    int temp = *p;
+    while (*p != 0)
+    {
+
+        for (int i = temp; i >= 0; i--)
+        {
+            p++;
+        }
+        temp = *p;
+        if (temp == 0)
+        {
+            p += 2;
+            if (*p == 1)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+
+            break;
+        }
+
+        // *p = '.';
+    }
+
+    // char *p = rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg);
+    // p += 1;
+    // dbg_ip(p, 4);
+
+    // dbg_ip(p - 1, 4);
+    // dbg_ip(p - 2, 4);
+    // dbg_ip(p - 3, 4);
+    // uint16_t *z = (uint16_t *)p;
+    // uint16_t data = ntohs(*z);
+    // if (data != 1)
+    // {
+    //     return 1;
+    // }
+    // else
+    // {
+    //     return 0;
+    // }
+
+    // return data;
+
+    // struct QUERY *temp = p;
+    // uint16_t x = (uint16_t *)(temp->qtype);
+    // uint16_t s = x;
+    // uint16_t y = ntohs(s);
+}
+uint32_t getIP(char *rawmsg)
 {
     // memcpy(*ans, rawmsg + sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 19, 5);
-    char *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 6);
-    dbg_info("Fun getIP \n");
+    struct ANS *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)));
+    // char *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)) + 12);
+    // dbg_info("Fun getIP \n");
+    char *x = (char *)&((*temp).ttl);
+    x += 4;
+    dbg_info("int getI{ \n");
+    dbg_ip(x, 10);
+    // uint32_t data = *(uint32_t *)x;
+    uint32_t *z = (uint32_t *)x;
+    // uint32_t data = ntohl(*z);
+    // uint32_t xx = inet_addr("220.181.38.148");
+    uint32_t tt = *z;
+    // uint32_t yy = inet_addr("39.156.69.79");
 
-    dbg_ip(temp, 20);
+    return tt;
+    // printf("%u  %u %u %u \n", data, xx, yy, tt);
+    // dbg_info("find IP  %lu   \n", data);
+    // *ans = temp;
+    // memcpy(*ans, temp, 4);
+    // *(ans + 5) = 0;
+    // dbg_ip(temp, 20);
     // inet_addr()
     // char *p = *ans;a
     // for (size_t i = 0; i < 4; i++)
@@ -330,10 +458,24 @@ void getIP(char *rawmsg, char **ans)
     //     rawmsg++;
     // }
     //   dbg_info("get Address is %s\n", *rawMsg);
-    dbg_ip(*ans, 5);
+    // dbg_ip(temp, 5);
 }
-void getTTl(char *raw, char **ans)
+uint getTTl(char *rawmsg)
 {
+    struct ANS *temp = rawmsg + (sizeof(struct HEADER) + lenOfQuery(rawmsg + sizeof(struct HEADER)));
+    char *x = (char *)&((*temp).ttl);
+    x -= 2;
+    uint32_t *z = (uint32_t *)x;
+    uint32_t data = ntohl(*z);
+    return data;
+    // uint16_t data = *(uint16_t *)temp;
+    // uint16_t data2 = *(uint16_t *)((char *)temp + 1);
+
+    // uint16_t data3 = *(uint16_t *)((char *)temp + 2);
+    // uint16_t data4 = *(uint16_t *)((char *)temp + 4);
+    // printf("%u\n", data);
+    // dbg_info("find TTL  %lu   \n", data);
+    // dbg_ip(temp, 20);
 }
 bool isQuery(char *rawMsg)
 {
