@@ -18,6 +18,7 @@
 // #define SERVER_PORT 8889
 #define MAX_EPOLL_SIZE 50
 
+static int extraLen = 0;
 extern int port;
 extern uint serverAddress;
 
@@ -59,9 +60,11 @@ void makeDnsRR(char *buf, ulong *ip, int state)
     {
         dbg_warning("it is a bad net website");
         header->rcode = 5;
+        // rr->rdlength = htons(25);
         rr->type = htons(16);
-        *(temp + 1) = 1;
+        *(temp + 1) = 24;
         *(temp + 2) = strlen("it is a bad net website");
+        extraLen = strlen("it is a bad net website") - 3;
         char *data = (char *)rr + 13;
         strcpy(data, "it is a bad net website");
     }
@@ -127,8 +130,9 @@ void getAddress(char **rawMsg)
     (*rawMsg)++;
     dbg_info("getAddress\n");
 }
-void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
+void dealWithPacket(char *buf, const struct sockaddr *addr, int fd, int count)
 {
+    extraLen = 0;
     fflush(NULL);
     int stateCode = 0;
 
@@ -140,7 +144,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     dbg_debug(rawmsg, 0, "domain is %s \n", domain);
     if (isNotIpv4(&rawmsg) && isQuery(rawmsg))
     {
-        sendToDns(rawmsg, addr, fd);
+        sendToDns(rawmsg, addr, fd, count);
         stateCode = NOT_FOUND;
         dbg_info("is not ipv4\n");
     }
@@ -169,7 +173,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         {
             dbg_debug(rawmsg, 0, "ask other DNS\n");
             stateCode = NOT_FOUND;
-            sendToDns(rawmsg, addr, fd);
+            sendToDns(rawmsg, addr, fd, count);
         }
         else if (ans == 0)
         {
@@ -199,7 +203,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         struct sockaddr *address = malloc(sizeof(struct sockaddr));
         memcpy(address, cacheForId[id].value, sizeof(struct sockaddr));
         int len = sizeof(*address);
-        sendto(fd, rawmsg, ANS_LEN, 0, address, len);
+        sendto(fd, rawmsg, count, 0, address, len);
         dbg_debug(rawmsg, 4, "success got a ans from Dns and send it !!!!!!!\n");
         return;
     }
@@ -207,7 +211,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     if (stateCode != NOT_FOUND)
     {
         int len = sizeof(*addr);
-        sendto(fd, rawmsg, ANS_LEN, 0, addr, len);
+        sendto(fd, rawmsg, count + sizeof(struct ANS) + extraLen, 0, addr, len);
         dbg_debug(rawmsg, 0, "find ip in cache or hash#####\n");
     }
 
@@ -215,7 +219,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     dbg_info("dealWithPacket\n");
 }
 
-void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
+void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd, int count)
 {
     struct sockaddr_in dnsAdd;
 
@@ -230,7 +234,7 @@ void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
 
         int len = sizeof(dnsAdd);
 
-        int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
+        int x = sendto(fd, rawmsg, count, 0, (const struct sockaddr *)&dnsAdd, len);
         id = 0;
     }
     dbg_info("sendToDns\n");
@@ -354,7 +358,7 @@ void runDns()
                 char *rawmsg = malloc(sizeof(char) * ANS_LEN);
                 memcpy(rawmsg, buf, ANS_LEN);
                 setblocking(listenfd);
-                dealWithPacket(rawmsg, (struct sockaddr *)&clent_addr, listenfd);
+                dealWithPacket(rawmsg, (struct sockaddr *)&clent_addr, listenfd, count);
                 setnonblocking(listenfd);
             }
             else
