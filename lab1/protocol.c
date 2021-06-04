@@ -721,6 +721,7 @@ void put_packet(unsigned char *packet, int len)
 #define DBG_EVENT 0x01
 #define DBG_FRAME 0x02
 #define DBG_WARNING 0x04
+#define DBG_ERROR 0x08
 
 void dbg_event(char *fmt, ...)
 {
@@ -757,12 +758,23 @@ void dbg_warning(char *fmt, ...)
         va_end(arg_ptr);
     }
 }
+void dbg_error(char *fmt, ...)
+{
+    va_list arg_ptr;
 
+    if (debug_mask & DBG_ERROR)
+    {
+        va_start(arg_ptr, fmt);
+        __v_lprintf(fmt, arg_ptr);
+        va_end(arg_ptr);
+    }
+}
 /* Event Generator */
 
 #define PHL_SQ_LEVEL 50
 
-static int sleep_cnt, start_ms, wakeup_ms, busy_cnt;
+static int sleep_cnt,
+    start_ms, wakeup_ms, busy_cnt;
 static int bias_cnt;
 
 struct RCV_FRAME
@@ -895,7 +907,7 @@ int wait_for_event(int *arg)
         }
 
         /* check all timers */
-        if ((event = scan_timer(arg)) != 0)
+        if ((event = scan_timer(arg)) != 0) //event返回的是哪个超时了，arg是超时的编号，也是wait—_for_event的arg
             return event;
 
         /* physical layer event */

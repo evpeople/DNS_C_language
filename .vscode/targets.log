@@ -5,8 +5,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
+ 
+make: *** No rule to make target 'all'.  Stop.
+ 
 
-# Make data base, printed on Wed Apr 14 01:21:29 2021
+# Make data base, printed on Thu Apr 22 22:01:31 2021
 
 # Variables
 
@@ -15,13 +18,15 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # automatic
 ?F = $(notdir $?)
 # environment
-WSLENV = VSCODE_WSL_EXT_LOCATION/up:VSCODE_SERVER_TAR/up
+WSLENV = VSCODE_WSL_EXT_LOCATION/up
 # default
 .SHELLFLAGS := -c
 # environment
 VSCODE_AGENT_FOLDER = /home/wangzhe/.vscode-server
 # environment
 VSCODE_LOG_NATIVE = false
+# environment
+ZSH_TMUX_TERM = screen-256color
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -35,7 +40,7 @@ SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{}}
 # environment
-_ = /home/wangzhe/.vscode-server/bin/08a217c4d27a02a5bcde898fd7981bda5b49391b/node
+_ = /home/wangzhe/.vscode-server/bin/3c4e3df9e89829dce27b7b5c24508306b151f30d/node
 # makefile
 MAKEFILE_LIST := 
 # 'override' directive
@@ -53,9 +58,7 @@ LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
 VSCODE_LOG_STACK = false
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-848a117d-7d45-4eba-9efb-dd6250b50752.sock
-# environment
-VSCODE_SERVER_TAR = /mnt/c/Users/王喆/AppData/Local/Temp/vscode-remote-wsl/08a217c4d27a02a5bcde898fd7981bda5b49391b/vscode-server-linux-x64.tar.gz
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-c054293e-c452-48ec-bd3f-eedb3c8322fa.sock
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -65,10 +68,9 @@ LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
+_ZSH_TMUX_FIXED_CONFIG = /home/wangzhe/.oh-my-zsh/plugins/tmux/tmux.only.conf
+# environment
 PWD = /home/wangzhe/DNS
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 # default
 .LOADED := 
 # environment
@@ -92,7 +94,7 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-PATH = /home/wangzhe/.vscode-server/bin/08a217c4d27a02a5bcde898fd7981bda5b49391b/bin:/usr/local/python3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files (x86)/VMware/VMware Workstation/bin/:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/NetSarang/Xftp 7/:/mnt/c/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/ojdkbuild/java-14-openjdk-14.0.2-1/missioncontrol/:/mnt/c/Program Files/ojdkbuild/java-14-openjdk-14.0.2-1/bin:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/qemu:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/dotnet/:/mnt/c/Maven/apache-maven-3.6.3/bin/:/mnt/c/Program Files/LLVM/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Users/王喆/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/Bandizip/:/mnt/c/Program Files/JetBrains/PyCharm 2020.3.2/bin:/mnt/c/Program Files/JetBrains/IntelliJ IDEA 2020.3.1/bin:/mnt/c/Program Files/JetBrains/GoLand 2020.3.1/bin:/mnt/c/tools/mysql/current/bin:/mnt/c/Program Files/Huawei/DevEco Studio/bin:/mnt/c/Users/王喆/AppData/Roaming/npm
+PATH = /home/wangzhe/.vscode-server/bin/3c4e3df9e89829dce27b7b5c24508306b151f30d/bin:/usr/local/python3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files (x86)/VMware/VMware Workstation/bin/:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/iCLS/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/DAL:/mnt/c/Program Files (x86)/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files/Intel/Intel(R) Management Engine Components/IPT:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/NetSarang/Xftp 7/:/mnt/c/Program Files/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/ojdkbuild/java-14-openjdk-14.0.2-1/missioncontrol/:/mnt/c/Program Files/ojdkbuild/java-14-openjdk-14.0.2-1/bin:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/qemu:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/dotnet/:/mnt/c/Maven/apache-maven-3.6.3/bin/:/mnt/c/Program Files/LLVM/bin:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/Users/王喆/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/Bandizip/:/mnt/c/Program Files/JetBrains/PyCharm 2020.3.2/bin:/mnt/c/Program Files/JetBrains/IntelliJ IDEA 2020.3.1/bin:/mnt/c/Program Files/JetBrains/GoLand 2020.3.1/bin:/mnt/c/tools/mysql/current/bin:/mnt/c/Program Files/Huawei/DevEco Studio/bin:/mnt/c/Users/王喆/AppData/Roaming/npm
 # environment
 SHLVL = 0
 # default
@@ -144,13 +146,13 @@ SUFFIXES :=
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
-VSCODE_INJECT_NODE_MODULE_LOOKUP_PATH = /home/wangzhe/.vscode-server/bin/08a217c4d27a02a5bcde898fd7981bda5b49391b/remote/node_modules
+VSCODE_INJECT_NODE_MODULE_LOOKUP_PATH = /home/wangzhe/.vscode-server/bin/3c4e3df9e89829dce27b7b5c24508306b151f30d/remote/node_modules
 # default
 .RECIPEPREFIX := 
 # environment
 http_proxy = http://127.0.0.1:7890
 # environment
-LANG = C.UTF-8
+LANG = en_US.UTF-8
 # environment
 TERM = xterm-256color
 # environment
@@ -158,7 +160,7 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 # environment
 WSL_DISTRO_NAME = Ubuntu-20.04
 # variable set hash-table stats:
-# Load=72/1024=7%, Rehash=0, Collisions=5/94=5%
+# Load=73/1024=7%, Rehash=0, Collisions=5/95=5%
 
 # Pattern-specific Variable Values
 
@@ -166,9 +168,9 @@ WSL_DISTRO_NAME = Ubuntu-20.04
 
 # Directories
 
-# . (device 2, inode 48413695994242816): 7 files, no impossibilities.
+# . (device 2, inode 844424931325955): 9 files, no impossibilities.
 
-# 7 files, no impossibilities in 1 directories.
+# 9 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -218,12 +220,13 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 15 / storage = 132 B / avg = 8 B
-# current buf: size = 8162 B / used = 132 B / count = 15 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 17 / storage = 154 B / avg = 9 B
+# current buf: size = 8162 B / used = 154 B / count = 17 / avg = 9 B
 
-# strcache performance: lookups = 18 / hit rate = 16%
+# strcache performance: lookups = 20 / hit rate = 15%
 # hash-table stats:
-# Load=15/8192=0%, Rehash=0, Collisions=1/18=6%
-# Finished Make data base on Wed Apr 14 01:21:29 2021
+ 
+# Load=17/8192=0%, Rehash=0, Collisions=1/20=5%
+# Finished Make data base on Thu Apr 22 22:01:31 2021
 
  
