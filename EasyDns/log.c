@@ -66,6 +66,7 @@ void dbg_debug(char *fmt, ...)
 
     if (debug_mask & DBG_DEBUG)
     {
+        printf("DEBUG:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -78,6 +79,7 @@ void dbg_info(char *fmt, ...)
 
     if (debug_mask & DBG_INFO)
     {
+        printf("INFO:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -90,6 +92,7 @@ void dbg_warning(char *fmt, ...)
 
     if (debug_mask & DBG_WARNING)
     {
+        printf("WARNING:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -101,6 +104,7 @@ void dbg_error(char *fmt, ...)
 
     if (debug_mask & DBG_ERROR)
     {
+        printf("ERROR:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -112,23 +116,26 @@ void dbg_temp(char *fmt, ...)
 
     if (debug_mask & DBG_TEMP)
     {
+        printf("\033[31mTEMP:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
+        printf("\033[0m");
     }
 }
 void dbg_ip(unsigned char *temp, int n)
 {
+    printf("IP IS BEGIN \n");
     for (size_t i = 0; i < n; i++)
     {
-        printf("%2x\t", *temp);
+        printf("%02X\t", *temp);
         temp++;
         if (i % 10 == 0 && i != 0)
         {
             printf("\n");
         }
     }
-    printf("IP IS OVER  \n\n");
+    printf("IP IS OVER  \n");
 }
 
 unsigned int get_ms(void)

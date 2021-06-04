@@ -4,8 +4,8 @@
 #include <uv.h>
 
 #define IPLENGTH 20
-#define DOMAINLENTH 400
-#define MAPLENGTH 20
+#define DOMAINLENTH 100
+#define MAPLENGTH 400
 
 #define STATIC 1
 #define DYNAMIC 2
@@ -28,7 +28,6 @@ struct hashMap
 struct domainMap
 {
     char *key; //domin
-    // char *value; //ip
     uint32_t value;
     long TTL;
     long lastCallTime;

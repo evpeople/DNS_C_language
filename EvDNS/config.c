@@ -15,5 +15,5 @@ void initDNS(struct hashMap **hashMap)
     struct sockaddr_in recv_addr;
     uv_ip4_addr("0.0.0.0", 6801, &recv_addr);
     uv_udp_bind(&recv_socket, (const struct sockaddr *)&recv_addr, UV_UDP_REUSEADDR);
-    dbg_info("ip udp bind success\n");
+    // dbg_info("ip udp bind success\n");
 }

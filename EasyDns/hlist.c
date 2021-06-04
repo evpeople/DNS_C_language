@@ -2,6 +2,7 @@
 #include "log.h"
 #include "net.h"
 
+#define LENOFKEY 40
 int hashCode(char *key)
 {
     ////UNIX系统使用的哈希
@@ -25,34 +26,22 @@ void createHasMap(struct hashMap **hashMap)
 
     (*hashMap) = malloc(sizeof(struct hashMap));
     memset((*hashMap)->hlist, 0, sizeof((*hashMap)->hlist));
-    // for (size_t i = 0; i < MAPLENGTH; i++)
-    // {
-    //     hashMap->hlist[i] = NULL;
-    // }
-
-    dbg_info("2m init success \n");
 }
 void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl) //key 是 domin， value 是ip
 {
+    //存储基本数据
     struct domainMap *node;
-    dbg_temp("baidu.com ip is %lu \n", value);
 
     node = malloc(sizeof(struct domainMap));
-    node->key = malloc(40); //用于存域名的大小，和存数字的大小
-    // node->value = malloc(24); //ip的大小和socketAdder的大小
-    // if (kind == STATIC)
-    // {
-    //     node->TTL == -1;
-    // }
-    memcpy(node->key, key, 40);
-    // dbg_temp("key is %s ********** yuan key %s da xiao ww %d \n ", node->key, key, strlen(node->key));
-    // memcpy(node->value, value, 24);
+    node->key = malloc(DOMAINLENTH);
+    memcpy(node->key, key, DOMAINLENTH);
     node->value = value;
     node->hash.next = NULL;
 
     node->TTL = ttl;
     node->lastCallTime = clock();
 
+    //构建哈希表
     int index = hashCode(key);
     if ((*hashMap)->hlist[index] == NULL)
     {
@@ -68,29 +57,22 @@ void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl) //
         *(node->hash.pprev) = &(node->hash);
     }
 }
-// void addCacheMap(char *key, );
 
 void hashMapInit(struct hashMap **hashMap)
 {
-    // createHasMap(hashMap);
-    // *hashMap = malloc(sizeof(struct hashMap));
-
     FILE *fp = NULL;
     char ip[IPLENGTH];
-    dbg_info("befor open success \n");
     char domain[DOMAINLENTH];
-    fp = fopen("/home/wangzhe/DNS/DNS/dnsrelay.txt", "a+");
+    fp = fopen("/home/wangzhe/DNS/DNS/dnsrelay.txt", "r");
     if (fp == NULL)
     {
         dbg_error("can't open file\n");
         exit(1);
     }
-    dbg_info("open success \n");
     while (!feof(fp))
     {
         fscanf(fp, "%s", ip);
         fscanf(fp, "%s", domain);
-        dbg_temp("ip is %s \n", ip);
         addHashMap(domain, inet_addr(ip), hashMap, -1);
     }
     fclose(fp);
@@ -98,7 +80,6 @@ void hashMapInit(struct hashMap **hashMap)
 
 int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
 {
-    //根据TTL＝＝－１　判断是cache还是静态，若是cache 则大于第二个的时候就free加返回
     bool find = false;
     int flag = 0;
     int index = hashCode(key);
@@ -117,39 +98,26 @@ int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
             flag = 0;
         }
 
+        //通过flag<=3 实现LRU
         while ((&(temp->hash) != NULL && flag == -1) || (&(temp->hash) != NULL && flag <= 3))
         {
 
             if (!strcasecmp(key, temp->key) && overTime(temp))
             {
-                // if (!strcmp(temp->value, "0.0.0.0"))
-                // {
-                //     dbg_info("屏蔽网站");
-                //     return "Not have this";
-                // }
                 find = true;
-                // dbg_info("返回的ip是%s\n", temp->value);
                 *value = temp->value;
-                // strcpy(*value, temp->value);
                 break;
                 if (flag != -1)
                 {
                     flag++;
                 }
-
-                // return temp->value;
             }
 
             temp = (struct domainMap *)(temp->hash.next - 2);
-            // delHashMap(&temp);
-            // temp = (struct domainMap *)(temp->hash.next - 2);
         }
     }
     if (!find)
     {
-        dbg_info("没有匹配到\n");
-        // *value = 0;
-        // ;
     }
     return find;
 }
@@ -181,23 +149,3 @@ int freeHashMap(struct hashMap **hashMap, int num)
 
     free(*hashMap);
 }
-// int main(int argc, char **argv)
-// {
-//     config(argc, argv);
-
-//     lprintf("\nde\n");
-//     dbg_info("befor 7 init success \n");
-//     struct hashMap *hashMap;
-//     dbg_info("befor 3 init success \n");
-//     createHasMap(hashMap);
-//     dbg_info("befor init success \n");
-//     hashMapInit(hashMap);
-
-//     int fd = initServer();
-//     char *temp;
-//     handleDnsMsg(fd, temp);
-//     dbg_info("after handle domain is %s\n", temp);
-//     char *ans = findHashMap(hashMap, temp);
-//     dbg_info("got ip is %s\n", ans);
-//     return 0;
-// }
