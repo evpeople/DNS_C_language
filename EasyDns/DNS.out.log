@@ -1,0 +1,18 @@
+Log file "./DNS.out.log", debug mask 0x14
+Not find in cacheMap
+TTL is -1 
+over is 1 
+time is 1622822924
+ lastCallTime 1622822923
+over Time is 1 
+TTL is -1 
+over is 1 
+time is 1622822924
+ lastCallTime 1622822923
+over Time is 1 
+TTL is -1 
+over is 1 
+time is 1622822924
+ lastCallTime 1622822923
+find in hashMap and store it
+is not a ipv4

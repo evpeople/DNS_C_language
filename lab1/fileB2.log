@@ -1,0 +1,41 @@
+000.000 =============================================================
+000.000                     Station B                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-04
+000.000 Log file "fileB2.log", TCP port 59144, debug mask 0x03
+000.000 Station B is connecting station A (TCP port 59144) ... Failed!
+000.000 Station B is connecting station A (TCP port 59144) ... Done.
+000.322 New epoch: Sat Apr 24 23:01:58 2021
+000.322 =================================================================
+000.322 
+000.322 Designed by Jiang Yanjun, build: Apr 24 2021  22:58:53
+000.322 启动了网络层，phlready 是 1  numberOFSend 是 0 have_ack[number_of_send] = 0
+000.869 接收到了帧、
+000.869 Recv DATA 0 0, ID 10000  frame_expect is 0
+000.869 放入了网络层
+000.869 Send ACK  0
+000.870 启动了网络层，phlready 是 1  numberOFSend 是 0 have_ack[number_of_send] = 0
+001.041 Send DATA 0 0, ID 20000
+001.136 接收到了帧、
+001.136 Recv DATA 1 0, ID 10001  frame_expect is 1
+001.136 放入了网络层
+001.136 Send ACK  1
+001.275 启动了网络层，phlready 是 1  numberOFSend 是 1 have_ack[number_of_send] = 0
+001.275 Send DATA 1 0, ID 20001
+001.401 接收到了帧、
+001.401 Recv DATA 2 0, ID 10002  frame_expect is 2
+001.401 放入了网络层
+001.401 Send ACK  2
+001.544 启动了网络层，phlready 是 1  numberOFSend 是 2 have_ack[number_of_send] = 0
+001.544 Send DATA 2 0, ID 20002
+001.670 接收到了帧、
+001.670 CRC校验出错！1
+001.810 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.811 Send DATA 3 0, ID 20003
+001.936 接收到了帧、
+001.936 Recv DATA 3 0, ID 10004  frame_expect is 3
+001.936 放入了网络层
+001.936 
+001.937 FATAL: Network Layer received a bad packet from data link layer
+001.937 Abort.

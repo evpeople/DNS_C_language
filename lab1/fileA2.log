@@ -1,0 +1,39 @@
+000.000 =============================================================
+000.000                     Station A                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-04
+000.000 Log file "fileA2.log", TCP port 59144, debug mask 0x03
+000.000 Station A is waiting for station B on TCP port 59144 ... Done.
+000.322 New epoch: Sat Apr 24 23:01:58 2021
+000.322 =================================================================
+000.322 
+000.322 Designed by Jiang Yanjun, build: Apr 24 2021  22:58:53
+000.322 启动了网络层，phlready 是 1  numberOFSend 是 0 have_ack[number_of_send] = 0
+000.322 Send DATA 0 0, ID 10000
+000.573 启动了网络层，phlready 是 1  numberOFSend 是 1 have_ack[number_of_send] = 0
+000.573 Send DATA 1 0, ID 10001
+000.839 启动了网络层，phlready 是 1  numberOFSend 是 2 have_ack[number_of_send] = 0
+000.839 Send DATA 2 0, ID 10002
+001.105 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.105 Send DATA 3 0, ID 10003
+001.136 接收到了帧、
+001.136 收到了  ACK  帧， ACK  号是 0 not_receive 是 0  number_OF_SEND  4 
+001.136 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+001.354 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.355 Send DATA 3 0, ID 10004
+001.560 接收到了帧、
+001.560 CRC校验出错！1
+001.592 接收到了帧、
+001.592 收到了  ACK  帧， ACK  号是 1 not_receive 是 1  number_OF_SEND  4 
+001.592 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+001.623 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.623 Send DATA 3 0, ID 10005
+001.859 接收到了帧、
+001.859 Recv DATA 1 0, ID 20001  frame_expect is 0
+001.889 接收到了帧、
+001.889 收到了  ACK  帧， ACK  号是 2 not_receive 是 2  number_OF_SEND  4 
+001.889 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+001.889 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.889 Send DATA 3 0, ID 10006
+001.953 TCP disconnected.

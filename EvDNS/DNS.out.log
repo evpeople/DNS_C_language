@@ -1,0 +1,98 @@
+000.000 Log file "./DNS.out.log", debug mask 0x02
+000.000 2m init success 
+000.000 2m init success 
+000.000 befor open success 
+000.000 open success 
+000.000 ip udp bind success
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is test0
+000.000 返回的ip是0.0.0.0
+000.000 ans is 0.0.0.0
+000.000 *ans is 0
+000.000 state code is 2
+000.000 
+000.000  reply is 
+000.000 
+000.000 wan cheng udp_send
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is test0
+000.000 返回的ip是0.0.0.0
+000.000 ans is 0.0.0.0
+000.000 *ans is 0
+000.000 state code is 2
+000.000 
+000.000  reply is 
+000.000 
+000.000 wan cheng udp_send
+000.000 success send UDP
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is baidu.com
+000.000 没有匹配到
+000.000 ans is Z
+000.000 *ans is Z
+000.000 not find 
+000.000 changed eded id is 163 xxxx is in 163 yyyyyy is 32324
+000.000 state code is 1wan cheng udp_send
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is baidu.com
+000.000 没有匹配到
+000.000 ans is Z
+000.000 *ans is Z
+000.000 not find 
+000.000 state code is 1wan cheng udp_send
+000.000 success send UDP
+000.000 has alloc
+000.000 get packet
+000.000 get id is 163
+000.000 预备转发包
+000.000 a3 before change is a3
+000.000 a3 after change is 7e44
+000.000 before memcpy 163 ^^^^ 32324
+000.000 after memcpy 163
+000.000 has alloc
+000.000 get packet
+000.000 get id is 163
+000.000 预备转发包
+000.000 a3 before change is a3
+000.000 a3 after change is 7e44
+000.000 before memcpy 163 ^^^^ 32324
+000.000 after memcpy 163
+000.000 success send UDP
+000.000 success send UDP
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is baidu.com
+000.000 没有匹配到
+000.000 ans is Z
+000.000 *ans is Z
+000.000 not find 
+000.000 changed eded id is 163 xxxx is in 163 yyyyyy is 4426
+000.000 state code is 1wan cheng udp_send
+000.000 has alloc
+000.000 get packet
+000.000 in is query
+000.000 get Address is baidu.com
+000.000 没有匹配到
+000.000 ans is Z
+000.000 *ans is Z
+000.000 not find 
+000.000 state code is 1wan cheng udp_send
+000.000 success send UDP
+000.000 has alloc
+000.000 get packet
+000.000 get id is 163
+000.000 预备转发包
+000.000 a3 before change is a3
+000.000 a3 after change is 114a
+000.000 before memcpy 163 ^^^^ 4426
+000.000 after memcpy 163
+000.000 has alloc

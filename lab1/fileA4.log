@@ -1,0 +1,208 @@
+000.000 =============================================================
+000.000                     Station A                               
+000.000 -------------------------------------------------------------
+000.000 Protocol.lib, version 4.0, jiangyanjun0718@bupt.edu.cn
+000.000 Channel: 8000 bps, 270 ms propagation delay, bit error rate 1.0E-04
+000.000 Log file "fileA4.log", TCP port 59144, debug mask 0x03
+000.000 Station A is waiting for station B on TCP port 59144 ... Done.
+000.989 New epoch: Sat Apr 24 23:32:52 2021
+000.989 =================================================================
+000.989 
+000.989 Designed by Jiang Yanjun, build: Apr 24 2021  23:32:43
+000.989 启动了网络层，phlready 是 1  numberOFSend 是 0 have_ack[number_of_send] = 0
+000.989 Send DATA 0 0, ID 10000
+001.239 启动了网络层，phlready 是 1  numberOFSend 是 1 have_ack[number_of_send] = 0
+001.239 Send DATA 1 0, ID 10001
+001.504 启动了网络层，phlready 是 1  numberOFSend 是 2 have_ack[number_of_send] = 0
+001.504 Send DATA 2 0, ID 10002
+001.582 接收到了帧、
+001.582 CRC校验出错！1
+001.772 启动了网络层，phlready 是 1  numberOFSend 是 3 have_ack[number_of_send] = 0
+001.772 Send DATA 3 0, ID 10003
+001.850 接收到了帧、
+001.850 Recv DATA 1 0, ID 20001  frame_expect is 0
+002.021 启动了网络层，phlready 是 1  numberOFSend 是 4 have_ack[number_of_send] = 0
+002.021 Send DATA 4 0, ID 10004
+002.099 接收到了帧、
+002.099 Recv DATA 2 0, ID 20002  frame_expect is 0
+002.286 启动了网络层，phlready 是 1  numberOFSend 是 5 have_ack[number_of_send] = 0
+002.286 Send DATA 5 0, ID 10005
+002.380 接收到了帧、
+002.380 Recv DATA 3 0, ID 20003  frame_expect is 0
+002.550 启动了网络层，phlready 是 1  numberOFSend 是 6 have_ack[number_of_send] = 0
+002.550 Send DATA 6 0, ID 10006
+002.629 接收到了帧、
+002.629 Recv DATA 4 0, ID 20004  frame_expect is 0
+002.821 启动了网络层，phlready 是 1  numberOFSend 是 7 have_ack[number_of_send] = 0
+002.821 Send DATA 7 0, ID 10007
+002.916 接收到了帧、
+002.916 Recv DATA 5 0, ID 20005  frame_expect is 0
+003.089 启动了网络层，phlready 是 1  numberOFSend 是 8 have_ack[number_of_send] = 0
+003.089 Send DATA 8 0, ID 10008
+003.167 接收到了帧、
+003.167 Recv DATA 6 0, ID 20006  frame_expect is 0
+003.341 启动了网络层，phlready 是 1  numberOFSend 是 9 have_ack[number_of_send] = 0
+003.341 Send DATA 9 0, ID 10009
+003.419 接收到了帧、
+003.419 Recv DATA 7 0, ID 20007  frame_expect is 0
+003.528 ---- DATA 0 timeout
+003.528 Send DATA 0 0, ID 10000
+003.528 Send DATA 1 0, ID 10001
+003.528 Send DATA 2 0, ID 10002
+003.528 Send DATA 3 0, ID 10003
+003.528 Send DATA 4 0, ID 10004
+003.528 Send DATA 5 0, ID 10005
+003.528 Send DATA 6 0, ID 10006
+003.528 Send DATA 7 0, ID 10007
+003.528 Send DATA 8 0, ID 10008
+003.528 Send DATA 9 0, ID 10009
+003.684 接收到了帧、
+003.684 Recv DATA 8 0, ID 20008  frame_expect is 0
+003.952 接收到了帧、
+003.952 CRC校验出错！1
+004.216 接收到了帧、
+004.216 CRC校验出错！1
+004.481 接收到了帧、
+004.481 Recv DATA 1 0, ID 20001  frame_expect is 0
+004.747 接收到了帧、
+004.747 Recv DATA 2 0, ID 20002  frame_expect is 0
+005.011 接收到了帧、
+005.011 Recv DATA 3 0, ID 20003  frame_expect is 0
+005.276 接收到了帧、
+005.276 Recv DATA 4 0, ID 20004  frame_expect is 0
+005.544 接收到了帧、
+005.544 Recv DATA 5 0, ID 20005  frame_expect is 0
+005.813 接收到了帧、
+005.813 Recv DATA 6 0, ID 20006  frame_expect is 0
+006.084 接收到了帧、
+006.084 Recv DATA 7 0, ID 20007  frame_expect is 0
+006.274 ---- DATA 0 timeout
+006.274 Send DATA 0 0, ID 10000
+006.274 Send DATA 1 0, ID 10001
+006.274 Send DATA 2 0, ID 10002
+006.274 Send DATA 3 0, ID 10003
+006.274 Send DATA 4 0, ID 10004
+006.274 Send DATA 5 0, ID 10005
+006.274 Send DATA 6 0, ID 10006
+006.274 Send DATA 7 0, ID 10007
+006.274 Send DATA 8 0, ID 10008
+006.274 Send DATA 9 0, ID 10009
+006.337 接收到了帧、
+006.337 Recv DATA 8 0, ID 20008  frame_expect is 0
+006.588 接收到了帧、
+006.588 Recv DATA 9 0, ID 20009  frame_expect is 0
+006.604 接收到了帧、
+006.604 收到了  ACK  帧， ACK  号是 0 not_receive 是 0  number_OF_SEND  0 
+006.856 接收到了帧、
+006.856 Recv DATA 0 0, ID 20000  frame_expect is 0
+006.856 放入了网络层
+006.856 .... 1 packets received, 370 bps, 4.62%, Err 7 (1.5e-04)
+006.856 Send ACK  0
+007.124 接收到了帧、
+007.124 Recv DATA 1 0, ID 20001  frame_expect is 1
+007.124 放入了网络层
+007.124 Send ACK  1
+007.389 接收到了帧、
+007.389 Recv DATA 2 0, ID 20002  frame_expect is 2
+007.389 放入了网络层
+007.390 Send ACK  2
+007.657 接收到了帧、
+007.657 Recv DATA 3 0, ID 20003  frame_expect is 3
+007.657 放入了网络层
+007.657 Send ACK  3
+007.924 接收到了帧、
+007.924 Recv DATA 4 0, ID 20004  frame_expect is 4
+007.924 放入了网络层
+007.924 Send ACK  4
+008.191 接收到了帧、
+008.191 Recv DATA 5 0, ID 20005  frame_expect is 5
+008.191 放入了网络层
+008.191 Send ACK  5
+008.457 接收到了帧、
+008.457 Recv DATA 6 0, ID 20006  frame_expect is 6
+008.457 放入了网络层
+008.457 Send ACK  6
+008.723 接收到了帧、
+008.723 Recv DATA 7 0, ID 20007  frame_expect is 7
+008.723 放入了网络层
+008.723 Send ACK  7
+008.802 ---- DATA 0 timeout
+008.802 Send DATA 0 0, ID 10000
+008.802 Send DATA 1 0, ID 10001
+008.802 Send DATA 2 0, ID 10002
+008.802 Send DATA 3 0, ID 10003
+008.802 Send DATA 4 0, ID 10004
+008.802 Send DATA 5 0, ID 10005
+008.802 Send DATA 6 0, ID 10006
+008.802 Send DATA 7 0, ID 10007
+008.802 Send DATA 8 0, ID 10008
+008.802 Send DATA 9 0, ID 10009
+008.974 接收到了帧、
+008.974 CRC校验出错！1
+009.240 接收到了帧、
+009.240 Recv DATA 9 0, ID 20009  frame_expect is 8
+009.272 接收到了帧、
+009.272 收到了  ACK  帧， ACK  号是 0 not_receive 是 0  number_OF_SEND  0 
+009.520 接收到了帧、
+009.520 Recv DATA 0 0, ID 20000  frame_expect is 8
+009.520 Send ACK  0
+009.787 接收到了帧、
+009.787 CRC校验出错！1
+010.051 接收到了帧、
+010.051 Recv DATA 2 0, ID 20002  frame_expect is 8
+010.051 Send ACK  2
+010.318 接收到了帧、
+010.318 Recv DATA 3 0, ID 20003  frame_expect is 8
+010.318 Send ACK  3
+010.568 接收到了帧、
+010.568 Recv DATA 4 0, ID 20004  frame_expect is 8
+010.568 Send ACK  4
+010.834 接收到了帧、
+010.834 Recv DATA 5 0, ID 20005  frame_expect is 8
+010.834 Send ACK  5
+011.101 接收到了帧、
+011.101 Recv DATA 6 0, ID 20006  frame_expect is 8
+011.101 Send ACK  6
+011.369 接收到了帧、
+011.369 Recv DATA 7 0, ID 20007  frame_expect is 8
+011.369 Send ACK  7
+011.635 接收到了帧、
+011.635 Recv DATA 8 0, ID 20008  frame_expect is 8
+011.635 放入了网络层
+011.635 .... 9 packets received, 1786 bps, 22.33%, Err 10 (1.2e-04)
+011.635 Send ACK  8
+011.668 ---- DATA 0 timeout
+011.668 Send DATA 0 0, ID 10000
+011.668 Send DATA 1 0, ID 10001
+011.668 Send DATA 2 0, ID 10002
+011.668 Send DATA 3 0, ID 10003
+011.668 Send DATA 4 0, ID 10004
+011.668 Send DATA 5 0, ID 10005
+011.668 Send DATA 6 0, ID 10006
+011.668 Send DATA 7 0, ID 10007
+011.668 Send DATA 8 0, ID 10008
+011.668 Send DATA 9 0, ID 10009
+011.906 接收到了帧、
+011.906 CRC校验出错！1
+011.922 接收到了帧、
+011.922 收到了  ACK  帧， ACK  号是 0 not_receive 是 0  number_OF_SEND  0 
+011.937 接收到了帧、
+011.937 收到了  ACK  帧， ACK  号是 1 not_receive 是 0  number_OF_SEND  0 
+011.937 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+011.937 接收到了帧、
+011.937 收到了  ACK  帧， ACK  号是 2 not_receive 是 2  number_OF_SEND  0 
+011.937 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+011.953 接收到了帧、
+011.953 收到了  ACK  帧， ACK  号是 3 not_receive 是 3  number_OF_SEND  0 
+011.953 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~测试in_middle 成功
+011.968 接收到了帧、
+011.968 CRC校验出错！2
+011.983 接收到了帧、
+011.983 收到了  ACK  帧， ACK  号是 5 not_receive 是 4  number_OF_SEND  0 
+011.999 接收到了帧、
+011.999 收到了  ACK  帧， ACK  号是 6 not_receive 是 4  number_OF_SEND  0 
+012.015 接收到了帧、
+012.015 收到了  ACK  帧， ACK  号是 7 not_receive 是 4  number_OF_SEND  0 
+012.203 接收到了帧、
+012.203 CRC校验出错！1
+012.220 TCP disconnected.
