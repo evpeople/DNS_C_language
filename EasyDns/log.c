@@ -21,6 +21,7 @@ uint serverAddress = 0;
 static struct option intopts[] = {
 
     {"debug", required_argument, NULL, 'd'},
+    {"server", no_argument, NULL, 's'},
     {0, 0, 0, 0},
 };
 
@@ -43,10 +44,8 @@ void config(int argc, char **argv)
             break;
         case 'p':
             port = atoi(optarg);
-            printf("port is %d", port);
             break;
         case 's':
-            // printf("%s", optarg);
             serverAddress = inet_addr(optarg);
             break;
         default:

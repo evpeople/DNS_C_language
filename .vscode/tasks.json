@@ -75,8 +75,8 @@
                 "/home/wangzhe/DNS/EasyDns/net.c",
                 "/home/wangzhe/DNS/EasyDns/lprintf.c",
                 "/home/wangzhe/DNS/EasyDns/log.c",
-                "-L/usr/local/lib/",
-                "-luv",
+                // "-L/usr/local/lib/",
+                // "-luv",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}.out"
             ],

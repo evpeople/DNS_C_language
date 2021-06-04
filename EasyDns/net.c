@@ -154,13 +154,13 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
             ret = findHashMap(&hashMap, domain, &ans);
             if (ret == 1)
             {
-                dbg_temp("find in hashMap and store it\n");
+                dbg_warning("find in hashMap and store it\n");
                 addHashMap(domain, ans, &cacheMap, -1);
             }
         }
         else
         {
-            dbg_temp("find in cache\n");
+            dbg_warning("find in cache\n");
         }
 
         free(domain - 1);
