@@ -1,6 +1,7 @@
  Prerequisites
 *.d
-
+*.log
+*.*.log
 # Object files
 *.o
 *.ko
@@ -51,4 +52,3 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-.vscode/*

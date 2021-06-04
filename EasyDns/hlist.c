@@ -73,7 +73,7 @@ int notOverTime(struct domainMap *temp)
         return 1;
     }
     dbg_warning("really over time!\n");
-    delHashMap(&temp);
+    delHashMapNode(&temp);
     return 0;
 }
 void hashMapInit(struct hashMap **hashMap)
@@ -147,23 +147,23 @@ int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
     return find;
 }
 
-int freeHashMap(struct hashMap **hashMap, int num)
+void freeHashMap(struct hashMap **hashMap)
 {
 
     free(*hashMap);
 }
-void delHashMap(struct domainMap **n)
+void delHashMapNode(struct domainMap **n)
 {
-    // if (*n == NULL)
-    // {
-    //     return;
-    // }
+    if (*n == NULL)
+    {
+        return;
+    }
 
-    // struct hlistNode *next = (*n)->hash.next;
-    // struct hlistNode **pprev = (*n)->hash.pprev;
-    // // struct hlistNode *next = n->next;
-    // // struct hlistNode **pprev = n->pprev;
-    // *pprev = next;
-    // if (next)
-    //     next->pprev = pprev;
+    struct hlistNode *next = (*n)->hash.next;
+    struct hlistNode **pprev = (*n)->hash.pprev;
+    // struct hlistNode *next = n->next;
+    // struct hlistNode **pprev = n->pprev;
+    *pprev = next;
+    if (next)
+        next->pprev = pprev;
 }

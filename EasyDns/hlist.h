@@ -44,7 +44,7 @@ void hashMapInit(struct hashMap **hashMap);
 int hashCode(char *key);
 void createHasMap(struct hashMap **hashMap);
 int findHashMap(struct hashMap **hashMap, char *key, ulong *value);
-int freeHashMap(struct hashMap **hashMap, int num);
-void delHashMap(struct domainMap **n);
+void delHashMapNode(struct domainMap **n);
+void freeHashMap(struct hashMap **hashMap);
 int notOverTime(struct domainMap *temp);
 void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl); //key 是 domin， value 是ip
