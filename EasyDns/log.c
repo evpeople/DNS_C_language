@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <arpa/inet.h>
 
 #include <string.h>
 
@@ -14,6 +15,8 @@
 static time_t epoch;
 
 static int debug_mask = 0;
+int port = 0;
+uint serverAddress = 0;
 
 static struct option intopts[] = {
 
@@ -21,7 +24,7 @@ static struct option intopts[] = {
     {0, 0, 0, 0},
 };
 
-#define OPT_SHORT "?ufind:p:b:l:t:"
+#define OPT_SHORT "?ufind:p:b:l:t:s:"
 
 void config(int argc, char **argv)
 {
@@ -38,7 +41,14 @@ void config(int argc, char **argv)
         case 'd':
             debug_mask = atoi(optarg);
             break;
-
+        case 'p':
+            port = atoi(optarg);
+            printf("port is %d", port);
+            break;
+        case 's':
+            // printf("%s", optarg);
+            serverAddress = inet_addr(optarg);
+            break;
         default:
             printf("ERROR: Unsupported option\n");
         }
@@ -60,16 +70,21 @@ void config(int argc, char **argv)
     lprintf("Log file \"%s\", debug mask 0x%02x\n", fname, debug_mask);
 }
 
-void dbg_debug(char *fmt, ...)
+void dbg_debug(char *ip, int num, char *fmt, ...)
 {
     va_list arg_ptr;
 
     if (debug_mask & DBG_DEBUG)
     {
-        printf("DEBUG:\t");
+        printf("\033[34mDEBUG:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
+        if (num)
+        {
+            dbg_ip(ip, num);
+        }
+        printf("\033[0m");
     }
 }
 
@@ -79,7 +94,7 @@ void dbg_info(char *fmt, ...)
 
     if (debug_mask & DBG_INFO)
     {
-        printf("INFO:\t");
+        printf("INFO: finished Func\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -92,10 +107,11 @@ void dbg_warning(char *fmt, ...)
 
     if (debug_mask & DBG_WARNING)
     {
-        printf("WARNING:\t");
+        printf("\033[35mWARNING:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
+        printf("\033[0m");
     }
 }
 void dbg_error(char *fmt, ...)
@@ -104,10 +120,11 @@ void dbg_error(char *fmt, ...)
 
     if (debug_mask & DBG_ERROR)
     {
-        printf("ERROR:\t");
+        printf("\033[31mERROR:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
+        printf("\033[0m");
     }
 }
 void dbg_temp(char *fmt, ...)
@@ -116,7 +133,7 @@ void dbg_temp(char *fmt, ...)
 
     if (debug_mask & DBG_TEMP)
     {
-        printf("\033[31mTEMP:\t");
+        printf("\033[36mTEMP:\t");
         va_start(arg_ptr, fmt);
         __v_lprintf(fmt, arg_ptr);
         va_end(arg_ptr);
@@ -135,7 +152,7 @@ void dbg_ip(unsigned char *temp, int n)
             printf("\n");
         }
     }
-    printf("IP IS OVER  \n");
+    printf("\nIP IS OVER  \n");
 }
 
 unsigned int get_ms(void)

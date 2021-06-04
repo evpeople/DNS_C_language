@@ -36,10 +36,14 @@ void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl) //
     node->key = malloc(DOMAINLENTH);
     memcpy(node->key, key, DOMAINLENTH);
     node->value = value;
-    node->hash.next = NULL;
-
     node->TTL = ttl;
-    node->lastCallTime = clock();
+
+    struct timeval tv;
+    struct timezone tz;
+    gettimeofday(&tv, &tz);
+    node->lastCallTime = tv.tv_sec;
+
+    node->hash.next = NULL;
 
     //构建哈希表
     int index = hashCode(key);
@@ -57,7 +61,21 @@ void addHashMap(char *key, uint32_t value, struct hashMap **hashMap, int ttl) //
         *(node->hash.pprev) = &(node->hash);
     }
 }
-
+int notOverTime(struct domainMap *temp)
+{
+    struct timeval tv;
+    struct timezone tz;
+    gettimeofday(&tv, &tz);
+    long time = tv.tv_sec;
+    dbg_temp("TTL is %d \nover is %d \ntime is %d\n lastCallTime %d\n", temp->TTL, time - temp->lastCallTime, time, temp->lastCallTime);
+    if (temp->TTL == -1 || (temp->TTL > (time - temp->lastCallTime)))
+    {
+        return 1;
+    }
+    dbg_warning("really over time!\n");
+    delHashMap(&temp);
+    return 0;
+}
 void hashMapInit(struct hashMap **hashMap)
 {
     FILE *fp = NULL;
@@ -71,8 +89,14 @@ void hashMapInit(struct hashMap **hashMap)
     }
     while (!feof(fp))
     {
-        fscanf(fp, "%s", ip);
-        fscanf(fp, "%s", domain);
+        if (!fscanf(fp, "%s", ip))
+        {
+            dbg_error("get ip wrong\n");
+        }
+        if (!fscanf(fp, "%s", domain))
+        {
+            dbg_error("get domain wrong\n");
+        }
         addHashMap(domain, inet_addr(ip), hashMap, -1);
     }
     fclose(fp);
@@ -101,8 +125,9 @@ int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
         //通过flag<=3 实现LRU
         while ((&(temp->hash) != NULL && flag == -1) || (&(temp->hash) != NULL && flag <= 3))
         {
-
-            if (!strcasecmp(key, temp->key) && overTime(temp))
+            int a = notOverTime(temp);
+            dbg_temp("over Time is %d \n", a);
+            if (!strcasecmp(key, temp->key) && notOverTime(temp))
             {
                 find = true;
                 *value = temp->value;
@@ -121,13 +146,11 @@ int findHashMap(struct hashMap **hashMap, char *key, ulong *value)
     }
     return find;
 }
-int overTime(struct domainMap *temp)
+
+int freeHashMap(struct hashMap **hashMap, int num)
 {
-    if (temp->TTL == -1 || (temp->TTL > (clock() - temp->lastCallTime)))
-    {
-        return 1;
-    }
-    return 0;
+
+    free(*hashMap);
 }
 void delHashMap(struct domainMap **n)
 {
@@ -143,9 +166,4 @@ void delHashMap(struct domainMap **n)
     // *pprev = next;
     // if (next)
     //     next->pprev = pprev;
-}
-int freeHashMap(struct hashMap **hashMap, int num)
-{
-
-    free(*hashMap);
 }

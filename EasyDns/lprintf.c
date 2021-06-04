@@ -60,8 +60,6 @@ static int output(const char *str, int len)
         if (sol)
         {
             ms = get_ms();
-            n = sprintf(timestamp, "%03d.%03d ", ms / 1000, ms % 1000);
-            tee_output(timestamp, n);
         }
         tee_output(head, tail - head);
         sol = tail[-1] == '\n';

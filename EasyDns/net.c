@@ -15,8 +15,11 @@
 #define CANT_GIVE 2
 #define GOT_IT 3
 #define FROM_DNS 4
-#define SERVER_PORT 8889
+// #define SERVER_PORT 8889
 #define MAX_EPOLL_SIZE 50
+
+extern int port;
+extern uint serverAddress;
 
 extern struct hashMap *hashMap;
 extern struct hashMap *cacheMap;
@@ -28,6 +31,7 @@ int lenOfQuery(char *rawmsg)
     int temp;
     temp = strlen(rawmsg) + 5;
     return temp;
+    dbg_info("len of Query\n");
 }
 
 void makeDnsRR(char *buf, ulong *ip, int state)
@@ -53,6 +57,7 @@ void makeDnsRR(char *buf, ulong *ip, int state)
 
     if (state == CANT_GIVE) //屏蔽网站
     {
+        dbg_warning("it is a bad net website");
         header->rcode = 5;
         rr->type = htons(16);
         *(temp + 1) = 1;
@@ -67,6 +72,8 @@ void makeDnsRR(char *buf, ulong *ip, int state)
         ulong *data = (ulong *)((char *)rr + 12);
         *data = *ip;
     }
+
+    dbg_info("makeDnsRR\n");
 }
 
 void makeDnsHead(char *rawmsg, ulong *ans, int stateCode)
@@ -91,11 +98,13 @@ void makeDnsHead(char *rawmsg, ulong *ans, int stateCode)
     case FROM_DNS:;
         uint16_t id = *(uint16_t *)rawmsg;
         ((struct HEADER *)rawmsg)->id = (cacheForId[id % CACHE_LEN].key);
+        dbg_debug(rawmsg, 4, "from Dns webSite look ip \n");
         break;
     default:
         dbg_error("接收包的函数遇到严重的错误\n");
         break;
     }
+    dbg_info("makeDnsHead\n");
 }
 
 void getAddress(char **rawMsg)
@@ -116,6 +125,7 @@ void getAddress(char **rawMsg)
         *p = '.';
     }
     (*rawMsg)++;
+    dbg_info("getAddress\n");
 }
 void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
 {
@@ -127,34 +137,37 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     char *domain = malloc(sizeof(char) * ANS_LEN);
     strcpy(domain, rawmsg + sizeof(struct HEADER));
     getAddress(&domain);
+    dbg_debug(rawmsg, 0, "domain is %s \n", domain);
     if (isNotIpv4(&rawmsg) && isQuery(rawmsg))
     {
         sendToDns(rawmsg, addr, fd);
         stateCode = NOT_FOUND;
+        dbg_info("is not ipv4\n");
     }
     else if (isQuery(rawmsg))
     {
-        char *domain = malloc(sizeof(char) * ANS_LEN);
-        strcpy(domain, rawmsg + sizeof(struct HEADER));
-        getAddress(&domain);
         ulong ans;
         int ret = findHashMap(&cacheMap, domain, &ans);
         if (ret == 0)
         {
+            dbg_temp("Not find in cacheMap\n");
             ret = findHashMap(&hashMap, domain, &ans);
             if (ret == 1)
             {
+                dbg_temp("find in hashMap and store it\n");
                 addHashMap(domain, ans, &cacheMap, -1);
             }
         }
         else
         {
+            dbg_temp("find in cache\n");
         }
 
         free(domain - 1);
 
         if (ret == 0) //没有找到
         {
+            dbg_debug(rawmsg, 0, "ask other DNS\n");
             stateCode = NOT_FOUND;
             sendToDns(rawmsg, addr, fd);
         }
@@ -177,6 +190,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         {
             uint32_t ip = getIP(rawmsg);
             uint ttl = getTTl(rawmsg);
+            dbg_temp("ip is %u ttl is %d\n", ip, ttl);
             addHashMap(domain, ip, &cacheMap, ttl);
         }
 
@@ -186,6 +200,7 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
         memcpy(address, cacheForId[id].value, sizeof(struct sockaddr));
         int len = sizeof(*address);
         sendto(fd, rawmsg, ANS_LEN, 0, address, len);
+        dbg_debug(rawmsg, 4, "success got a ans from Dns and send it !!!!!!!\n");
         return;
     }
     //发送构造好的相应。
@@ -193,9 +208,11 @@ void dealWithPacket(char *buf, const struct sockaddr *addr, int fd)
     {
         int len = sizeof(*addr);
         sendto(fd, rawmsg, ANS_LEN, 0, addr, len);
+        dbg_debug(rawmsg, 0, "find ip in cache or hash#####\n");
     }
 
     free(rawmsg);
+    dbg_info("dealWithPacket\n");
 }
 
 void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
@@ -207,7 +224,8 @@ void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
     if (id)
     {
         dnsAdd.sin_family = AF_INET;
-        dnsAdd.sin_addr.s_addr = inet_addr("10.3.9.4");
+        serverAddress = serverAddress == 0 ? inet_addr("10.3.9.4") : serverAddress;
+        dnsAdd.sin_addr.s_addr = serverAddress;
         dnsAdd.sin_port = htons(53);
 
         int len = sizeof(dnsAdd);
@@ -215,6 +233,7 @@ void sendToDns(char *rawmsg, const struct sockaddr *addr, int fd)
         int x = sendto(fd, rawmsg, ANS_LEN, 0, (const struct sockaddr *)&dnsAdd, len);
         id = 0;
     }
+    dbg_info("sendToDns\n");
 }
 int isNotIpv4(char **rawmsg)
 {
@@ -236,11 +255,13 @@ int isNotIpv4(char **rawmsg)
             }
             else
             {
+                dbg_warning("is not a ipv4\n");
                 return 1;
             }
             break;
         }
     }
+    dbg_info("isNotIpv4\n");
 }
 uint32_t getIP(char *rawmsg)
 {
@@ -249,6 +270,7 @@ uint32_t getIP(char *rawmsg)
     uint32_t *z = (uint32_t *)y;
 
     return *z;
+    dbg_info("getIP\n");
 }
 uint getTTl(char *rawmsg)
 {
@@ -258,6 +280,7 @@ uint getTTl(char *rawmsg)
     uint32_t *z = (uint32_t *)x;
     uint32_t data = ntohl(*z);
     return data;
+    dbg_info("getTTL\n");
 }
 bool isQuery(char *rawMsg)
 {
@@ -274,7 +297,10 @@ void addCacheMap(char **rawmsg, const struct sockaddr *addr)
 {
     char *p = *rawmsg;
     uint16_t id = *(uint16_t *)(*rawmsg);
-    clock_t idInCache = clock();
+    struct timeval tv;
+    struct timezone tz;
+    gettimeofday(&tv, &tz);
+    long idInCache = tv.tv_sec;
     cacheForId[idInCache % CACHE_LEN].key = id;
     if (!addr)
     {
@@ -292,12 +318,11 @@ void addCacheMap(char **rawmsg, const struct sockaddr *addr)
 
     *(uint16_t *)(*rawmsg) = idInCache % CACHE_LEN;
     uint16_t id2 = *(uint16_t *)(*rawmsg);
+    dbg_info("addCacheMap\n");
 }
 void runDns()
 {
     int listenfd;
-    dbg_info("SD\n");
-    // dbg_info
     listenfd = initSocket();
     if (listenfd == -1)
     {
@@ -371,7 +396,8 @@ int initSocket()
     memset(&ser_addr, 0, sizeof(ser_addr));
     ser_addr.sin_family = AF_INET;
     ser_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    ser_addr.sin_port = htons(SERVER_PORT);
+    port = port == 0 ? 8889 : port;
+    ser_addr.sin_port = htons(port);
 
     ret = bind(server_fd, (struct sockaddr *)&ser_addr, sizeof(ser_addr));
     if (ret < 0)
@@ -379,5 +405,6 @@ int initSocket()
         printf("socket bind fail!\n");
         return -1;
     }
+    dbg_info("initSocket\n");
     return server_fd;
 }

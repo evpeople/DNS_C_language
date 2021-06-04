@@ -23,6 +23,6 @@ void dbg_temp(char *fmt, ...);
 void dbg_error(char *fmt, ...);
 void dbg_warning(char *fmt, ...);
 void dbg_info(char *fmt, ...);
-void dbg_debug(char *fmt, ...);
+void dbg_debug(char *ip, int num, char *fmt, ...);
 void dbg_ip(unsigned char *, int);
 void config(int argc, char **argv);

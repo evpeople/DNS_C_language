@@ -8,5 +8,5 @@ void initDNS(struct hashMap **hashMap)
     createHasMap(hashMap);
     createHasMap(&cacheMap);
     hashMapInit(hashMap);
-    struct sockaddr_in recv_addr;
+    dbg_info("initDNS\n");
 }
